@@ -2,8 +2,6 @@ name: Lint
 
 on:
   pull_request:
-    paths:
-      - 'app/*.py'
 
 jobs:
   flake8_check:
