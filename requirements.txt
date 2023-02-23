@@ -2,6 +2,7 @@ Django
 django-extensions
 ipython
 
+
 # flake8
 flake8
 flake8-builtins
