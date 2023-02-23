@@ -27,3 +27,4 @@ class ContactUs(models.Model):
             if not key.startswith("_"):
                 str_repr += f"{key}: {value}; "
         return str_repr
+
