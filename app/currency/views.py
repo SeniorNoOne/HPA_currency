@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 
 from currency.models import Rate, ContactUs
@@ -16,4 +15,3 @@ def show_email_lst(request):
     if not result:
         result = ["No records in CURRENCY_CONTACTUS database"]
     return HttpResponse("<br>".join(result))
-
