@@ -34,7 +34,7 @@ class Source(models.Model):
     source_url = models.CharField(max_length=255)
     name = models.CharField(max_length=64)
     city = models.CharField(max_length=64, blank=True, default="")
-    phone = PhoneNumberField(blank=True, default="", unique=True)
+    phone = PhoneNumberField(blank=True, unique=True, default="", null=True)
 
     def __str__(self):
         str_repr = ""
