@@ -1,6 +1,8 @@
 Django
 django-extensions
 ipython
+django-phonenumber-field
+phonenumbers
 
 
 # flake8

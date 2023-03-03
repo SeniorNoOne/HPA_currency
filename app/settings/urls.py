@@ -5,7 +5,9 @@ from currency.views import (
     index,
     rate_list, rate_details, rate_create, rate_update, rate_delete,
     contact_us_list, contact_us_details, contact_us_create,
-    contact_us_update, contact_us_delete
+    contact_us_update, contact_us_delete,
+    source_list, source_details, source_create,
+    source_update, source_delete
 )
 
 urlpatterns = [
@@ -24,4 +26,10 @@ urlpatterns = [
     path('contact_us/details/<int:pk>/', contact_us_details),
     path('contact_us/update/<int:pk>/', contact_us_update),
     path('contact_us/delete/<int:pk>/', contact_us_delete),
+
+    path('source/create/', source_create),
+    path('source/list/', source_list),
+    path('source/details/<int:pk>/', source_details),
+    path('source/update/<int:pk>/', source_update),
+    path('source/delete/<int:pk>/', source_delete),
 ]
