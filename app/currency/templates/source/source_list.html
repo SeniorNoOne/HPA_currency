@@ -11,7 +11,7 @@
     <p>
         <a href="/source/create/">Create new source</a>
     </p>
-    {% if source_list %}
+    {% if object_list %}
         <table>
             <tr>
                 <th>ID</th>
@@ -21,7 +21,7 @@
                 <th>Delete</th>
                 <th>Details</th>
             </tr>
-            {% for source in source_list %}
+            {% for source in object_list %}
                 <tr>
                     <td>{{ source.id }}</td>
                     <td>{{ source.source_url }}</td>

@@ -9,8 +9,7 @@ from currency.views import (
     ContactUsCreateView, ContactUsListView, ContactUsDetailView, ContactUsUpdateView,
     ContactUsDeleteView,
 
-    source_list, source_details, source_create,
-    source_update, source_delete
+    SourceCreateView, SourceListView, SourceDetailView, SourceUpdateView, SourceDeleteView
 )
 
 urlpatterns = [
@@ -32,9 +31,9 @@ urlpatterns = [
     path('contact_us/update/<int:pk>/', ContactUsUpdateView.as_view()),
     path('contact_us/delete/<int:pk>/', ContactUsDeleteView.as_view()),
 
-    path('source/create/', source_create),
-    path('source/list/', source_list),
-    path('source/details/<int:pk>/', source_details),
-    path('source/update/<int:pk>/', source_update),
-    path('source/delete/<int:pk>/', source_delete),
+    path('source/create/', SourceCreateView.as_view()),
+    path('source/list/', SourceListView.as_view()),
+    path('source/details/<int:pk>/', SourceDetailView.as_view()),
+    path('source/update/<int:pk>/', SourceUpdateView.as_view()),
+    path('source/delete/<int:pk>/', SourceDeleteView.as_view()),
 ]
