@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    {{ block.super }}
+    {% include 'includes/table_style.html' %}
+{% endblock %}
+
+{% block title %}Source List{% endblock %}
+
+{% block content %}
+    <p>
+        <a href="/source/create/">Create new source</a>
+    </p>
+    {% if source_list %}
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>URL</th>
+                <th>Name</th>
+                <th>Update</th>
+                <th>Delete</th>
+                <th>Details</th>
+            </tr>
+            {% for source in source_list %}
+                <tr>
+                    <td>{{ source.id }}</td>
+                    <td>{{ source.source_url }}</td>
+                    <td>{{ source.name }}</td>
+                    <td><a href="/source/update/{{ source.id }}/">Update</a></td>
+                    <td><a href="/source/delete/{{ source.id }}/">Delete</a></td>
+                    <td><a href="/source/details/{{ source.id }}/">Details</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        DB is empty so far
+    {% endif %}
+{% endblock %}

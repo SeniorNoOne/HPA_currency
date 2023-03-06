@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    {{ block.super }}
+    {% include 'includes/table_style.html' %}
+{% endblock %}
+
+{% block title %}Source Details{% endblock %}
+
+{% block content %}
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>URL</th>
+            <th>Name</th>
+            <th>City</th>
+            <th>Phone</th>
+        </tr>
+        <tr>
+            <td>{{ source.id }}</td>
+            <td>{{ source.source_url }}</td>
+            <td>{{ source.name }}</td>
+            <td>{{ source.city }}</td>
+            <td>{{ source.phone }}</td>
+        </tr>
+    </table>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    {{ block.super }}
+    {% include 'includes/table_style.html' %}
+{% endblock %}
+
+{% block title %}Feedback Details{% endblock %}
+
+{% block content %}
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Subject</th>
+            <th>Message</th>
+        </tr>
+        <tr>
+            <td>{{ feedback.id }}</td>
+            <td>{{ feedback.email_from }}</td>
+            <td>{{ feedback.subject }}</td>
+            <td>{{ feedback.message }}</td>
+        </tr>
+    </table>
+{% endblock %}

@@ -1,25 +1,35 @@
-"""settings URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 
-from currency.views import show_currency_lst, show_email_lst
+from currency.views import (
+    index,
+    rate_list, rate_details, rate_create, rate_update, rate_delete,
+    contact_us_list, contact_us_details, contact_us_create,
+    contact_us_update, contact_us_delete,
+    source_list, source_details, source_create,
+    source_update, source_delete
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('currency/list', show_currency_lst),
-    path('contact_us/list', show_email_lst)
+
+    path('', index),
+
+    path('rate/create/', rate_create),
+    path('rate/list/', rate_list),
+    path('rate/details/<int:pk>/', rate_details),
+    path('rate/update/<int:pk>/', rate_update),
+    path('rate/delete/<int:pk>/', rate_delete),
+
+    path('contact_us/create/', contact_us_create),
+    path('contact_us/list/', contact_us_list),
+    path('contact_us/details/<int:pk>/', contact_us_details),
+    path('contact_us/update/<int:pk>/', contact_us_update),
+    path('contact_us/delete/<int:pk>/', contact_us_delete),
+
+    path('source/create/', source_create),
+    path('source/list/', source_list),
+    path('source/details/<int:pk>/', source_details),
+    path('source/update/<int:pk>/', source_update),
+    path('source/delete/<int:pk>/', source_delete),
 ]
