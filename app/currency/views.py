@@ -40,51 +40,34 @@ class RateDeleteView(DeleteView):
     success_url = "/rate/list/"
 
 
-def contact_us_create(request):
-    if request.method == "POST":
-        form = ContactUsForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect("/contact_us/list")
-    elif request.method == "GET":
-        form = ContactUsForm()
-    context = {"form": form}
-    return render(request, "contact_us/contact_us_create.html", context)
+class ContactUsCreateView(CreateView):
+    form_class = ContactUsForm
+    template_name = "contact_us/contact_us_create.html"
+    queryset = ContactUs.objects.all()
+    success_url = "/contact_us/list/"
 
 
-def contact_us_list(request):
-    result = ContactUs.objects.all()
-    context = {'feedback_list': result}
-    return render(request, 'contact_us/contact_us_list.html', context)
+class ContactUsListView(ListView):
+    template_name = "contact_us/contact_us_list.html"
+    queryset = ContactUs.objects.all()
 
 
-def contact_us_details(request, pk):
-    feedback_by_id = get_object_or_404(ContactUs, pk=pk)
-    context = {'feedback': feedback_by_id}
-    return render(request, 'contact_us/contact_us_details.html', context)
+class ContactUsDetailView(DetailView):
+    template_name = "contact_us/contact_us_details.html"
+    queryset = ContactUs.objects.all()
 
 
-def contact_us_update(request, pk):
-    rate_by_id = get_object_or_404(ContactUs, pk=pk)
-    if request.method == "POST":
-        form = ContactUsForm(request.POST, instance=rate_by_id)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect("/contact_us/list")
-    elif request.method == "GET":
-        form = ContactUsForm(instance=rate_by_id)
-    context = {"form": form}
-    return render(request, "contact_us/contact_us_update.html", context)
+class ContactUsUpdateView(UpdateView):
+    form_class = ContactUsForm
+    template_name = "contact_us/contact_us_update.html"
+    queryset = ContactUs.objects.all()
+    success_url = "/contact_us/list/"
 
 
-def contact_us_delete(request, pk):
-    rate_by_id = get_object_or_404(ContactUs, pk=pk)
-    if request.method == "POST":
-        rate_by_id.delete()
-        return HttpResponseRedirect("/contact_us/list")
-    elif request.method == "GET":
-        context = {"feedback": rate_by_id}
-        return render(request, "contact_us/contact_us_delete.html", context)
+class ContactUsDeleteView(DeleteView):
+    template_name = "contact_us/contact_us_delete.html"
+    queryset = ContactUs.objects.all()
+    success_url = "/contact_us/list/"
 
 
 def source_create(request):

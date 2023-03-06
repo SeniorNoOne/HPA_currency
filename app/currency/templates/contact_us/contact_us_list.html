@@ -11,7 +11,7 @@
     <p>
         <a href="/contact_us/create/">Create new feedback</a>
     </p>
-    {% if feedback_list %}
+    {% if object_list %}
         <table>
             <tr>
                 <th>ID</th>
@@ -21,7 +21,7 @@
                 <th>Delete</th>
                 <th>Details</th>
             </tr>
-            {% for feedback in feedback_list %}
+            {% for feedback in object_list %}
                 <tr>
                     <td>{{ feedback.id }}</td>
                     <td>{{ feedback.email_from }}</td>
