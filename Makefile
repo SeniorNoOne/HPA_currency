@@ -1,11 +1,20 @@
+manage_py := python app/manage.py
+
+install:
+	pip install -r requirements.txt
+
 run:
-	python app/manage.py runserver
+	$(manage_py) runserver
 
 showmigrations:
-	python app/manage.py showmigrations
+	$(manage_py) showmigrations
 
-migrate:
-	python app/manage.py migrate
+init_db:
+	$(manage_py) makemigrations
+	$(manage_py) migrate
+
+shell:
+	$(manage_py) shell_plus --print-sql
 
 flake8:
 	flake8 app/
