@@ -11,7 +11,7 @@
     <p>
         <a href="/rate/create/">Create new rate</a>
     </p>
-    {% if rate_list %}
+    {% if object_list %}
         <table>
             <tr>
                 <th>ID</th>
@@ -22,7 +22,7 @@
                 <th>Delete</th>
                 <th>Details</th>
             </tr>
-            {% for rate in rate_list %}
+            {% for rate in object_list %}
                 <tr>
                     <td>{{ rate.id }}</td>
                     <td>{{ rate.currency }}</td>

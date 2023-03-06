@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
-from currency.models import Rate, ContactUs, Source
+from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
 from currency.forms import RateForm, ContactUsForm, SourceForm
+from currency.models import Rate, ContactUs, Source
 
 
 # main page
@@ -9,51 +10,34 @@ def index(request):
     return render(request, 'index.html', context)
 
 
-def rate_create(request):
-    if request.method == "POST":
-        form = RateForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect("/rate/list")
-    elif request.method == "GET":
-        form = RateForm()
-    context = {"form": form}
-    return render(request, "rate_create.html", context)
+class RateCreateView(CreateView):
+    form_class = RateForm
+    template_name = "rate/rate_create.html"
+    queryset = Rate.objects.all()
+    success_url = "/rate/list/"
 
 
-def rate_list(request):
-    result = Rate.objects.all()
-    context = {'rate_list': result}
-    return render(request, 'rate_list.html', context)
+class RateListView(ListView):
+    template_name = "rate/rate_list.html"
+    queryset = Rate.objects.all()
 
 
-def rate_details(request, pk):
-    rate_by_id = get_object_or_404(Rate, pk=pk)
-    context = {'rate': rate_by_id}
-    return render(request, 'rate_details.html', context)
+class RateDetailView(DetailView):
+    template_name = "rate/rate_details.html"
+    queryset = Rate.objects.all()
 
 
-def rate_update(request, pk):
-    rate_by_id = get_object_or_404(Rate, pk=pk)
-    if request.method == "POST":
-        form = RateForm(request.POST, instance=rate_by_id)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect("/rate/list")
-    elif request.method == "GET":
-        form = RateForm(instance=rate_by_id)
-    context = {"form": form}
-    return render(request, "rate_update.html", context)
+class RateUpdateView(UpdateView):
+    form_class = RateForm
+    template_name = "rate/rate_update.html"
+    queryset = Rate.objects.all()
+    success_url = "/rate/list/"
 
 
-def rate_delete(request, pk):
-    rate_by_id = get_object_or_404(Rate, pk=pk)
-    if request.method == "POST":
-        rate_by_id.delete()
-        return HttpResponseRedirect("/rate/list")
-    elif request.method == "GET":
-        context = {"rate": rate_by_id}
-        return render(request, "rate_delete.html", context)
+class RateDeleteView(DeleteView):
+    template_name = "rate/rate_delete.html"
+    queryset = Rate.objects.all()
+    success_url = "/rate/list/"
 
 
 def contact_us_create(request):
@@ -65,19 +49,19 @@ def contact_us_create(request):
     elif request.method == "GET":
         form = ContactUsForm()
     context = {"form": form}
-    return render(request, "contact_us_create.html", context)
+    return render(request, "contact_us/contact_us_create.html", context)
 
 
 def contact_us_list(request):
     result = ContactUs.objects.all()
     context = {'feedback_list': result}
-    return render(request, 'contact_us_list.html', context)
+    return render(request, 'contact_us/contact_us_list.html', context)
 
 
 def contact_us_details(request, pk):
     feedback_by_id = get_object_or_404(ContactUs, pk=pk)
     context = {'feedback': feedback_by_id}
-    return render(request, 'contact_us_details.html', context)
+    return render(request, 'contact_us/contact_us_details.html', context)
 
 
 def contact_us_update(request, pk):
@@ -90,7 +74,7 @@ def contact_us_update(request, pk):
     elif request.method == "GET":
         form = ContactUsForm(instance=rate_by_id)
     context = {"form": form}
-    return render(request, "contact_us_update.html", context)
+    return render(request, "contact_us/contact_us_update.html", context)
 
 
 def contact_us_delete(request, pk):
@@ -100,7 +84,7 @@ def contact_us_delete(request, pk):
         return HttpResponseRedirect("/contact_us/list")
     elif request.method == "GET":
         context = {"feedback": rate_by_id}
-        return render(request, "contact_us_delete.html", context)
+        return render(request, "contact_us/contact_us_delete.html", context)
 
 
 def source_create(request):
@@ -112,19 +96,19 @@ def source_create(request):
     elif request.method == "GET":
         form = SourceForm()
     context = {"form": form}
-    return render(request, "source_create.html", context)
+    return render(request, "source/source_create.html", context)
 
 
 def source_list(request):
     result = Source.objects.all()
     context = {'source_list': result}
-    return render(request, 'source_list.html', context)
+    return render(request, 'source/source_list.html', context)
 
 
 def source_details(request, pk):
     source_by_id = get_object_or_404(Source, pk=pk)
     context = {'source': source_by_id}
-    return render(request, "source_details.html", context)
+    return render(request, "source/source_details.html", context)
 
 
 def source_update(request, pk):
@@ -137,7 +121,7 @@ def source_update(request, pk):
     elif request.method == "GET":
         form = SourceForm(instance=source_by_id)
     context = {"form": form}
-    return render(request, "source_update.html", context)
+    return render(request, "source/source_update.html", context)
 
 
 def source_delete(request, pk):
@@ -147,4 +131,4 @@ def source_delete(request, pk):
         return HttpResponseRedirect("/source/list")
     elif request.method == "GET":
         context = {"source": source_by_id}
-        return render(request, "source_delete.html", context)
+        return render(request, "source/source_delete.html", context)

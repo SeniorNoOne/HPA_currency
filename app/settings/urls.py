@@ -1,9 +1,9 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from currency.views import (
     index,
-    rate_list, rate_details, rate_create, rate_update, rate_delete,
+    RateListView, RateDetailView, RateUpdateView, RateCreateView, RateDeleteView,
     contact_us_list, contact_us_details, contact_us_create,
     contact_us_update, contact_us_delete,
     source_list, source_details, source_create,
@@ -13,13 +13,15 @@ from currency.views import (
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    path('__debug__/', include('debug_toolbar.urls')),
+
     path('', index),
 
-    path('rate/create/', rate_create),
-    path('rate/list/', rate_list),
-    path('rate/details/<int:pk>/', rate_details),
-    path('rate/update/<int:pk>/', rate_update),
-    path('rate/delete/<int:pk>/', rate_delete),
+    path('rate/create/', RateCreateView.as_view()),
+    path('rate/list/', RateListView.as_view()),
+    path('rate/details/<int:pk>/', RateDetailView.as_view()),
+    path('rate/update/<int:pk>/', RateUpdateView.as_view()),
+    path('rate/delete/<int:pk>/', RateDeleteView.as_view()),
 
     path('contact_us/create/', contact_us_create),
     path('contact_us/list/', contact_us_list),

@@ -1,16 +1,11 @@
 {% extends 'base.html' %}
 
-{% block style %}
-    {{ block.super }}
-    {% include 'includes/table_style.html' %}
-{% endblock %}
-
-{% block title %}Create Source{% endblock %}
+{% block title %}Delete Feedback{% endblock %}
 
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        <p>Do you really want to delete contact us form with ID = {{ feedback.id }}</p>
         <button type="submit">Submit</button>
     </form>
 {% endblock %}
