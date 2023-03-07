@@ -3,7 +3,7 @@ django-extensions
 ipython
 django-phonenumber-field
 phonenumbers
-
+django-debug-toolbar
 
 # flake8
 flake8

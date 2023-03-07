@@ -9,9 +9,9 @@
 
 {% block content %}
     <p>
-        <a href="/contact_us/create/">Create new feedback</a>
+        <a href="{% url 'currency:contactus-create' %}">Create new feedback</a>
     </p>
-    {% if feedback_list %}
+    {% if object_list %}
         <table>
             <tr>
                 <th>ID</th>
@@ -21,14 +21,14 @@
                 <th>Delete</th>
                 <th>Details</th>
             </tr>
-            {% for feedback in feedback_list %}
+            {% for feedback in object_list %}
                 <tr>
                     <td>{{ feedback.id }}</td>
                     <td>{{ feedback.email_from }}</td>
                     <td>{{ feedback.subject }}</td>
-                    <td><a href="/contact_us/update/{{ feedback.id }}/">Update</a></td>
-                    <td><a href="/contact_us/delete/{{ feedback.id }}/">Delete</a></td>
-                    <td><a href="/contact_us/details/{{ feedback.id }}/">Details</a></td>
+                    <td><a href="{% url 'currency:contactus-update' feedback.id %}">Update</a></td>
+                    <td><a href="{% url 'currency:contactus-delete' feedback.id %}">Delete</a></td>
+                    <td><a href="{% url 'currency:contactus-details' feedback.id %}">Details</a></td>
                 </tr>
             {% endfor %}
         </table>
