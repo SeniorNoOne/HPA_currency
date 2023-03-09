@@ -21,12 +21,12 @@ class ContactUs(models.Model):
     subject = models.CharField(max_length=100)
     message = models.TextField()
 
+    class Meta:
+        verbose_name = 'Contact Us'
+        verbose_name_plural = 'Contact Us'
+
     def __str__(self):
-        str_repr = ""
-        for key, value in self.__dict__.items():
-            if not key.startswith("_"):
-                str_repr += f"{key}: {value}; "
-        return str_repr
+        return f'Feedback from {self.email_from}'
 
 
 class Source(models.Model):
@@ -36,8 +36,4 @@ class Source(models.Model):
     phone = PhoneNumberField(blank=True, unique=True, default="", null=True)
 
     def __str__(self):
-        str_repr = ""
-        for key, value in self.__dict__.items():
-            if not key.startswith("_"):
-                str_repr += f"{key}: {value}; "
-        return str_repr
+        return f'Source {self.name.capitalize()}'
