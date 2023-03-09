@@ -13,6 +13,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='rate',
             name='currency',
-            field=models.PositiveSmallIntegerField(choices=[(1, 'USD'), (2, 'EUR'), (3, 'Hryvnia'), (4, 'Pound Sterling'), (5, 'Yen')], default=1),
+            field=models.PositiveSmallIntegerField(
+                choices=[(1, 'Dollar'),
+                         (2, 'Euro'),
+                         (3, 'Hryvnia'),
+                         (4, 'Pound Sterling'),
+                         (5, 'Yen')
+                         ],
+                default=1),
         ),
     ]
