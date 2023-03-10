@@ -31,6 +31,8 @@ EXTERNAL_APPS = [
     "django_extensions",
     "phonenumber_field",
     "debug_toolbar",
+    'rangefilter',
+    'import_export',
 ]
 
 CUSTOM_APPS = [

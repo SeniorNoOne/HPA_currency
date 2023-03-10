@@ -18,3 +18,6 @@ shell:
 
 flake8:
 	flake8 app/
+
+createsuperuser:
+	$(manage_py) createsuperuser

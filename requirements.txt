@@ -4,6 +4,8 @@ ipython
 django-phonenumber-field
 phonenumbers
 django-debug-toolbar
+django-admin-rangefilter
+django-import-export
 
 # flake8
 flake8

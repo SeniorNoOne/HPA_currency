@@ -4,7 +4,7 @@ from currency.views import MainPageView
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin:index'),
 
     path('', MainPageView.as_view()),
 
