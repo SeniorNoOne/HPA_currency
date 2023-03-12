@@ -3,7 +3,7 @@ from django.views.generic import (
     CreateView, DeleteView, DetailView, ListView, UpdateView, TemplateView
 )
 from currency.forms import ContactUsForm, RateForm, SourceForm
-from currency.models import ContactUs, Rate, Source
+from currency.models import ContactUs, Rate, Source, RequestResponseLog
 from django.core.mail import send_mail
 from django.conf import settings
 
@@ -115,3 +115,8 @@ class SourceDeleteView(DeleteView):
     template_name = 'source/source_delete.html'
     queryset = Source.objects.all()
     success_url = reverse_lazy('currency:source-list')
+
+
+class LogListView(ListView):
+    template_name = 'log/log_list.html'
+    queryset = RequestResponseLog.objects.all()

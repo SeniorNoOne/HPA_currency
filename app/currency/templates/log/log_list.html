@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    {{ block.super }}
+    {% include 'includes/table_style.html' %}
+{% endblock %}
+
+{% block title %}Log List{% endblock %}
+
+{% block content %}
+    {% if object_list %}
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Path</th>
+                <th>Method</th>
+                <th>Time, ms</th>
+            </tr>
+            {% for log in object_list %}
+                <tr>
+                    <td>{{ log.id }}</td>
+                    <td>{{ log.path }}</td>
+                    <td>{{ log.get_request_method_display }}</td>
+                    <td>{{ log.time }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        DB is empty so far
+    {% endif %}
+{% endblock %}

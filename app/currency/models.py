@@ -1,6 +1,6 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-from currency.choices import RateCurrencyChoices
+from currency.choices import RateCurrencyChoices, RequestMethodChoices
 
 
 class Rate(models.Model):
@@ -17,9 +17,11 @@ class Rate(models.Model):
 
 
 class ContactUs(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=100)
     email_from = models.EmailField(max_length=100)
     subject = models.CharField(max_length=100)
-    message = models.TextField()
+    message = models.CharField(max_length=500)
 
     class Meta:
         verbose_name = 'Contact Us'
@@ -37,3 +39,9 @@ class Source(models.Model):
 
     def __str__(self):
         return f'Source {self.name.capitalize()}'
+
+
+class RequestResponseLog(models.Model):
+    path = models.CharField(max_length=255)
+    request_method = models.PositiveSmallIntegerField(choices=RequestMethodChoices.choices)
+    time = models.PositiveSmallIntegerField()

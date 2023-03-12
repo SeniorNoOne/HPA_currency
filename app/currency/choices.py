@@ -7,3 +7,8 @@ class RateCurrencyChoices(models.IntegerChoices):
     UAH = 3, 'Hryvnia'
     GBP = 4, 'Pound Sterling'
     JPY = 5, 'Yen'
+
+
+class RequestMethodChoices(models.IntegerChoices):
+    GET = 1, 'GET'
+    POST = 2, 'POST'
