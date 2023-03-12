@@ -1,3 +1,4 @@
+from configparser import ConfigParser
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -123,7 +124,24 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+config = ConfigParser()
+config.read('config.ini')
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_SENDER = 'test_sender@example.com'
+EMAIL_RECEIVER = ['test_receiver@example.com']
+
+if 'smtp' in config:
+    EMAIL_HOST = config.get('smtp', 'host', fallback='')
+    EMAIL_PORT = config.get('smtp', 'port', fallback='')
+    EMAIL_HOST_USER = config.get('smtp', 'username', fallback='')
+    EMAIL_HOST_PASSWORD = config.get('smtp', 'password', fallback='')
+    EMAIL_USE_TLS = config.get('smtp', 'tls', fallback='')
+    EMAIL_SENDER = config.get('smtp', 'validated_user', fallback='')
+    EMAIL_RECEIVER = [mail.strip() for mail in
+                      config.get('smtp', 'target_users', fallback=[]).split(',')]
+    if EMAIL_SENDER and EMAIL_RECEIVER:
+        EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 if DEBUG:
     import socket  # only if you haven't already imported this

@@ -4,6 +4,23 @@ from django.views.generic import (
 )
 from currency.forms import ContactUsForm, RateForm, SourceForm
 from currency.models import ContactUs, Rate, Source
+from django.core.mail import send_mail
+from django.conf import settings
+
+
+class SendMessageMixin:
+    def _send_mail(self):
+        subject = 'User Feedback Form'
+        message = f'Reply to email: {self.object.email_from}\n' + \
+                  f'Subject: {self.object.subject}\n' + \
+                  f'Body: {self.object.message}\n'
+        send_mail(subject, message, settings.EMAIL_SENDER, [*settings.EMAIL_RECEIVER],
+                  fail_silently=False)
+
+    def form_valid(self, form):
+        redirect = super().form_valid(form)
+        self._send_mail()
+        return redirect
 
 
 class MainPageView(TemplateView):
@@ -40,7 +57,7 @@ class RateDeleteView(DeleteView):
     success_url = reverse_lazy('currency:rate-list')
 
 
-class ContactUsCreateView(CreateView):
+class ContactUsCreateView(SendMessageMixin, CreateView):
     form_class = ContactUsForm
     template_name = 'contact_us/contact_us_create.html'
     queryset = ContactUs.objects.all()
@@ -57,7 +74,7 @@ class ContactUsDetailView(DetailView):
     queryset = ContactUs.objects.all()
 
 
-class ContactUsUpdateView(UpdateView):
+class ContactUsUpdateView(SendMessageMixin, UpdateView):
     form_class = ContactUsForm
     template_name = 'contact_us/contact_us_update.html'
     queryset = ContactUs.objects.all()
