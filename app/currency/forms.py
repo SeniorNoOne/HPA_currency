@@ -21,6 +21,9 @@ class ContactUsForm(forms.ModelForm):
             'subject',
             'message',
         )
+        widgets = {
+            'message': forms.Textarea(),
+        }
 
 
 class SourceForm(forms.ModelForm):

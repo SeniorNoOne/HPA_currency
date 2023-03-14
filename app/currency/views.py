@@ -6,6 +6,12 @@ from currency.forms import ContactUsForm, RateForm, SourceForm
 from currency.models import ContactUs, Rate, Source, RequestResponseLog
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
+
+class SuperUserTestMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_superuser
 
 
 class SendMessageMixin:
@@ -14,7 +20,7 @@ class SendMessageMixin:
         message = f'Reply to email: {self.object.email_from}\n' + \
                   f'Subject: {self.object.subject}\n' + \
                   f'Body: {self.object.message}\n'
-        send_mail(subject, message, settings.EMAIL_SENDER, [*settings.EMAIL_RECEIVER],
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [*settings.EMAIL_RECEIVER],
                   fail_silently=False)
 
     def form_valid(self, form):
@@ -39,19 +45,19 @@ class RateListView(ListView):
     queryset = Rate.objects.all()
 
 
-class RateDetailView(DetailView):
+class RateDetailView(LoginRequiredMixin, DetailView):
     template_name = 'rate/rate_details.html'
     queryset = Rate.objects.all()
 
 
-class RateUpdateView(UpdateView):
+class RateUpdateView(SuperUserTestMixin, UpdateView):
     form_class = RateForm
     template_name = 'rate/rate_update.html'
     queryset = Rate.objects.all()
     success_url = reverse_lazy('currency:rate-list')
 
 
-class RateDeleteView(DeleteView):
+class RateDeleteView(SuperUserTestMixin, DeleteView):
     template_name = 'rate/rate_delete.html'
     queryset = Rate.objects.all()
     success_url = reverse_lazy('currency:rate-list')
