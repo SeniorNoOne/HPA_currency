@@ -6,7 +6,9 @@ from currency.views import MainPageView
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin:index'),
 
-    path('', MainPageView.as_view()),
+    path('auth/', include('django.contrib.auth.urls')),
+
+    path('', MainPageView.as_view(), name='index'),
 
     path('__debug__/', include('debug_toolbar.urls')),
 

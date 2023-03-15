@@ -1,5 +1,6 @@
 from configparser import ConfigParser
 from pathlib import Path
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -59,7 +60,9 @@ ROOT_URLCONF = 'settings.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates'
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,7 +132,7 @@ config = ConfigParser()
 config.read('config.ini')
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_SENDER = 'test_sender@example.com'
+DEFAULT_FROM_EMAIL = 'test_sender@example.com'
 EMAIL_RECEIVER = ['test_receiver@example.com']
 
 if 'smtp' in config:
@@ -138,13 +141,17 @@ if 'smtp' in config:
     EMAIL_HOST_USER = config.get('smtp', 'username', fallback='')
     EMAIL_HOST_PASSWORD = config.get('smtp', 'password', fallback='')
     EMAIL_USE_TLS = config.get('smtp', 'tls', fallback='')
-    EMAIL_SENDER = config.get('smtp', 'validated_user', fallback='')
+    DEFAULT_FROM_EMAIL = config.get('smtp', 'validated_user', fallback='')
     EMAIL_RECEIVER = [mail.strip() for mail in
                       config.get('smtp', 'target_users', fallback=[]).split(',')]
-    if EMAIL_SENDER and EMAIL_RECEIVER:
+    if DEFAULT_FROM_EMAIL and EMAIL_RECEIVER:
         EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 if DEBUG:
     import socket  # only if you haven't already imported this
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
+
+LOGIN_REDIRECT_URL = reverse_lazy('index')
+LOGOUT_REDIRECT_URL = reverse_lazy('index')
+LOGIN_URL = reverse_lazy('login')
