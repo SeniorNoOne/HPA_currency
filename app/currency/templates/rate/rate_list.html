@@ -22,7 +22,9 @@
                     <th>Update</th>
                     <th>Delete</th>
                 {% endif %}
-                <th>Details</th>
+                {% if not request.user.is_anonymous %}
+                    <th>Details</th>
+                {% endif %}
             </tr>
             {% for rate in object_list %}
                 <tr>
@@ -34,7 +36,9 @@
                         <td><a href="{% url 'currency:rate-update' rate.id %}">Update</a></td>
                         <td><a href="{% url 'currency:rate-delete' rate.id %}">Delete</a></td>
                     {% endif %}
-                    <td><a href="{% url 'currency:rate-details' rate.id %}">Details</a></td>
+                    {% if not request.user.is_anonymous %}
+                        <td><a href="{% url 'currency:rate-details' rate.id %}">Details</a></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </table>
