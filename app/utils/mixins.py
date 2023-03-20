@@ -9,8 +9,8 @@ class CreateSignUpEmailMixin:
         path = reverse('account:activate', args=(self.object.username,))
         subject = 'Thank you for registration!'
         message = 'To activate your account, follow the link:\n' + \
-                  f'{settings.HTTP_SCHEMA}://{settings.HOST}{path}' + \
-                  "Sincerely, \nSupport Team"
+                  f'\n{settings.HTTP_SCHEMA}://{settings.HOST}{path}\n' + \
+                  "\nSincerely, \nSupport Team"
 
         email = {'subject': subject,
                  'message': message,
