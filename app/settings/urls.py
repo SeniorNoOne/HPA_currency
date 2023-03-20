@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls, name='admin:index'),
 
     path('auth/', include('django.contrib.auth.urls')),
+    path('account/', include('account.urls')),
 
     path('', MainPageView.as_view(), name='index'),
 

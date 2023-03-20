@@ -30,15 +30,17 @@ DJANGO_APPS = [
 ]
 
 EXTERNAL_APPS = [
-    "django_extensions",
-    "phonenumber_field",
-    "debug_toolbar",
+    'django_extensions',
+    'phonenumber_field',
+    'debug_toolbar',
     'rangefilter',
     'import_export',
 ]
 
 CUSTOM_APPS = [
-    "currency",
+    'currency',
+    'utils',
+    'account',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + EXTERNAL_APPS + CUSTOM_APPS
@@ -155,3 +157,8 @@ if DEBUG:
 LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGOUT_REDIRECT_URL = reverse_lazy('index')
 LOGIN_URL = reverse_lazy('login')
+
+AUTH_USER_MODEL = 'account.User'
+
+HOST = 'localhost:8000'
+HTTP_SCHEMA = 'http'

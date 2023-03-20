@@ -4,29 +4,8 @@ from django.views.generic import (
 )
 from currency.forms import ContactUsForm, RateForm, SourceForm
 from currency.models import ContactUs, Rate, Source, RequestResponseLog
-from django.core.mail import send_mail
-from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-
-
-class SuperUserTestMixin(UserPassesTestMixin):
-    def test_func(self):
-        return self.request.user.is_superuser
-
-
-class SendMessageMixin:
-    def _send_mail(self):
-        subject = 'User Feedback Form'
-        message = f'Reply to email: {self.object.email_from}\n' + \
-                  f'Subject: {self.object.subject}\n' + \
-                  f'Body: {self.object.message}\n'
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [*settings.EMAIL_RECEIVER],
-                  fail_silently=False)
-
-    def form_valid(self, form):
-        redirect = super().form_valid(form)
-        self._send_mail()
-        return redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from utils.mixins import SendFeedbackMailMixin, SuperUserTestMixin
 
 
 class MainPageView(TemplateView):
@@ -63,7 +42,7 @@ class RateDeleteView(SuperUserTestMixin, DeleteView):
     success_url = reverse_lazy('currency:rate-list')
 
 
-class ContactUsCreateView(SendMessageMixin, CreateView):
+class ContactUsCreateView(SendFeedbackMailMixin, CreateView):
     form_class = ContactUsForm
     template_name = 'contact_us/contact_us_create.html'
     queryset = ContactUs.objects.all()
@@ -80,7 +59,7 @@ class ContactUsDetailView(DetailView):
     queryset = ContactUs.objects.all()
 
 
-class ContactUsUpdateView(SendMessageMixin, UpdateView):
+class ContactUsUpdateView(SendFeedbackMailMixin, UpdateView):
     form_class = ContactUsForm
     template_name = 'contact_us/contact_us_update.html'
     queryset = ContactUs.objects.all()
