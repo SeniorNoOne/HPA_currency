@@ -14,9 +14,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='RequestResponseLog',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False,
+                                           verbose_name='ID')),
                 ('path', models.CharField(max_length=255)),
-                ('request_method', models.PositiveSmallIntegerField(choices=[(1, 'GET'), (2, 'POST')])),
+                ('request_method',
+                 models.PositiveSmallIntegerField(choices=[(1, 'GET'), (2, 'POST')])),
                 ('time', models.PositiveSmallIntegerField()),
             ],
         ),
