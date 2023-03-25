@@ -38,7 +38,7 @@ class Source(models.Model):
     phone = PhoneNumberField(blank=True, unique=True, default="", null=True)
 
     def __str__(self):
-        return f'{self.name.capitalize()}'
+        return self.name.capitalize()
 
 
 class RequestResponseLog(models.Model):
