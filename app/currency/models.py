@@ -10,7 +10,7 @@ class Rate(models.Model):
     currency = models.PositiveSmallIntegerField(choices=RateCurrencyChoices.choices,
                                                 default=RateCurrencyChoices.USD,
                                                 verbose_name='Currency')
-    source = models.CharField(max_length=25, verbose_name='Source')
+    source = models.ForeignKey('currency.Source', on_delete=models.CASCADE)
 
     def __str__(self):
         return f'Currency: {self.get_currency_display()} - {self.buy}/{self.sell}'
@@ -38,7 +38,7 @@ class Source(models.Model):
     phone = PhoneNumberField(blank=True, unique=True, default="", null=True)
 
     def __str__(self):
-        return f'Source {self.name.capitalize()}'
+        return self.name.capitalize()
 
 
 class RequestResponseLog(models.Model):

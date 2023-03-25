@@ -18,6 +18,7 @@
                 <th>Currency</th>
                 <th>Buy</th>
                 <th>Sell</th>
+                <th>Source</th>
                 {% if request.user.is_superuser %}
                     <th>Update</th>
                     <th>Delete</th>
@@ -32,6 +33,7 @@
                     <td>{{ rate.get_currency_display }}</td>
                     <td>{{ rate.buy }}</td>
                     <td>{{ rate.sell }}</td>
+                    <td>{{ rate.source }}</td>
                     {% if request.user.is_superuser %}
                         <td><a href="{% url 'currency:rate-update' rate.id %}">Update</a></td>
                         <td><a href="{% url 'currency:rate-delete' rate.id %}">Delete</a></td>

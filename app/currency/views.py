@@ -1,11 +1,11 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView, DeleteView, DetailView, ListView, UpdateView, TemplateView
 )
 from currency.forms import ContactUsForm, RateForm, SourceForm
 from currency.models import ContactUs, Rate, Source, RequestResponseLog
-from django.contrib.auth.mixins import LoginRequiredMixin
 from utils.mixins import SendFeedbackMailMixin, SuperUserTestMixin
 
 
@@ -22,7 +22,7 @@ class RateCreateView(CreateView):
 
 class RateListView(ListView):
     template_name = 'rate/rate_list.html'
-    queryset = Rate.objects.all()
+    queryset = Rate.objects.select_related('source')  # prefetch_related(Prefetch('source'))
 
 
 class RateDetailView(LoginRequiredMixin, DetailView):
