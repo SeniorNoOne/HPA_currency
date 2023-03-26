@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -106,16 +105,3 @@ class SourceDeleteView(DeleteView):
 class LogListView(ListView):
     template_name = 'log/log_list.html'
     queryset = RequestResponseLog.objects.all()
-
-
-class ProfileView(LoginRequiredMixin, UpdateView):
-    template_name = 'registration/profile.html'
-    success_url = reverse_lazy('index')
-    queryset = get_user_model().objects.all()
-    fields = (
-        'first_name',
-        'last_name'
-    )
-
-    def get_object(self, queryset=None):
-        return self.request.user

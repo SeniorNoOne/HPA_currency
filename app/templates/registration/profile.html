@@ -5,8 +5,9 @@
 {% endblock title %}
 
 {% block content %}
-    Update Profile
-    <form method="post">
+    Update Profile <br>
+    <img src="{{ object.avatar_url }}" width="150" height="150">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Submit</button>

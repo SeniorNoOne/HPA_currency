@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.views.generic import CreateView, RedirectView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView, RedirectView, UpdateView
 from django.urls import reverse_lazy
 from account.forms import UserSignUpForm
 from utils.mixins import SendSignupMailMixin
@@ -25,3 +26,17 @@ class UserActivateView(RedirectView):
 
         url = super().get_redirect_url(*args, **kwargs)
         return url
+
+
+class ProfileView(LoginRequiredMixin, UpdateView):
+    template_name = 'registration/profile.html'
+    success_url = reverse_lazy('index')
+    queryset = get_user_model().objects.all()
+    fields = (
+        'first_name',
+        'last_name',
+        'avatar'
+    )
+
+    def get_object(self, queryset=None):
+        return self.request.user

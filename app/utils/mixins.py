@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib.auth.mixins import UserPassesTestMixin
+from pathlib import Path
 
 
 class CreateSignUpEmailMixin:
@@ -58,3 +59,10 @@ class SendFeedbackMailMixin(CreateFeedbackEmailMixin, SendMailMixin):
 
 class SendSignupMailMixin(CreateSignUpEmailMixin, SendMailMixin):
     pass
+
+
+class GetUploadToPath:
+    field_name = 'username'
+
+    def get_upload_to_path(self, instance, filename):
+        return Path(str(getattr(instance, self.field_name, instance.id))) / filename

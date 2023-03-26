@@ -6,6 +6,7 @@ phonenumbers
 django-debug-toolbar
 django-admin-rangefilter
 django-import-export
+Pillow
 
 # flake8
 flake8
