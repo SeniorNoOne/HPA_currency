@@ -1,9 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files.storage import default_storage
 from django.views.generic import CreateView, RedirectView, UpdateView
 from django.urls import reverse_lazy
 from account.forms import UserSignUpForm
 from utils.mixins import SendSignupMailMixin
+from django.core.files.base import ContentFile
 
 
 class UserSignupView(SendSignupMailMixin, CreateView):
@@ -40,3 +42,17 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+
+        uploaded_file = form.cleaned_data['avatar']
+
+        if uploaded_file:
+            filename = default_storage.save(instance.username + '/' + uploaded_file.name,
+                                            ContentFile(uploaded_file.read()))
+            instance.avatar = filename
+        else:
+            instance.avatar = None
+        instance.save()
+        return super().form_valid(form)

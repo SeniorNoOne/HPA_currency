@@ -7,6 +7,8 @@ django-debug-toolbar
 django-admin-rangefilter
 django-import-export
 Pillow
+django-storages
+boto3
 
 # flake8
 flake8

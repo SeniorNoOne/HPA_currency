@@ -15,5 +15,4 @@ class User(AbstractUser):
     def avatar_url(self):
         if self.avatar:
             return self.avatar.url
-
         return static('avatar_default.png')

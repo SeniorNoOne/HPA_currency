@@ -35,6 +35,7 @@ EXTERNAL_APPS = [
     'debug_toolbar',
     'rangefilter',
     'import_export',
+    'storages'
 ]
 
 CUSTOM_APPS = [
@@ -150,6 +151,22 @@ if 'smtp' in config:
     if DEFAULT_FROM_EMAIL and EMAIL_RECEIVER:
         EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+MEDIA_ROOT = BASE_DIR.parent / 'static_content' / 'media'
+MEDIA_URL = '/media/'
+
+if 's3' in config:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+
+    AWS_ACCESS_KEY_ID = config.get('s3', 'access_key_id')
+    AWS_SECRET_ACCESS_KEY = config.get('s3', 'secret_access_key')
+    AWS_STORAGE_BUCKET_NAME = config.get('s3', 'bucket_name')
+    AWS_S3_ENDPOINT_URL = config.get('s3', 'endpoint_url')
+    AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME + config.get("s3", "custom_domain")
+    AWS_S3_FILE_OVERWRITE = config.get("s3", "overwrite")
+
 if DEBUG:
     import socket  # only if you haven't already imported this
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
@@ -163,6 +180,3 @@ AUTH_USER_MODEL = 'account.User'
 
 HOST = 'localhost:8000'
 HTTP_SCHEMA = 'http'
-
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR.parent / 'static_content' / 'media'
