@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView, DeleteView, DetailView, ListView, UpdateView, TemplateView
 )
+
 from currency.forms import ContactUsForm, RateForm, SourceForm
 from currency.models import ContactUs, Rate, Source, RequestResponseLog
 from utils.mixins import SendFeedbackMailMixin, SuperUserTestMixin

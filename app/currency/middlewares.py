@@ -1,4 +1,5 @@
 from time import time
+
 from currency.choices import RequestMethodChoices
 from currency.models import RequestResponseLog
 

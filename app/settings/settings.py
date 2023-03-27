@@ -1,5 +1,6 @@
-from configparser import ConfigParser
 from django.urls import reverse_lazy
+
+from configparser import ConfigParser
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -158,7 +159,6 @@ MEDIA_URL = '/media/'
 
 if 's3' in config:
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 
     AWS_ACCESS_KEY_ID = config.get('s3', 'access_key_id')
     AWS_SECRET_ACCESS_KEY = config.get('s3', 'secret_access_key')
