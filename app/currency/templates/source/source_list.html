@@ -1,38 +1,51 @@
 {% extends 'base.html' %}
 
-{% block style %}
-    {{ block.super }}
-    {% include 'includes/table_style.html' %}
-{% endblock %}
-
 {% block title %}Source List{% endblock %}
 
 {% block content %}
-    <p>
-        <a href="{% url 'currency:source-create' %}">Create new source</a>
-    </p>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="{% url 'currency:source-create' %}">Create new source</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
     {% if object_list %}
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>URL</th>
-                <th>Name</th>
-                <th>Update</th>
-                <th>Delete</th>
-                <th>Details</th>
-            </tr>
-            {% for source in object_list %}
-                <tr>
-                    <td>{{ source.id }}</td>
-                    <td>{{ source.source_url }}</td>
-                    <td>{{ source.name }}</td>
-                    <td><a href="{% url 'currency:source-update' source.id %}">Update</a></td>
-                    <td><a href="{% url 'currency:source-delete' source.id %}">Delete</a></td>
-                    <td><a href="{% url 'currency:source-details' source.id %}">Details</a></td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        DB is empty so far
+        <div class="container">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">URL</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for source in object_list %}
+                        <tr>
+                            <td>{{ source.id }}</td>
+                            <td>{{ source.source_url }}</td>
+                            <td>{{ source.name }}</td>
+                            <td>
+                                <a href="{% url 'currency:source-details' source.id %}">Details</a>
+                                <a href="{% url 'currency:source-update' source.id %}">Update</a>
+                                <a href="{% url 'currency:source-delete' source.id %}">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block on_empty_db %}
+    {% if not object_list %}
+        There are no records in Source DB!
     {% endif %}
 {% endblock %}

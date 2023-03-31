@@ -1,13 +1,55 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Currency -  {% block title %}{% endblock %}</title>
-</head>
-{% block style %}{% endblock %}
-<body>
-    {% include 'includes/navbar.html' %}
-    {% include 'includes/auth_navbar.html' %}
-    {% block content %}{% endblock %}
-</body>
+    <html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+              rel="stylesheet"
+              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+              crossorigin="anonymous">
+
+
+
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Currency -  {% block title %}{% endblock %}</title>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+                crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <div class="section">
+            {% include 'includes/navbar.html' %}
+            {% block content %}{% endblock %}
+        </div>
+
+        <div class="section">
+            <div class="container">
+                <p>
+                    <h3 class="play text-center">{% block on_empty_db %}{% endblock %}</h3>
+                </p>
+            </div>
+        </div>
+
+        <div class="section bg-primary">
+            <div class="container">
+                Footer
+            </div>
+        </div>
+
+        <script>
+            const currentPath = window.location.pathname;
+            // Get all the navbar links
+            const navbarLinks = document.querySelectorAll('.nav-link');
+
+            // Loop through the links and add the active class to the one that matches the current path
+            navbarLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+        </script>
+    </body>
 </html>

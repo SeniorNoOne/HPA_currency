@@ -65,7 +65,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'templates'
+            BASE_DIR / 'templates',
+
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -154,6 +155,7 @@ if 'smtp' in config:
 
 
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 MEDIA_ROOT = BASE_DIR.parent / 'static_content' / 'media'
 MEDIA_URL = '/media/'
 
@@ -178,5 +180,5 @@ LOGIN_URL = reverse_lazy('login')
 
 AUTH_USER_MODEL = 'account.User'
 
-HOST = 'localhost:8000'
-HTTP_SCHEMA = 'http'
+# HOST = 'localhost:8000'
+# HTTP_SCHEMA = 'http'
