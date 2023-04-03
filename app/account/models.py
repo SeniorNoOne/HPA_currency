@@ -2,6 +2,9 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.templatetags.static import static
 
+# this import causes an error
+# from utils.mixins import GetPath
+
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)

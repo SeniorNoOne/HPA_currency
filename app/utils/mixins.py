@@ -58,3 +58,13 @@ class SendFeedbackMailMixin(CreateFeedbackEmailMixin, SendMailMixin):
 
 class SendSignupMailMixin(CreateSignUpEmailMixin, SendMailMixin):
     pass
+
+
+# Callable import problem
+# When this class is imported into another app, it inflicts error
+# Way to recreate error - import this class in account/models.py even without
+# invoking or passing it to some other code
+class GetPath:
+    def __call__(self, instance, filename, field_name='username'):
+        from pathlib import Path
+        return Path(str(getattr(instance, field_name, instance.id))) / filename
