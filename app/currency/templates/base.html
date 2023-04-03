@@ -1,30 +1,41 @@
 {% load static %}
 
 <!DOCTYPE html>
-    <html>
+<html lang="en">
     <head>
+        <!-- Bootstrap -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
               rel="stylesheet"
               integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
               crossorigin="anonymous">
 
+        <!-- Custom static CSS -->
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
-
-        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
-
-        <title>Currency -  {% block title %}{% endblock %}</title>
-
+        <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
                 crossorigin="anonymous"></script>
+
+        <!-- Jquery JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+        <!-- Jquery Mask (So far not working) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+
+        <!-- Other -->
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+        <title>Currency -  {% block title %}{% endblock %}</title>
     </head>
 
-    <body>
+    <body class="d-flex flex-column h-100">
+        <!-- Navbar -->
         <div class="section">
             {% include 'includes/navbar.html' %}
             {% block content %}{% endblock %}
         </div>
 
+        <!-- Content -->
         <div class="section">
             <div class="container">
                 <p>
@@ -33,12 +44,17 @@
             </div>
         </div>
 
-        <div class="section bg-primary">
+        <!-- Footer -->
+        <footer class="footer bg-dark mt-auto py-3">
             <div class="container">
-                Footer
+                <div class="text-center text-light">
+                ©2023 Copyright:
+                <a class="text-light" href="https://t.me/SeniorNoOne">Vadym Martyniuk</a>
+                </div>
             </div>
-        </div>
+        </footer>
 
+        <!-- Jquery scrip that makes active navbar item highlighted -->
         <script>
             const currentPath = window.location.pathname;
             // Get all the navbar links

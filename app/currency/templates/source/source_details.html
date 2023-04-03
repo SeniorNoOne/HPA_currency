@@ -3,19 +3,19 @@
 {% block title %}Source Details{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <a href="{% url 'currency:rate-create' %}">Create new rate</a>
+    <div class="container mt-4">
+        <a href="{% url 'currency:rate-create' %}">Create new source</a>
     </div>
 
-    <div class="container">
+    <div class="container my-3">
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>URL</th>
-                    <th>Name</th>
-                    <th>City</th>
-                    <th>Phone</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">URL</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Phone</th>
                 </tr>
             </thead>
 

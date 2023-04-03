@@ -36,12 +36,14 @@ EXTERNAL_APPS = [
     'debug_toolbar',
     'rangefilter',
     'import_export',
-    'storages'
+    'storages',
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
 CUSTOM_APPS = [
-    'currency',
     'utils',
+    'currency',
     'account',
 ]
 
@@ -182,3 +184,7 @@ AUTH_USER_MODEL = 'account.User'
 
 # HOST = 'localhost:8000'
 # HTTP_SCHEMA = 'http'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"

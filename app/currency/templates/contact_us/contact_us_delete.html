@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Delete Feedback{% endblock %}
 
 {% block content %}
-    <form method="post">
+    <div class="container mt-4">
+        <form method="POST">
         {% csrf_token %}
-        <p>Do you really want to delete contact us form with ID = {{ contactus.id }}</p>
-        <button type="submit">Submit</button>
-    </form>
+        {{ form|crispy }}
+            <div class="d-flex justify-content-center my-3">
+                Do you really want to delete feedback form with ID = {{ contactus.id }}
+            </div>
+            <div class="d-flex justify-content-center my-3">
+                <button type="submit" class="btn btn-danger col-3">Delete</button>
+            </div>
+        </form>
+    </div>
 {% endblock %}

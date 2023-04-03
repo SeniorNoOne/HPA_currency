@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Delete Rate{% endblock %}
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        <p>Do you really want to delete rate with ID = {{ rate.id }}</p>
-        <button type="submit">Yes</button>
-    </form>
+    <div class="container mt-4">
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+                <div class="d-flex justify-content-center my-3">
+                    <p>Do you really want to delete rate with ID = {{ rate.id }}</p>
+                </div>
+                <div class="d-flex justify-content-center my-3">
+                    <button type="submit">Yes</button>
+                </div>
+            </form>
+    </div>
 {% endblock %}
