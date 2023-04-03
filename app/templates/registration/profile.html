@@ -1,15 +1,28 @@
 {% extends 'base.html' %}
 
-{% block title %}
-    Profile
-{% endblock title %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile{% endblock title %}
 
 {% block content %}
-    Update Profile <br>
-    <img src="{{ object.avatar_url }}" width="150" height="150">
-    <form method="post" enctype="multipart/form-data">
+    <div class="row justify-content-center">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
+        <form method="post" enctype="multipart/form-data">
+            <div class="container mt-4">
+                <div class="row justify-content-center">
+                    <div class="col-4 mt-3">
+                        <img class="rounded mx-auto d-block" src="{{ object.avatar_url }}" width="200" height="200" alt="wrong image"
+                         style="max-width: 200px; max-height: 200px; width: auto; height: auto;">
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-4 mt-4">
+                        {% crispy form %}
+                        <button class="btn btn-primary col-12" type="submit">Apply Changes</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 {% endblock content %}

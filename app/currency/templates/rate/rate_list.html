@@ -29,12 +29,13 @@
                             <td>{{ rate.buy }}</td>
                             <td>{{ rate.sell }}</td>
                             <td>{{ rate.source }}</td>
-                            {% if request.user.is_superuser %}
-                                <td><a href="{% url 'currency:rate-update' rate.id %}">Update</a></td>
-                                <td><a href="{% url 'currency:rate-delete' rate.id %}">Delete</a></td>
-                            {% else %}
-                                <td><a href="{% url 'currency:rate-details' rate.id %}">Details</a></td>
-                            {% endif %}
+                            <td>
+                                <a href="{% url 'currency:rate-details' rate.id %}">Details</a>
+                                {% if request.user.is_superuser %}
+                                    <a href="{% url 'currency:rate-update' rate.id %}">Update</a>
+                                    <a href="{% url 'currency:rate-delete' rate.id %}">Delete</a>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

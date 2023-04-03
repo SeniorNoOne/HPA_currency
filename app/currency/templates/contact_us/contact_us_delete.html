@@ -7,13 +7,15 @@
 {% block content %}
     <div class="container mt-4">
         <form method="POST">
-        {% csrf_token %}
-        {{ form|crispy }}
-            <div class="d-flex justify-content-center my-3">
-                Do you really want to delete feedback form with ID = {{ contactus.id }}
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="row justify-content-center my-3">
+                <h5 class="text-center">
+                    Do you really want to delete feedback form with ID = {{ contactus.id }}
+                </h5>
             </div>
-            <div class="d-flex justify-content-center my-3">
-                <button type="submit" class="btn btn-danger col-3">Delete</button>
+            <div class="row justify-content-center my-3">
+                <button type="submit" class="btn btn-danger col-2">Delete</button>
             </div>
         </form>
     </div>

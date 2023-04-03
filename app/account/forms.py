@@ -1,5 +1,7 @@
 import uuid
 
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Row, Column, Submit
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
@@ -8,8 +10,12 @@ User = get_user_model()
 
 
 class UserSignUpForm(forms.ModelForm):
-    password1 = forms.CharField(widget=forms.PasswordInput, label="Password")
-    password2 = forms.CharField(widget=forms.PasswordInput, label="Confirm password")
+    password1 = forms.CharField(label='Password',
+                                widget=forms.PasswordInput(
+                                    attrs={'placeholder': 'Enter password'}))
+    password2 = forms.CharField(label='Confirm Password',
+                                widget=forms.PasswordInput(
+                                    attrs={'placeholder': 'Confirm password'}))
 
     class Meta:
         model = User
@@ -19,6 +25,31 @@ class UserSignUpForm(forms.ModelForm):
             'last_name',
             'password1',
             'password2'
+        )
+        widgets = {
+            'email': forms.TextInput(attrs={'placeholder': 'Enter your email'}),
+            'first_name': forms.TextInput(attrs={'placeholder': 'Enter your first name'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Enter your last name'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'POST'
+        self.helper.layout = Layout(
+            Row(
+                Column('email', css_class='col-8'),
+                css_class='row justify-content-center'
+            ),
+            Row(
+                Column('first_name', css_class='col-4'),
+                Column('last_name', css_class='col-4'),
+                css_class='row justify-content-center'
+            ),
+            Row(
+                Column(Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
+                       css_class='offset-2')
+            )
         )
 
     def clean(self):

@@ -24,13 +24,20 @@ class RateForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'POST'
         self.helper.layout = Layout(
-            Row(Column('buy', css_class='col-6'),
-                Column('sell', css_class='col-6'),
-                css_class='row justify-content-center'),
-            Row(Column('source', css_class='col-6'),
-                Column('currency', css_class='col-6'),
-                css_class='row justify-content-center'),
-            Row(Column(Submit('submit', 'Submit', css_class='btn btn-primary col-2')))
+            Row(
+                Column('buy', css_class='col-4'),
+                Column('sell', css_class='col-4'),
+                css_class='row justify-content-center'
+            ),
+            Row(
+                Column('source', css_class='col-4'),
+                Column('currency', css_class='col-4'),
+                css_class='row justify-content-center'
+            ),
+            Row(
+                Column(Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
+                       css_class='offset-2')
+            )
         )
 
 
@@ -45,8 +52,10 @@ class ContactUsForm(forms.ModelForm):
         widgets = {
             'email_from': forms.TextInput(attrs={'placeholder': 'Enter your email'}),
             'subject': forms.TextInput(attrs={'placeholder': 'Enter subject'}),
-            'message': forms.Textarea(attrs={'placeholder': 'Provide us your detailed feedback',
-                                             'rows': '10'}),
+            'message': forms.Textarea(attrs={
+                'placeholder': 'Provide us your detailed feedback',
+                'rows': '10'}
+            ),
         }
 
     def __init__(self, *args, **kwargs):
@@ -54,12 +63,19 @@ class ContactUsForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'POST'
         self.helper.layout = Layout(
-            Row(Column('email_from', css_class='col-6'),
-                Column('subject', css_class='col-6'),
-                css_class='row justify-content-center'),
-            Row(Column('message', args={'rows': '10'}),
-                css_class='row justify-content-center'),
-            Row(Column(Submit('submit', 'Submit', css_class='btn btn-primary col-2')))
+            Row(
+                Column('email_from', css_class='col-4'),
+                Column('subject', css_class='col-4'),
+                css_class='row justify-content-center'
+            ),
+            Row(
+                Column('message', args={'rows': '10'}, css_class='col-8 '),
+                css_class='row justify-content-center'
+            ),
+            Row(
+                Column(Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
+                       css_class='offset-2')
+            )
         )
 
 
@@ -84,11 +100,18 @@ class SourceForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'POST'
         self.helper.layout = Layout(
-            Row(Column('source_url', css_class='col-6'),
-                Column('name', css_class='col-6'),
-                css_class='row justify-content-center'),
-            Row(Column('city', css_class='col-6'),
-                Column('phone', css_class='col-6'),
-                css_class='row justify-content-center'),
-            Row(Column(Submit('submit', 'Submit', css_class='btn btn-primary col-2')))
+            Row(
+                Column('source_url', css_class='col-4'),
+                Column('name', css_class='col-4'),
+                css_class='row justify-content-center'
+            ),
+            Row(
+                Column('city', css_class='col-4'),
+                Column('phone', css_class='col-4'),
+                css_class='row justify-content-center'
+            ),
+            Row(
+                Column(Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
+                       css_class='offset-2')
+            )
         )
