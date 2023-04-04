@@ -50,9 +50,10 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         uploaded_file = form.cleaned_data['avatar']
 
         if uploaded_file:
-            filename = default_storage.save(get_upload_to_path(instance, uploaded_file.name),
-                                            ContentFile(uploaded_file.read()))
-            instance.avatar = filename
+            if instance.username not in uploaded_file.name:
+                filename = default_storage.save(get_upload_to_path(instance, uploaded_file.name),
+                                                ContentFile(uploaded_file.read()))
+                instance.avatar = filename
         else:
             instance.avatar = None
         instance.save()

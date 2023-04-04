@@ -47,6 +47,11 @@ class UserSignUpForm(forms.ModelForm):
                 css_class='row justify-content-center'
             ),
             Row(
+                Column('password1', css_class='col-4'),
+                Column('password2', css_class='col-4'),
+                css_class='row justify-content-center'
+            ),
+            Row(
                 Column(Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
                        css_class='offset-2')
             )

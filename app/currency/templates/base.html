@@ -38,9 +38,7 @@
         <!-- Content -->
         <div class="section">
             <div class="container">
-                <p>
-                    <h3 class="text-center">{% block on_empty_db %}{% endblock %}</h3>
-                </p>
+                <h3 class="text-center mt-3">{% block on_empty_db %}{% endblock %}</h3>
             </div>
         </div>
 
@@ -62,7 +60,7 @@
 
             // Loop through the links and add the active class to the one that matches the current path
             navbarLinks.forEach(link => {
-                if (link.getAttribute('href') === currentPath) {
+                if (link.getAttribute('href') === currentPath || currentPath.includes(link.getAttribute('id'))) {
                     link.classList.add('active');
                 }
             });

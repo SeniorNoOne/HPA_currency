@@ -19,16 +19,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                    <a class="nav-link" id="index" href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'currency:rate-list' %}">Rate</a>
+                    <a class="nav-link" id="rate" href="{% url 'currency:rate-list' %}">Rate</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'currency:source-list' %}">Source</a>
+                    <a class="nav-link" id="source" href="{% url 'currency:source-list' %}">Source</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'currency:contactus-list' %}">Feedback</a>
+                    <a class="nav-link" id="contact-us" href="{% url 'currency:contactus-list' %}">Feedback</a>
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto">

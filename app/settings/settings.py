@@ -182,8 +182,8 @@ LOGIN_URL = reverse_lazy('login')
 
 AUTH_USER_MODEL = 'account.User'
 
-# HOST = 'localhost:8000'
-# HTTP_SCHEMA = 'http'
+HOST = 'localhost:8000'
+HTTP_SCHEMA = 'http'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
