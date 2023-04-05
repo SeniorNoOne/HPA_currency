@@ -92,7 +92,8 @@ class SourceForm(forms.ModelForm):
             'source_url': forms.TextInput(attrs={'placeholder': 'Enter source URL'}),
             'name': forms.TextInput(attrs={'placeholder': 'Enter source name'}),
             'city': forms.TextInput(attrs={'placeholder': 'Enter source city'}),
-            'phone': forms.TextInput(attrs={'placeholder': 'Enter source phone number'}),
+            'phone': forms.TextInput(attrs={'placeholder': 'Enter source phone number',
+                                            'data-mask': '+000-00-000-00-00'}),
         }
 
     def __init__(self, *args, **kwargs):

@@ -4,6 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
 from django import forms
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, UsernameField
 from django.contrib.auth.password_validation import validate_password
 
 User = get_user_model()
@@ -72,3 +73,24 @@ class UserSignUpForm(forms.ModelForm):
         user.set_password(password)
         user.save()
         return user
+
+
+class CustomLoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Enter your mail'})
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': 'Enter password'})
+    )
+
+
+class CustomResetPasswordForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'placeholder': 'Enter your mail'})
+    )
