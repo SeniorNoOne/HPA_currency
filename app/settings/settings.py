@@ -1,6 +1,7 @@
+from django.urls import reverse_lazy
+
 from configparser import ConfigParser
 from pathlib import Path
-from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -35,11 +36,14 @@ EXTERNAL_APPS = [
     'debug_toolbar',
     'rangefilter',
     'import_export',
+    'storages',
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
 CUSTOM_APPS = [
-    'currency',
     'utils',
+    'currency',
     'account',
 ]
 
@@ -63,7 +67,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'templates'
+            BASE_DIR / 'templates',
+
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -126,6 +131,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -149,6 +155,22 @@ if 'smtp' in config:
     if DEFAULT_FROM_EMAIL and EMAIL_RECEIVER:
         EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+MEDIA_ROOT = BASE_DIR.parent / 'static_content' / 'media'
+MEDIA_URL = '/media/'
+
+if 's3' in config:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+    AWS_ACCESS_KEY_ID = config.get('s3', 'access_key_id')
+    AWS_SECRET_ACCESS_KEY = config.get('s3', 'secret_access_key')
+    AWS_STORAGE_BUCKET_NAME = config.get('s3', 'bucket_name')
+    AWS_S3_ENDPOINT_URL = config.get('s3', 'endpoint_url')
+    AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME + config.get("s3", "custom_domain")
+    AWS_S3_FILE_OVERWRITE = config.get("s3", "overwrite")
+
 if DEBUG:
     import socket  # only if you haven't already imported this
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
@@ -162,3 +184,7 @@ AUTH_USER_MODEL = 'account.User'
 
 HOST = 'localhost:8000'
 HTTP_SCHEMA = 'http'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"

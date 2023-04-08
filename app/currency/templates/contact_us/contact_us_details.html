@@ -1,28 +1,31 @@
 {% extends 'base.html' %}
 
-{% block style %}
-    {{ block.super }}
-    {% include 'includes/table_style.html' %}
-{% endblock %}
-
 {% block title %}Feedback Details{% endblock %}
 
 {% block content %}
-    <p>
+    <div class="container mt-4">
         <a href="{% url 'currency:contactus-create' %}">Create new feedback</a>
-    </p>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Email</th>
-            <th>Subject</th>
-            <th>Message</th>
-        </tr>
-        <tr>
-            <td>{{ contactus.id }}</td>
-            <td>{{ contactus.email_from }}</td>
-            <td>{{ contactus.subject }}</td>
-            <td>{{ contactus.message }}</td>
-        </tr>
-    </table>
+    </div>
+
+    <div class="container my-3">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Subject</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>{{ contactus.id }}</td>
+                    <td>{{ contactus.email_from }}</td>
+                    <td>{{ contactus.subject }}</td>
+                    <td>{{ contactus.message }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

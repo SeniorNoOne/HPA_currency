@@ -1,38 +1,45 @@
 {% extends 'base.html' %}
 
-{% block style %}
-    {{ block.super }}
-    {% include 'includes/table_style.html' %}
-{% endblock %}
-
-{% block title %}Feedback{% endblock %}
+{% block title %}Feedback List{% endblock %}
 
 {% block content %}
-    <p>
+    <div class="container mt-4">
         <a href="{% url 'currency:contactus-create' %}">Create new feedback</a>
-    </p>
+    </div>
+
     {% if object_list %}
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Email</th>
-                <th>Subject</th>
-                <th>Update</th>
-                <th>Delete</th>
-                <th>Details</th>
-            </tr>
-            {% for feedback in object_list %}
-                <tr>
-                    <td>{{ feedback.id }}</td>
-                    <td>{{ feedback.email_from }}</td>
-                    <td>{{ feedback.subject }}</td>
-                    <td><a href="{% url 'currency:contactus-update' feedback.id %}">Update</a></td>
-                    <td><a href="{% url 'currency:contactus-delete' feedback.id %}">Delete</a></td>
-                    <td><a href="{% url 'currency:contactus-details' feedback.id %}">Details</a></td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        DB is empty so far
+        <div class="container my-3">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Subject</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for feedback in object_list %}
+                        <tr>
+                            <td>{{ feedback.id }}</td>
+                            <td>{{ feedback.email_from }}</td>
+                            <td>{{ feedback.subject }}</td>
+                            <td>
+                                <a href="{% url 'currency:contactus-details' feedback.id %}">Details</a>
+                                <a href="{% url 'currency:contactus-update' feedback.id %}">Update</a>
+                                <a href="{% url 'currency:contactus-delete' feedback.id %}">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block on_empty_db %}
+    {% if not object_list %}
+        There are no records in Contact Us DB!
     {% endif %}
 {% endblock %}
