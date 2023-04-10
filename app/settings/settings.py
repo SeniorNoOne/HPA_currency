@@ -42,7 +42,6 @@ EXTERNAL_APPS = [
 ]
 
 CUSTOM_APPS = [
-    'utils',
     'currency',
     'account',
 ]
