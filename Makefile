@@ -21,3 +21,6 @@ flake8:
 
 createsuperuser:
 	$(manage_py) createsuperuser
+
+worker:
+	cd app && celery -A settings worker -l info

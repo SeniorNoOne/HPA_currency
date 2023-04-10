@@ -1,3 +1,4 @@
+Celery
 Django
 django-extensions
 ipython
