@@ -11,6 +11,7 @@ Pillow
 django-storages
 boto3
 django-crispy-forms
+crispy_bootstrap5
 
 # flake8
 flake8

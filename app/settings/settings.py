@@ -190,3 +190,16 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Celery
 CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_IMPORTS = ('utils.tasks',)
+
+CELERY_QUEUES = {
+    'mail': {
+        'exchange': 'mail',
+        'exchange_type': 'direct',
+        'binding_key': 'mail'
+    },
+}
+
+CELERY_ROUTES = {
+    'utils.tasks.celery_send_mail': {'queue': 'mail'}
+}
