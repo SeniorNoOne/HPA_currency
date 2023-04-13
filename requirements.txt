@@ -12,6 +12,7 @@ django-storages
 boto3
 django-crispy-forms
 crispy_bootstrap5
+requests
 
 # flake8
 flake8
