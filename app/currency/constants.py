@@ -56,3 +56,14 @@ class MonobankConfig:
         'name': name,
         'url': url,
     }
+
+
+class NBUConfig:
+    code = 2
+    name = 'NBU'
+    url = 'https://bank.gov.ua/ua/markets/exchangerates'
+    source_create_params = {
+        'code': code,
+        'name': name,
+        'url': url
+    }

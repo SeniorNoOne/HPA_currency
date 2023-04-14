@@ -32,7 +32,7 @@ mail_worker:
 	cd app && celery -A settings worker -Q mail -l info --autoscale=0,2
 
 schedule_worker:
-	cd app && celery -A settings worker -Q scheduled_tasks -l info --autoscale=0,2
+	cd app && celery -A settings worker -Q scheduled_tasks -l info --autoscale=0,3
 
 beat:
 	cd app && celery -A settings beat -l info

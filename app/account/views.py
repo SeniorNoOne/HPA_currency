@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, RedirectView, UpdateView
 
 from account.forms import UserSignUpForm
-from utils.helpers import get_upload_to_path
+from utils.common import get_upload_to_path
 from utils.mixins import SendSignupMailMixin
 
 

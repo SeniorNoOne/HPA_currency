@@ -13,6 +13,7 @@ boto3
 django-crispy-forms
 crispy_bootstrap5
 requests
+beautifulsoup4
 
 # flake8
 flake8

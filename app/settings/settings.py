@@ -223,6 +223,10 @@ CELERY_ROUTES = {
     'currency.tasks.parse_monobank': {
         'queue': 'scheduled_tasks',
         'routing_key': 'scheduled_tasks'
+    },
+    'currency.tasks.parse_nbu': {
+        'queue': 'scheduled_tasks',
+        'routing_key': 'scheduled_tasks'
     }
 }
 
@@ -237,4 +241,9 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/15'),
         'options': {'queue': 'scheduled_tasks'}
     },
+    'parse_nbu_scheduled_task': {
+        'task': 'currency.tasks.parse_nbu',
+        'schedule': crontab(minute='*/15'),
+        'options': {'queue': 'scheduled_tasks'}
+    }
 }
