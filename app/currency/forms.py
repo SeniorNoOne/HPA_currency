@@ -83,14 +83,16 @@ class SourceForm(forms.ModelForm):
     class Meta:
         model = Source
         fields = (
-            'source_url',
+            'url',
             'name',
+            'code',
             'city',
             'phone'
         )
         widgets = {
-            'source_url': forms.TextInput(attrs={'placeholder': 'Enter source URL'}),
+            'url': forms.TextInput(attrs={'placeholder': 'Enter source URL'}),
             'name': forms.TextInput(attrs={'placeholder': 'Enter source name'}),
+            'code': forms.NumberInput(attrs={'placeholder': 'Enter valid ISO 4217 currency code'}),
             'city': forms.TextInput(attrs={'placeholder': 'Enter source city'}),
             'phone': forms.TextInput(attrs={'placeholder': 'Enter source phone number',
                                             'data-mask': '+000-00-000-00-00'}),
@@ -102,8 +104,12 @@ class SourceForm(forms.ModelForm):
         self.helper.form_method = 'POST'
         self.helper.layout = Layout(
             Row(
-                Column('source_url', css_class='col-4'),
+                Column('url', css_class='col-8'),
+                css_class='row justify-content-center'
+            ),
+            Row(
                 Column('name', css_class='col-4'),
+                Column('code', css_class='col-4'),
                 css_class='row justify-content-center'
             ),
             Row(

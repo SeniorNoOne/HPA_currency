@@ -1,3 +1,4 @@
+from celery.schedules import crontab
 from django.urls import reverse_lazy
 
 from configparser import ConfigParser
@@ -196,10 +197,44 @@ CELERY_QUEUES = {
     'mail': {
         'exchange': 'mail',
         'exchange_type': 'direct',
-        'binding_key': 'mail'
+        'routing_key': 'mail'
     },
+    'scheduled_tasks': {
+        'exchange': 'scheduled_tasks',
+        'exchange_type': 'direct',
+        'routing_key': 'scheduled_tasks'
+    }
 }
 
+CELERY_DEFAULT_QUEUE = 'default'
+CELERY_DEFAULT_EXCHANGE = 'default'
+CELERY_DEFAULT_ROUTING_KEY = 'default'
+
+
 CELERY_ROUTES = {
-    'utils.tasks.celery_send_mail': {'queue': 'mail'}
+    'utils.tasks.celery_send_mail': {
+        'queue': 'mail',
+        'routing_key': 'mail'
+    },
+    'currency.tasks.parse_privatbank': {
+        'queue': 'scheduled_tasks',
+        'routing_key': 'scheduled_tasks'
+    },
+    'currency.tasks.parse_monobank': {
+        'queue': 'scheduled_tasks',
+        'routing_key': 'scheduled_tasks'
+    }
+}
+
+CELERY_BEAT_SCHEDULE = {
+    'parse_privatbank_scheduled_task': {
+        'task': 'currency.tasks.parse_privatbank',
+        'schedule': crontab(minute='*/15'),
+        'options': {'queue': 'scheduled_tasks'}
+    },
+    'parse_monobank_scheduled_task': {
+        'task': 'currency.tasks.parse_monobank',
+        'schedule': crontab(minute='*/15'),
+        'options': {'queue': 'scheduled_tasks'}
+    },
 }

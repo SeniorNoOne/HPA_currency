@@ -14,6 +14,9 @@ class Rate(models.Model):
                                                 verbose_name='Currency')
     source = models.ForeignKey('currency.Source', on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ('-created',)
+
     def __str__(self):
         return f'Currency: {self.get_currency_display()} - {self.buy}/{self.sell}'
 
@@ -34,10 +37,11 @@ class ContactUs(models.Model):
 
 
 class Source(models.Model):
-    source_url = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
+    code = models.SmallIntegerField(unique=True)
     name = models.CharField(max_length=64)
-    city = models.CharField(max_length=64, blank=True, default="")
-    phone = PhoneNumberField(blank=True, unique=True, default="", null=True)
+    city = models.CharField(max_length=64, blank=True)
+    phone = PhoneNumberField(blank=True, unique=True, null=True)
 
     def __str__(self):
         return self.name.capitalize()

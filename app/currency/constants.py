@@ -24,29 +24,35 @@ class AvailableCurrency(int, Enum):
     def choices(cls):
         return [(idx, currency.full_name) for idx, currency in enumerate(cls)]
 
+    @classmethod
+    def from_code(cls, code):
+        for currency in cls:
+            if currency.value == code:
+                return currency
+
     USD = (840, 'US Dollar')
     EUR = (978, 'Euro')
     GBP = (826, 'Pound Sterling')
     JPY = (392, 'Yen')
 
 
-class PrivatConfig:
-    source_code = 0
-    source_name = 'PrivatBank'
-    source_url = 'https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11'
+class PrivatbankConfig:
+    code = 0
+    name = 'PrivatBank'
+    url = 'https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11'
     source_create_params = {
-        'code': source_code,
-        'name': source_name,
-        'source_url': source_url,
+        'code': code,
+        'name': name,
+        'url': url,
     }
 
 
-class MonoConfig:
-    source_code = 1
-    source_name = 'Monobank'
-    source_url = 'https://api.monobank.ua/bank/currency'
+class MonobankConfig:
+    code = 1
+    name = 'Monobank'
+    url = 'https://api.monobank.ua/bank/currency'
     source_create_params = {
-        'code': source_code,
-        'name': source_name,
-        'source_url': source_url
+        'code': code,
+        'name': name,
+        'url': url,
     }
