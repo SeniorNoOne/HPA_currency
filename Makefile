@@ -14,10 +14,10 @@ init_db:
 	$(manage_py) migrate
 
 makemigrations:
-	$(manage.py) makemigrations
+	$(manage_py) makemigrations
 
 migrate:
-	$(manage.py) migrate
+	$(manage_py) migrate
 
 shell:
 	$(manage_py) shell_plus --print-sql

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.core.mail import send_mail
 from django.urls import reverse
 
 from utils.tasks import celery_send_mail
@@ -49,6 +50,17 @@ class SendMailMixin:
         return redirect
 
 
+class SendMailNoCeleryMixin:
+    @staticmethod
+    def _send_mail(email):
+        send_mail(**email)
+
+    def form_valid(self, form):
+        redirect = super().form_valid(form)
+        self._send_mail(self._create_email())
+        return redirect
+
+
 class SuperUserTestMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_superuser
@@ -59,4 +71,9 @@ class SendFeedbackMailMixin(CreateFeedbackEmailMixin, SendMailMixin):
 
 
 class SendSignupMailMixin(CreateSignUpEmailMixin, SendMailMixin):
+    pass
+
+
+# Shortcut to avoid celery usage, since Windows has problem with it
+class SendSignupMailNoCeleryMixin(CreateSignUpEmailMixin, SendMailNoCeleryMixin):
     pass
