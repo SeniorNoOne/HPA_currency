@@ -83,6 +83,7 @@ class SourceForm(forms.ModelForm):
     class Meta:
         model = Source
         fields = (
+            'logo',
             'url',
             'name',
             'code',
@@ -103,6 +104,10 @@ class SourceForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'POST'
         self.helper.layout = Layout(
+            Row(
+                Column('logo', css_class='col-8'),
+                css_class='row justify-content-center'
+            ),
             Row(
                 Column('url', css_class='col-8'),
                 css_class='row justify-content-center'

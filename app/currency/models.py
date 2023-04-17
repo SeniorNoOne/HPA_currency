@@ -1,4 +1,5 @@
 from django.db import models
+from django.templatetags.static import static
 
 from currency.choices import RateCurrencyChoices, RequestMethodChoices
 
@@ -42,9 +43,16 @@ class Source(models.Model):
     name = models.CharField(max_length=64)
     city = models.CharField(max_length=64, blank=True)
     phone = PhoneNumberField(blank=True, unique=True, null=True)
+    logo = models.ImageField(blank=True, null=True)
 
     def __str__(self):
         return self.name.capitalize()
+
+    @property
+    def logo_url(self):
+        if self.logo:
+            return self.logo.url
+        return static('source_logo_default.png')
 
 
 class RequestResponseLog(models.Model):

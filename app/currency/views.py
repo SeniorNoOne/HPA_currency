@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView, DeleteView, DetailView, ListView, UpdateView, TemplateView
@@ -6,7 +7,7 @@ from django.views.generic import (
 
 from currency.forms import ContactUsForm, RateForm, SourceForm
 from currency.models import ContactUs, Rate, Source, RequestResponseLog
-from utils.mixins import SendFeedbackMailMixin, SuperUserTestMixin
+from utils.mixins import SendFeedbackMailMixin, SuperUserTestMixin, SaveFileMixin, DeleteFileMixin
 
 
 class MainPageView(TemplateView):
@@ -73,11 +74,15 @@ class ContactUsDeleteView(DeleteView):
     success_url = reverse_lazy('currency:contactus-list')
 
 
-class SourceCreateView(CreateView):
+class SourceCreateView(CreateView, SaveFileMixin):
     form_class = SourceForm
     template_name = 'source/source_create.html'
     queryset = Source.objects.all()
     success_url = reverse_lazy('currency:source-list')
+
+    def form_valid(self, form):
+        self._save_file(form, 'logo', 'code')
+        return super().form_valid(form)
 
 
 class SourceListView(ListView):
@@ -90,17 +95,26 @@ class SourceDetailView(DetailView):
     queryset = Source.objects.all()
 
 
-class SourceUpdateView(UpdateView):
+class SourceUpdateView(UpdateView, SaveFileMixin):
     form_class = SourceForm
     template_name = 'source/source_update.html'
     queryset = Source.objects.all()
     success_url = reverse_lazy('currency:source-list')
 
+    def form_valid(self, form):
+        self._save_file(form, 'logo', 'code')
+        return super().form_valid(form)
 
-class SourceDeleteView(DeleteView):
+
+class SourceDeleteView(DeleteView, DeleteFileMixin):
     template_name = 'source/source_delete.html'
     queryset = Source.objects.all()
     success_url = reverse_lazy('currency:source-list')
+
+    def form_valid(self, form):
+        instance = self.get_object()
+        self._delete_file_dir(instance, unique_key='code')
+        return super().form_valid(form)
 
 
 class LogListView(ListView):

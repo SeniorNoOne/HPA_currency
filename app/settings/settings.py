@@ -203,6 +203,11 @@ CELERY_QUEUES = {
         'exchange': 'scheduled_tasks',
         'exchange_type': 'direct',
         'routing_key': 'scheduled_tasks'
+    },
+    'storage_tasks': {
+        'exchange': 'storage_tasks',
+        'exchange_type': 'direct',
+        'routing_key': 'storage_tasks'
     }
 }
 
@@ -215,6 +220,14 @@ CELERY_ROUTES = {
     'utils.tasks.celery_send_mail': {
         'queue': 'mail',
         'routing_key': 'mail'
+    },
+    'utils.tasks.celery_save_file': {
+        'queue': 'storage_tasks',
+        'routing_key': 'storage_tasks'
+    },
+    'utils.tasks.celery_delete_file_dir': {
+        'queue': 'storage_tasks',
+        'routing_key': 'storage_tasks'
     },
     'currency.tasks.parse_privatbank': {
         'queue': 'scheduled_tasks',

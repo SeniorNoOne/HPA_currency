@@ -1,4 +1,5 @@
 from enum import Enum
+from django.templatetags.static import static
 
 
 class AvailableCurrency(int, Enum):
@@ -40,10 +41,12 @@ class PrivatbankConfig:
     code = 0
     name = 'PrivatBank'
     url = 'https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11'
+    logo = static('source_privatbank_logo.png')
     source_create_params = {
         'code': code,
         'name': name,
         'url': url,
+        'logo': logo
     }
 
 
@@ -51,10 +54,12 @@ class MonobankConfig:
     code = 1
     name = 'Monobank'
     url = 'https://api.monobank.ua/bank/currency'
+    logo = static('source_monobank_logo.png')
     source_create_params = {
         'code': code,
         'name': name,
         'url': url,
+        'logo': logo
     }
 
 
@@ -62,8 +67,10 @@ class NBUConfig:
     code = 2
     name = 'NBU'
     url = 'https://bank.gov.ua/ua/markets/exchangerates'
+    logo = 'source_nbu_logo.png'
     source_create_params = {
         'code': code,
         'name': name,
-        'url': url
+        'url': url,
+        'logo': logo
     }

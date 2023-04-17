@@ -1,9 +1,8 @@
 from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.core.mail import send_mail
 from django.urls import reverse
 
-from utils.tasks import celery_send_mail
+from utils.tasks import celery_send_mail, celery_save_file, celery_delete_file_dir
 
 
 class CreateSignUpEmailMixin:
@@ -42,18 +41,10 @@ class CreateFeedbackEmailMixin:
 class SendMailMixin:
     @staticmethod
     def _send_mail(email):
-        celery_send_mail.apply_async(args=[email], queue='mail')
-
-    def form_valid(self, form):
-        redirect = super().form_valid(form)
-        self._send_mail(self._create_email())
-        return redirect
-
-
-class SendMailNoCeleryMixin:
-    @staticmethod
-    def _send_mail(email):
-        send_mail(**email)
+        # For Windows
+        celery_send_mail(email)
+        # UNIX
+        # celery_send_mail.apply_async(args=[email], queue='mail')
 
     def form_valid(self, form):
         redirect = super().form_valid(form)
@@ -74,6 +65,11 @@ class SendSignupMailMixin(CreateSignUpEmailMixin, SendMailMixin):
     pass
 
 
-# Shortcut to avoid celery usage, since Windows has problem with it
-class SendSignupMailNoCeleryMixin(CreateSignUpEmailMixin, SendMailNoCeleryMixin):
-    pass
+class SaveFileMixin:
+    def _save_file(self, form, target_field, unique_key):
+        celery_save_file(form, target_field, unique_key)
+
+
+class DeleteFileMixin:
+    def _delete_file_dir(self, instance, unique_key, content):
+        celery_delete_file_dir(instance, unique_key, content)

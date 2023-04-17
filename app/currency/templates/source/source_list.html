@@ -23,7 +23,7 @@
                     {% for source in object_list %}
                         <tr>
                             <td>{{ source.id }}</td>
-                            <td>{{ source.source_url }}</td>
+                            <td>{{ source.url }}</td>
                             <td>{{ source.name }}</td>
                             <td>
                                 <a href="{% url 'currency:source-details' source.id %}">Details</a>

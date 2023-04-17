@@ -22,6 +22,7 @@ class UserSignUpForm(forms.ModelForm):
     class Meta:
         model = User
         fields = (
+            'avatar',
             'email',
             'first_name',
             'last_name',
@@ -44,6 +45,10 @@ class UserSignUpForm(forms.ModelForm):
                     HTML('<h3 class="text-center">Signup</h3>'),
                     css_class='col-8 mt-3'
                 ),
+                css_class='row justify-content-center'
+            ),
+            Row(
+                Column('avatar', css_class='col-8'),
                 css_class='row justify-content-center'
             ),
             Row(

@@ -1,20 +1,21 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, RedirectView, UpdateView
 
 from account.forms import UserSignUpForm
-from utils.common import get_upload_to_path
-from utils.mixins import SendSignupMailMixin
+from utils.mixins import SendSignupMailMixin, SaveFileMixin
 
 
-class UserSignupView(SendSignupMailMixin, CreateView):
+class UserSignupView(SendSignupMailMixin, CreateView, SaveFileMixin):
     queryset = get_user_model().objects.all()
     template_name = "signup.html"
     success_url = reverse_lazy("index")
     form_class = UserSignUpForm
+
+    def form_valid(self, form):
+        self._save_file(form, 'avatar', 'username')
+        return super().form_valid(form)
 
 
 class UserActivateView(RedirectView):
@@ -32,7 +33,7 @@ class UserActivateView(RedirectView):
         return url
 
 
-class ProfileView(LoginRequiredMixin, UpdateView):
+class ProfileView(LoginRequiredMixin, UpdateView, SaveFileMixin):
     template_name = 'registration/profile.html'
     success_url = reverse_lazy('index')
     queryset = get_user_model().objects.all()
@@ -46,15 +47,5 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         return self.request.user
 
     def form_valid(self, form):
-        instance = form.save(commit=False)
-        uploaded_file = form.cleaned_data['avatar']
-
-        if uploaded_file:
-            if instance.username not in uploaded_file.name:
-                filename = default_storage.save(get_upload_to_path(instance, uploaded_file.name),
-                                                ContentFile(uploaded_file.read()))
-                instance.avatar = filename
-        else:
-            instance.avatar = None
-        instance.save()
+        self._save_file(form, 'avatar', 'username')
         return super().form_valid(form)
