@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.templatetags.static import static
 
@@ -51,7 +52,10 @@ class Source(models.Model):
     @property
     def logo_url(self):
         if self.logo:
-            return self.logo.url
+            if settings.STATIC_URL in str(self.logo):
+                return str(self.logo)
+            else:
+                return self.logo.url
         return static('source_logo_default.png')
 
 

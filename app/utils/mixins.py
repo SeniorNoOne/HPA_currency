@@ -1,10 +1,11 @@
 from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.core.files.base import ContentFile
 from django.urls import reverse
 from django.core.files.storage import default_storage
 
 from utils.common import get_upload_to_path, get_instance_path
-from utils.tasks import celery_send_mail, celery_save_file, celery_delete_file_dir
+from utils.tasks import celery_send_mail
 
 
 class CreateSignUpEmailMixin:
@@ -58,24 +59,31 @@ class SendSignupMailMixin(CreateSignUpEmailMixin, SendMailMixin):
 
 class SaveFileMixin:
     @staticmethod
-    def _save_file(instance, target_field, unique_key):
-        uploaded_file = getattr(instance, target_field)
-        content = list(uploaded_file.read()) if uploaded_file else None
+    def _save_file(cleaned_data, model_name, file_field_name, unique_field_name):
+        model_name = model_name.lower()
+        uploaded_file = cleaned_data.get(file_field_name)
+        unique_key = str(cleaned_data.get(unique_field_name, 'lost_dir'))
+        content = ContentFile(uploaded_file.read()) if uploaded_file else None
         if uploaded_file:
-            path_to_file = get_upload_to_path(instance, uploaded_file.name, unique_key)
-            celery_save_file.apply_async(args=[path_to_file, content, default_storage], queue='storage_tasks')
-            # celery_save_file(path_to_file, content)
-            setattr(instance, target_field, path_to_file)
+            path_to_file = get_upload_to_path(model_name, unique_key, uploaded_file.name)
+            if not default_storage.exists(path_to_file):
+                path_to_file = default_storage.save(path_to_file, content)
         else:
-            setattr(instance, target_field, None)
-        # instance.save()
+            path_to_file = None
+        return path_to_file
 
 
 class DeleteFileMixin:
     @staticmethod
-    def _delete_file_dir(instance, unique_key):
-        path_to_instance = get_instance_path(instance, unique_key)
-        celery_delete_file_dir.apply_async(args=[path_to_instance], queue='storage_tasks')
+    def _delete_file_dir(instance, unique_field_name):
+        model_name = instance.__class__.__name__.lower()
+        unique_key = str(getattr(instance, unique_field_name))
+        path_to_instance = get_instance_path(model_name, unique_key)
+        if dirs := default_storage.listdir(path_to_instance):
+            for file_name in dirs[1]:
+                file_path = f"{path_to_instance}/{file_name}"
+                default_storage.delete(file_path)
+            default_storage.delete(path_to_instance)
 
 
 class SuperUserTestMixin(UserPassesTestMixin):

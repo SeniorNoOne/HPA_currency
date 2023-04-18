@@ -28,11 +28,8 @@ flake8:
 createsuperuser:
 	$(manage_py) createsuperuser
 
-mail_worker:
-	cd app && celery -A settings worker -Q mail -l info --autoscale=0,2
-
-storage_worker:
-	cd app && celery -A settings worker -Q storage_tasks -l info --autoscale=0,2
+worker:
+	cd app && celery -A settings worker -l info --autoscale=0,2
 
 schedule_worker:
 	cd app && celery -A settings worker -Q scheduled_tasks -l info --autoscale=0,3

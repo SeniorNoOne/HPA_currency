@@ -5,16 +5,15 @@ from decimal import Decimal
 from pathlib import Path
 
 
-def get_upload_to_path(instance, file_name, unique_key='username'):
-    return get_instance_path(instance, unique_key) + '/' + file_name
+def get_upload_to_path(model_name, unique_key, file_name):
+    instance_path = get_instance_path(model_name, unique_key)
+    file_path = instance_path + '/' + file_name
+    return file_path
 
 
-def get_instance_path(instance, unique_key):
-    return str(
-        Path(instance.__class__.__name__ + '/' +
-             str(getattr(instance, unique_key))
-             )
-    )
+def get_instance_path(model_name, unique_key):
+    instance_path = Path(model_name + '/' + unique_key)
+    return str(instance_path)
 
 
 def get_response(url, return_html=False):

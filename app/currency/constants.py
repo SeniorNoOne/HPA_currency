@@ -67,7 +67,7 @@ class NBUConfig:
     code = 2
     name = 'NBU'
     url = 'https://bank.gov.ua/ua/markets/exchangerates'
-    logo = 'source_nbu_logo.png'
+    logo = static('source_nbu_logo.png')
     source_create_params = {
         'code': code,
         'name': name,
