@@ -81,7 +81,9 @@ class SourceCreateView(CreateView, SaveFileMixin):
     success_url = reverse_lazy('currency:source-list')
 
     def form_valid(self, form):
-        self._save_file(form, 'logo', 'code')
+        instance = form.save(commit=False)
+        self._save_file(instance, 'logo', 'code')
+        instance.save()
         return super().form_valid(form)
 
 
@@ -102,7 +104,9 @@ class SourceUpdateView(UpdateView, SaveFileMixin):
     success_url = reverse_lazy('currency:source-list')
 
     def form_valid(self, form):
-        self._save_file(form, 'logo', 'code')
+        instance = form.save(commit=False)
+        self._save_file(instance, 'logo', 'code')
+        instance.save()
         return super().form_valid(form)
 
 
@@ -113,7 +117,7 @@ class SourceDeleteView(DeleteView, DeleteFileMixin):
 
     def form_valid(self, form):
         instance = self.get_object()
-        self._delete_file_dir(instance, unique_key='code')
+        self._delete_file_dir(instance, 'code')
         return super().form_valid(form)
 
 

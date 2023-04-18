@@ -82,9 +82,10 @@ class UserSignUpForm(forms.ModelForm):
         user = super().save(commit=False)
         password = self.cleaned_data['password1']
         user.is_active = False
-        user.username = uuid.uuid4()
+        user.username = user.username if user.username else uuid.uuid4()
         user.set_password(password)
-        user.save()
+        if commit:
+            user.save()
         return user
 
 

@@ -6,11 +6,15 @@ from pathlib import Path
 
 
 def get_upload_to_path(instance, file_name, unique_key='username'):
-    return get_instance_path(instance, unique_key) / file_name
+    return get_instance_path(instance, unique_key) + '/' + file_name
 
 
 def get_instance_path(instance, unique_key):
-    return Path(instance.__class__.__name__ + '/' + str(getattr(instance, unique_key)))
+    return str(
+        Path(instance.__class__.__name__ + '/' +
+             str(getattr(instance, unique_key))
+             )
+    )
 
 
 def get_response(url, return_html=False):

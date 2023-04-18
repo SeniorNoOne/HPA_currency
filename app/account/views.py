@@ -14,7 +14,11 @@ class UserSignupView(SendSignupMailMixin, CreateView, SaveFileMixin):
     form_class = UserSignUpForm
 
     def form_valid(self, form):
-        self._save_file(form, 'avatar', 'username')
+        instance = form.save(commit=False)
+        self._save_file(instance, 'avatar', 'username')
+        email = self._create_email(instance)
+        self._send_mail(email)
+        instance.save()
         return super().form_valid(form)
 
 
