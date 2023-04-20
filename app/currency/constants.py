@@ -35,6 +35,7 @@ class AvailableCurrency(int, Enum):
     EUR = (978, 'Euro')
     GBP = (826, 'Pound Sterling')
     JPY = (392, 'Yen')
+    UAH = (980, 'Ukrainian hryvnia')
 
 
 class PrivatbankConfig:

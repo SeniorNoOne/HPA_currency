@@ -64,7 +64,8 @@ def parse_monobank():
     rates = json_to_decimal(response, keys_to_convert=['rateBuy', 'rateSell'])
 
     for rate in rates:
-        if rate['currencyCodeA'] in AvailableCurrency.codes():
+        if rate['currencyCodeA'] in AvailableCurrency.codes() and \
+                rate['currencyCodeB'] == AvailableCurrency.UAH.value:
             code_name_enum = AvailableCurrency.from_code(rate['currencyCodeA'])
             last_rate = Rate.objects.filter(currency=RateCurrencyChoices[code_name_enum.name],
                                             source=source).first()
