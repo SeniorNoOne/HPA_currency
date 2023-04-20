@@ -36,3 +36,9 @@ schedule_worker:
 
 beat:
 	cd app && celery -A settings beat -l info
+
+test_data:
+	$(manage_py) create_test_data
+
+rm_test_data:
+	$(manage_py) delete_test_data

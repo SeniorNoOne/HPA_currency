@@ -24,6 +24,7 @@ class RateCreateView(CreateView):
 class RateListView(ListView):
     template_name = 'rate/rate_list.html'
     queryset = Rate.objects.select_related('source')  # prefetch_related(Prefetch('source'))
+    paginate_by = 20
 
 
 class RateDetailView(LoginRequiredMixin, DetailView):
