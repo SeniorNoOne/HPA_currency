@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.db import models
+from django.templatetags.static import static
 
 from currency.choices import RateCurrencyChoices, RequestMethodChoices
 
@@ -13,6 +15,9 @@ class Rate(models.Model):
                                                 default=RateCurrencyChoices.USD,
                                                 verbose_name='Currency')
     source = models.ForeignKey('currency.Source', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('-created',)
 
     def __str__(self):
         return f'Currency: {self.get_currency_display()} - {self.buy}/{self.sell}'
@@ -34,13 +39,24 @@ class ContactUs(models.Model):
 
 
 class Source(models.Model):
-    source_url = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
+    code = models.SmallIntegerField(unique=True)
     name = models.CharField(max_length=64)
-    city = models.CharField(max_length=64, blank=True, default="")
-    phone = PhoneNumberField(blank=True, unique=True, default="", null=True)
+    city = models.CharField(max_length=64, blank=True)
+    phone = PhoneNumberField(blank=True, unique=True, null=True)
+    logo = models.ImageField(blank=True, null=True)
 
     def __str__(self):
         return self.name.capitalize()
+
+    @property
+    def logo_url(self):
+        if self.logo:
+            if settings.STATIC_URL in str(self.logo):
+                return str(self.logo)
+            else:
+                return self.logo.url
+        return static('source_logo_default.png')
 
 
 class RequestResponseLog(models.Model):

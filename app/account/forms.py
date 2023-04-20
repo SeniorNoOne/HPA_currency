@@ -1,10 +1,11 @@
 import uuid
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Column, Submit
+from crispy_forms.layout import Column, HTML, Layout, Row, Submit
+
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.password_validation import validate_password
 
 User = get_user_model()
@@ -21,6 +22,7 @@ class UserSignUpForm(forms.ModelForm):
     class Meta:
         model = User
         fields = (
+            'avatar',
             'email',
             'first_name',
             'last_name',
@@ -38,6 +40,17 @@ class UserSignUpForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'POST'
         self.helper.layout = Layout(
+            Row(
+                Column(
+                    HTML('<h3 class="text-center">Signup</h3>'),
+                    css_class='col-8 mt-3'
+                ),
+                css_class='row justify-content-center'
+            ),
+            Row(
+                Column('avatar', css_class='col-8'),
+                css_class='row justify-content-center'
+            ),
             Row(
                 Column('email', css_class='col-8'),
                 css_class='row justify-content-center'
@@ -69,16 +82,14 @@ class UserSignUpForm(forms.ModelForm):
         user = super().save(commit=False)
         password = self.cleaned_data['password1']
         user.is_active = False
-        user.username = uuid.uuid4()
+        user.username = user.username if user.username else uuid.uuid4()
         user.set_password(password)
-        user.save()
+        if commit:
+            user.save()
         return user
 
 
 class CustomLoginForm(AuthenticationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     username = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': 'Enter your mail'})
     )
@@ -86,11 +97,35 @@ class CustomLoginForm(AuthenticationForm):
         widget=forms.PasswordInput(attrs={'placeholder': 'Enter password'})
     )
 
-
-class CustomResetPasswordForm(PasswordResetForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-    email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'placeholder': 'Enter your mail'})
-    )
+        self.helper = FormHelper()
+        self.helper.form_method = 'POST'
+        self.helper.layout = Layout(
+            Row(
+                Column(
+                    HTML('<h3 class="text-center">Login To Your Account</h3>'),
+                    css_class='col-4 mt-3'
+                    ),
+                css_class='row justify-content-center'
+            ),
+            Row(
+                Column('username', css_class='col-4 mt-3'),
+                css_class='row justify-content-center'
+            ),
+            Row(
+                Column('password', css_class='col-4'),
+                css_class='row justify-content-center'
+            ),
+            Row(
+                Column(Submit('submit', 'Login', css_class='btn btn-primary col-12'),
+                       css_class='col-2'),
+                Column(
+                    HTML(
+                        '<a href="{% url "password_reset" %}" '
+                        'class="btn btn-danger col-12" role="button">Reset Password</a>'
+                    ), css_class='col-2'
+                ),
+                css_class='row justify-content-center',
+            )
+        )

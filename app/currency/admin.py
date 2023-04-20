@@ -35,7 +35,7 @@ class ContactUs(admin.ModelAdmin):
 
 @admin.register(Source)
 class SourceAdmin(admin.ModelAdmin):
-    list_display = ('id', 'source_url', 'name', 'city_display', 'phone')
+    list_display = ('id', 'url', 'name', 'city_display', 'phone')
     search_fields = ('name', 'city', 'phone')
 
     def city_display(self, obj):

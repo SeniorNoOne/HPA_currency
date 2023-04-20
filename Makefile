@@ -13,6 +13,12 @@ init_db:
 	$(manage_py) makemigrations
 	$(manage_py) migrate
 
+makemigrations:
+	$(manage_py) makemigrations
+
+migrate:
+	$(manage_py) migrate
+
 shell:
 	$(manage_py) shell_plus --print-sql
 
@@ -21,3 +27,12 @@ flake8:
 
 createsuperuser:
 	$(manage_py) createsuperuser
+
+worker:
+	cd app && celery -A settings worker -l info --autoscale=0,2
+
+schedule_worker:
+	cd app && celery -A settings worker -Q scheduled_tasks -l info --autoscale=0,3
+
+beat:
+	cd app && celery -A settings beat -l info

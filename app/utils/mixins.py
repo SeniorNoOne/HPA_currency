@@ -1,12 +1,17 @@
 from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.core.mail import send_mail
+from django.core.files.base import ContentFile
 from django.urls import reverse
+from django.core.files.storage import default_storage
+
+from utils.common import get_upload_to_path, get_instance_path
+from utils.tasks import celery_send_mail
 
 
 class CreateSignUpEmailMixin:
-    def _create_email(self):
-        path = reverse('account:activate', args=(self.object.username,))
+    @staticmethod
+    def _create_email(instance):
+        path = reverse('account:activate', args=(instance.username,))
         subject = 'Thank you for registration!'
         message = 'To activate your account, follow the link:\n' + \
                   f'\n{settings.HTTP_SCHEMA}://{settings.HOST}{path}\n' + \
@@ -15,18 +20,19 @@ class CreateSignUpEmailMixin:
         email = {'subject': subject,
                  'message': message,
                  'from_email': settings.DEFAULT_FROM_EMAIL,
-                 'recipient_list': [self.object.email],
+                 'recipient_list': [instance.email],
                  'fail_silently': False
                  }
         return email
 
 
 class CreateFeedbackEmailMixin:
-    def _create_email(self):
+    @staticmethod
+    def _create_email(instance):
         subject = 'User Feedback Form'
-        message = f'Reply to email: {self.object.email_from}\n' + \
-                  f'Subject: {self.object.subject}\n' + \
-                  f'Body: {self.object.message}\n'
+        message = f'Reply to email: {instance.email_from}\n' + \
+                  f'Subject: {instance.subject}\n' + \
+                  f'Body: {instance.message}\n'
 
         email = {'subject': subject,
                  'message': message,
@@ -38,18 +44,9 @@ class CreateFeedbackEmailMixin:
 
 
 class SendMailMixin:
-    def _send_mail(self, email):
-        send_mail(**email)
-
-    def form_valid(self, form):
-        redirect = super().form_valid(form)
-        self._send_mail(self._create_email())
-        return redirect
-
-
-class SuperUserTestMixin(UserPassesTestMixin):
-    def test_func(self):
-        return self.request.user.is_superuser
+    @staticmethod
+    def _send_mail(email):
+        celery_send_mail.apply_async(args=[email], queue='mail')
 
 
 class SendFeedbackMailMixin(CreateFeedbackEmailMixin, SendMailMixin):
@@ -60,11 +57,35 @@ class SendSignupMailMixin(CreateSignUpEmailMixin, SendMailMixin):
     pass
 
 
-# Callable import problem
-# When this class is imported into another app, it inflicts error
-# Way to recreate error - import this class in account/models.py even without
-# invoking or passing it to some other code
-class GetPath:
-    def __call__(self, instance, filename, field_name='username'):
-        from pathlib import Path
-        return Path(str(getattr(instance, field_name, instance.id))) / filename
+class SaveFileMixin:
+    @staticmethod
+    def _save_file(cleaned_data, model_name, file_field_name, unique_field_name):
+        model_name = model_name.lower()
+        uploaded_file = cleaned_data.get(file_field_name)
+        unique_key = str(cleaned_data.get(unique_field_name, 'lost_dir'))
+        content = ContentFile(uploaded_file.read()) if uploaded_file else None
+        if uploaded_file:
+            path_to_file = get_upload_to_path(model_name, unique_key, uploaded_file.name)
+            if not default_storage.exists(path_to_file):
+                path_to_file = default_storage.save(path_to_file, content)
+        else:
+            path_to_file = None
+        return path_to_file
+
+
+class DeleteFileMixin:
+    @staticmethod
+    def _delete_file_dir(instance, unique_field_name):
+        model_name = instance.__class__.__name__.lower()
+        unique_key = str(getattr(instance, unique_field_name))
+        path_to_instance = get_instance_path(model_name, unique_key)
+        if dirs := default_storage.listdir(path_to_instance):
+            for file_name in dirs[1]:
+                file_path = f"{path_to_instance}/{file_name}"
+                default_storage.delete(file_path)
+            default_storage.delete(path_to_instance)
+
+
+class SuperUserTestMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_superuser

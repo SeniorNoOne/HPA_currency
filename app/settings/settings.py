@@ -1,3 +1,4 @@
+from celery.schedules import crontab
 from django.urls import reverse_lazy
 
 from configparser import ConfigParser
@@ -42,7 +43,6 @@ EXTERNAL_APPS = [
 ]
 
 CUSTOM_APPS = [
-    'utils',
     'currency',
     'account',
 ]
@@ -188,3 +188,57 @@ HTTP_SCHEMA = 'http'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# Celery
+CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_IMPORTS = ('utils.tasks',)
+
+CELERY_QUEUES = {
+    'scheduled_tasks': {
+        'exchange': 'scheduled_tasks',
+        'exchange_type': 'direct',
+        'routing_key': 'scheduled_tasks'
+    },
+}
+
+CELERY_DEFAULT_QUEUE = 'default'
+CELERY_DEFAULT_EXCHANGE = 'default'
+CELERY_DEFAULT_ROUTING_KEY = 'default'
+
+
+CELERY_ROUTES = {
+    'utils.tasks.celery_send_mail': {
+        'queue': 'default',
+        'routing_key': 'default'
+    },
+    'currency.tasks.parse_privatbank': {
+        'queue': 'scheduled_tasks',
+        'routing_key': 'scheduled_tasks'
+    },
+    'currency.tasks.parse_monobank': {
+        'queue': 'scheduled_tasks',
+        'routing_key': 'scheduled_tasks'
+    },
+    'currency.tasks.parse_nbu': {
+        'queue': 'scheduled_tasks',
+        'routing_key': 'scheduled_tasks'
+    }
+}
+
+CELERY_BEAT_SCHEDULE = {
+    'parse_privatbank_scheduled_task': {
+        'task': 'currency.tasks.parse_privatbank',
+        'schedule': crontab(minute='*/15'),
+        'options': {'queue': 'scheduled_tasks'}
+    },
+    'parse_monobank_scheduled_task': {
+        'task': 'currency.tasks.parse_monobank',
+        'schedule': crontab(minute='*/15'),
+        'options': {'queue': 'scheduled_tasks'}
+    },
+    'parse_nbu_scheduled_task': {
+        'task': 'currency.tasks.parse_nbu',
+        'schedule': crontab(minute='*/15'),
+        'options': {'queue': 'scheduled_tasks'}
+    }
+}

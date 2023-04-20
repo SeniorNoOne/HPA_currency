@@ -9,7 +9,7 @@
         </button>
 
         <a class="navbar-brand">
-                <img src="{% static 'currency.png' %}" height="60" alt="Currency Logo" loading="lazy" />
+                <img src="{% static 'currency_navbar.png' %}" height="60" alt="Currency Logo" loading="lazy" />
         </a>
 
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -38,9 +38,9 @@
                             <li><a class="dropdown-item" href="{% url 'account:signup' %}">Sign Up</a></li>
                             <li><a class="dropdown-item" href="{% url 'password_reset' %}">Reset Password</a></li>
                         {% else %}
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                             <li><a class="dropdown-item" href="{% url 'account:profile' %}">Profile</a></li>
                             <li><a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                         {% endif %}
                     </ul>
                 </li>
