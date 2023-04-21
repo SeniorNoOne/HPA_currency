@@ -20,8 +20,8 @@ class Command(BaseCommand):
 
         for _ in range(300):
             Rate.objects.create(
-                buy=random.randint(10, 50),
-                sell=random.randint(10, 50),
+                buy=random.randint(10, 30),
+                sell=random.randint(10, 30),
                 currency=random.choices(RateCurrencyChoices.choices)[0][0],
                 source=test_source
             )

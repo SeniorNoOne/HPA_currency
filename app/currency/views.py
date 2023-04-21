@@ -7,7 +7,12 @@ from django.views.generic import (
 
 from currency.forms import ContactUsForm, RateForm, SourceForm
 from currency.models import ContactUs, Rate, Source, RequestResponseLog
-from utils.mixins import SendFeedbackMailMixin, SuperUserTestMixin, SaveFileMixin, DeleteFileMixin
+from currency.filters import RateFilter, RequestResponseLogFilter, ContactUsFilter
+from utils.mixins import (
+    SendFeedbackMailMixin, SuperUserTestMixin, SaveFileMixin, DeleteFileMixin, CustomPaginationMixin
+)
+
+from django_filters.views import FilterView
 
 
 class MainPageView(TemplateView):
@@ -21,10 +26,10 @@ class RateCreateView(CreateView):
     success_url = reverse_lazy('currency:rate-list')
 
 
-class RateListView(ListView):
+class RateListView(CustomPaginationMixin, FilterView):
     template_name = 'rate/rate_list.html'
     queryset = Rate.objects.select_related('source')  # prefetch_related(Prefetch('source'))
-    paginate_by = 20
+    filterset_class = RateFilter
 
 
 class RateDetailView(LoginRequiredMixin, DetailView):
@@ -52,9 +57,10 @@ class ContactUsCreateView(SendFeedbackMailMixin, CreateView):
     success_url = reverse_lazy('currency:contactus-list')
 
 
-class ContactUsListView(ListView):
+class ContactUsListView(CustomPaginationMixin, FilterView):
     template_name = 'contact_us/contact_us_list.html'
     queryset = ContactUs.objects.all()
+    filterset_class = ContactUsFilter
 
 
 class ContactUsDetailView(DetailView):
@@ -120,6 +126,7 @@ class SourceDeleteView(DeleteView, DeleteFileMixin):
         return super().form_valid(form)
 
 
-class LogListView(ListView):
+class LogListView(CustomPaginationMixin, FilterView):
     template_name = 'log/log_list.html'
     queryset = RequestResponseLog.objects.all()
+    filterset_class = RequestResponseLogFilter

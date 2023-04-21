@@ -9,6 +9,9 @@
 
     {% if object_list %}
         <div class="container my-3">
+            {% include 'includes/filter.html' %}
+        </div>
+        <div class="container my-3">
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -34,6 +37,10 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+
+        <div class="container mt-3">
+            {% include 'includes/pagination.html' %}
         </div>
     {% endif %}
 {% endblock %}
