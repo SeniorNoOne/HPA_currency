@@ -52,7 +52,11 @@
 {% endblock %}
 
 {% block on_empty_db %}
-    {% if not object_list %}
-        There are no records in Rate DB!
+    {% if not object_list and filter_params %}
+        {% if filter_params %}
+            None of the records match the filter parameters
+        {% else %}
+            There are no records in Rate DB!
+        {% else %}
     {% endif %}
 {% endblock %}

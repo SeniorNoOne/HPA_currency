@@ -2,12 +2,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.urls import reverse_lazy
 from django.views.generic import (
-    CreateView, DeleteView, DetailView, ListView, UpdateView, TemplateView
+    CreateView, DeleteView, DetailView, UpdateView, TemplateView
 )
 
 from currency.forms import ContactUsForm, RateForm, SourceForm
 from currency.models import ContactUs, Rate, Source, RequestResponseLog
-from currency.filters import RateFilter, RequestResponseLogFilter, ContactUsFilter
+from currency.filters import RateFilter, RequestResponseLogFilter, ContactUsFilter, SourceFilter
 from utils.mixins import (
     SendFeedbackMailMixin, SuperUserTestMixin, SaveFileMixin, DeleteFileMixin, CustomPaginationMixin
 )
@@ -93,9 +93,10 @@ class SourceCreateView(CreateView, SaveFileMixin):
         return super().form_valid(form)
 
 
-class SourceListView(ListView):
+class SourceListView(SendFeedbackMailMixin, CustomPaginationMixin, FilterView):
     template_name = 'source/source_list.html'
     queryset = Source.objects.all()
+    filterset_class = SourceFilter
 
 
 class SourceDetailView(DetailView):
