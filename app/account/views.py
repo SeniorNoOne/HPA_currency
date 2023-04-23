@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, RedirectView, UpdateView
 
@@ -20,8 +21,12 @@ class UserSignupView(SendSignupMailMixin, CreateView, SaveFileMixin):
         self._save_file(cleaned_data, 'user', 'avatar', 'username')
         email = self._create_email(instance)
         self._send_mail(email)
-        instance.save()
-        return super().form_valid(form)
+        try:
+            instance.save()
+            return super().form_valid(form)
+        except ValidationError as error:
+            form.add_error('email', ''.join(error))
+            return self.form_invalid(form)
 
 
 class UserActivateView(RedirectView):

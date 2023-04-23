@@ -1,2 +1,8 @@
 [flake8]
 max-line-length = 100
+
+per-file-ignores =
+    # Shadowing built-in
+    **/commands/*.py:A003
+    # Unused imports
+    **/apps.py:F401

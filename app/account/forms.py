@@ -24,6 +24,7 @@ class UserSignUpForm(forms.ModelForm):
         fields = (
             'avatar',
             'email',
+            'phone',
             'first_name',
             'last_name',
             'password1',
@@ -33,6 +34,8 @@ class UserSignUpForm(forms.ModelForm):
             'email': forms.TextInput(attrs={'placeholder': 'Enter your email'}),
             'first_name': forms.TextInput(attrs={'placeholder': 'Enter your first name'}),
             'last_name': forms.TextInput(attrs={'placeholder': 'Enter your last name'}),
+            'phone': forms.TextInput(attrs={'placeholder': 'Enter your phone number',
+                                            'data-mask': '+000-00-000-00-00'})
         }
 
     def __init__(self, *args, **kwargs):
@@ -52,7 +55,8 @@ class UserSignUpForm(forms.ModelForm):
                 css_class='row justify-content-center'
             ),
             Row(
-                Column('email', css_class='col-8'),
+                Column('email', css_class='col-4'),
+                Column('phone', css_class='col-4'),
                 css_class='row justify-content-center'
             ),
             Row(
@@ -106,7 +110,7 @@ class CustomLoginForm(AuthenticationForm):
                 Column(
                     HTML('<h3 class="text-center">Login To Your Account</h3>'),
                     css_class='col-4 mt-3'
-                    ),
+                ),
                 css_class='row justify-content-center'
             ),
             Row(

@@ -9,6 +9,9 @@
 
     {% if object_list %}
         <div class="container my-3">
+            {% include 'includes/filter.html' %}
+        </div>
+        <div class="container my-3">
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -35,11 +38,19 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="container mt-3">
+            {% include 'includes/pagination.html' %}
+        </div>
     {% endif %}
 {% endblock %}
 
 {% block on_empty_db %}
-    {% if not object_list %}
-        There are no records in Contact Us DB!
+    {% if not object_list and filter_params %}
+        {% if filter_params %}
+            None of the records match the filter parameters
+        {% else %}
+            There are no records in Contact Us DB!
+        {% endif %}
     {% endif %}
 {% endblock %}

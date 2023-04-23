@@ -2,12 +2,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.urls import reverse_lazy
 from django.views.generic import (
-    CreateView, DeleteView, DetailView, ListView, UpdateView, TemplateView
+    CreateView, DeleteView, DetailView, UpdateView, TemplateView
 )
 
 from currency.forms import ContactUsForm, RateForm, SourceForm
 from currency.models import ContactUs, Rate, Source, RequestResponseLog
-from utils.mixins import SendFeedbackMailMixin, SuperUserTestMixin, SaveFileMixin, DeleteFileMixin
+from currency.filters import RateFilter, RequestResponseLogFilter, ContactUsFilter, SourceFilter
+from utils.mixins import (
+    SendFeedbackMailMixin, SuperUserTestMixin, SaveFileMixin, DeleteFileMixin, CustomPaginationMixin
+)
+
+from django_filters.views import FilterView
 
 
 class MainPageView(TemplateView):
@@ -21,9 +26,10 @@ class RateCreateView(CreateView):
     success_url = reverse_lazy('currency:rate-list')
 
 
-class RateListView(ListView):
+class RateListView(CustomPaginationMixin, FilterView):
     template_name = 'rate/rate_list.html'
     queryset = Rate.objects.select_related('source')  # prefetch_related(Prefetch('source'))
+    filterset_class = RateFilter
 
 
 class RateDetailView(LoginRequiredMixin, DetailView):
@@ -51,9 +57,10 @@ class ContactUsCreateView(SendFeedbackMailMixin, CreateView):
     success_url = reverse_lazy('currency:contactus-list')
 
 
-class ContactUsListView(ListView):
+class ContactUsListView(CustomPaginationMixin, FilterView):
     template_name = 'contact_us/contact_us_list.html'
     queryset = ContactUs.objects.all()
+    filterset_class = ContactUsFilter
 
 
 class ContactUsDetailView(DetailView):
@@ -86,9 +93,10 @@ class SourceCreateView(CreateView, SaveFileMixin):
         return super().form_valid(form)
 
 
-class SourceListView(ListView):
+class SourceListView(SendFeedbackMailMixin, CustomPaginationMixin, FilterView):
     template_name = 'source/source_list.html'
     queryset = Source.objects.all()
+    filterset_class = SourceFilter
 
 
 class SourceDetailView(DetailView):
@@ -119,6 +127,7 @@ class SourceDeleteView(DeleteView, DeleteFileMixin):
         return super().form_valid(form)
 
 
-class LogListView(ListView):
+class LogListView(CustomPaginationMixin, FilterView):
     template_name = 'log/log_list.html'
     queryset = RequestResponseLog.objects.all()
+    filterset_class = RequestResponseLogFilter
