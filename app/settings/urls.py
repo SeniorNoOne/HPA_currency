@@ -23,5 +23,7 @@ urlpatterns = [
 
     path('__debug__/', include('debug_toolbar.urls')),
 
-    path('currency/', include('currency.urls'))
+    path('currency/', include('currency.urls')),
+
+    path('api/currency/', include('currency.api.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

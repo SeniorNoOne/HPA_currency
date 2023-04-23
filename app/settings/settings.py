@@ -41,6 +41,7 @@ EXTERNAL_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'django_filters',
+    'rest_framework',
 ]
 
 CUSTOM_APPS = [

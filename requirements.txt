@@ -15,6 +15,7 @@ crispy_bootstrap5
 requests
 beautifulsoup4
 django-filter
+djangorestframework
 
 # flake8
 flake8
