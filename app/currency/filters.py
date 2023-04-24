@@ -7,8 +7,8 @@ class RateFilter(django_filters.FilterSet):
     class Meta:
         model = Rate
         fields = {
-            'buy': ('lt', 'gt'),
-            'sell': ('lt', 'gt'),
+            'buy': ('exact', 'lt', 'lte', 'gt', 'gte',),
+            'sell': ('exact', 'lt', 'lte', 'gt', 'gte'),
             'source__name': ('icontains',)
         }
 
@@ -39,5 +39,5 @@ class RequestResponseLogFilter(django_filters.FilterSet):
         fields = {
             'path': ('icontains',),
             'request_method': ('exact',),
-            'time': ('lt', 'gt')
+            'time': ('exact', 'lt', 'lte', 'gt', 'gte')
         }

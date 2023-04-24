@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from celery.schedules import crontab
 from django.urls import reverse_lazy
 
@@ -42,6 +44,8 @@ EXTERNAL_APPS = [
     'crispy_bootstrap5',
     'django_filters',
     'rest_framework',
+    'rest_framework_simplejwt',
+    'drf_yasg'
 ]
 
 CUSTOM_APPS = [
@@ -243,4 +247,21 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/15'),
         'options': {'queue': 'scheduled_tasks'}
     }
+}
+
+# REST
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
+
+# Simple JWT
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer", "JWT"),
 }

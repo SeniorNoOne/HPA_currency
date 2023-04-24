@@ -16,6 +16,9 @@ requests
 beautifulsoup4
 django-filter
 djangorestframework
+djangorestframework-simplejwt
+drf-yasg
+
 
 # flake8
 flake8
