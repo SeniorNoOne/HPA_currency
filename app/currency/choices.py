@@ -14,3 +14,5 @@ class RequestMethodChoices(models.IntegerChoices):
     PUT = 3, 'PUT',
     PATCH = 4, 'PATCH',
     DELETE = 5, 'DELETE'
+    HEAD = 6, 'HEAD'
+    OPTIONS = 7, ' OPTIONS'
