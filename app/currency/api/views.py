@@ -7,20 +7,8 @@ from currency.api.paginators import CurrencyApiLimitOffsetPagination
 from currency.filters import RateFilter, SourceFilter, ContactUsFilter, RequestResponseLogFilter
 from currency.models import Rate, Source, ContactUs, RequestResponseLog
 
-from django_filters import rest_framework as filters
-from rest_framework import filters as rest_framework_filters
 
-
-# Did this in such way, since it does not work in settings.py
-class CurrencyFilterBackendBase:
-    filter_backends = (
-        filters.DjangoFilterBackend,
-        rest_framework_filters.OrderingFilter,
-        rest_framework_filters.SearchFilter
-    )
-
-
-class RateApiViewSet(CurrencyFilterBackendBase, viewsets.ModelViewSet):
+class RateApiViewSet(viewsets.ModelViewSet):
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
     pagination_class = CurrencyApiLimitOffsetPagination
@@ -30,7 +18,7 @@ class RateApiViewSet(CurrencyFilterBackendBase, viewsets.ModelViewSet):
     search_fields = ('source__name',)
 
 
-class ContactUsApiViewSet(CurrencyFilterBackendBase, viewsets.ModelViewSet):
+class ContactUsApiViewSet(viewsets.ModelViewSet):
     queryset = ContactUs.objects.all()
     serializer_class = ContactUsSerializer
     pagination_class = CurrencyApiLimitOffsetPagination
@@ -39,7 +27,7 @@ class ContactUsApiViewSet(CurrencyFilterBackendBase, viewsets.ModelViewSet):
     search_fields = ('email_from', 'subject', 'message',)
 
 
-class SourceApiViewSet(CurrencyFilterBackendBase, viewsets.ModelViewSet):
+class SourceApiViewSet(viewsets.ModelViewSet):
     queryset = Source.objects.all()
     serializer_class = SourceSerializer
     pagination_class = CurrencyApiLimitOffsetPagination
@@ -49,7 +37,7 @@ class SourceApiViewSet(CurrencyFilterBackendBase, viewsets.ModelViewSet):
     search_fields = ('name', 'url', 'city',)
 
 
-class RequestResponseLogApiViewSet(CurrencyFilterBackendBase, viewsets.ModelViewSet):
+class RequestResponseLogApiViewSet(viewsets.ModelViewSet):
     queryset = RequestResponseLog.objects.all()
     serializer_class = RequestResponseLogSerializer
     pagination_class = CurrencyApiLimitOffsetPagination
