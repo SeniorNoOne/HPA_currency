@@ -10,6 +10,19 @@ from utils.common import get_upload_to_path, get_instance_path
 from utils.tasks import celery_send_mail
 
 
+class GetValByNameMixin:
+    @staticmethod
+    def get_val(obj, var_name):
+        """
+        This method is needed to ensure that _create_mail method
+        will work with both - instances of classes and dicts
+        """
+        if isinstance(obj, dict):
+            return obj.get(var_name)
+        else:
+            return getattr(obj, var_name)
+
+
 class CreateSignUpEmailMixin:
     @staticmethod
     def _create_email(instance):
@@ -28,13 +41,12 @@ class CreateSignUpEmailMixin:
         return email
 
 
-class CreateFeedbackEmailMixin:
-    @staticmethod
-    def _create_email(instance):
+class CreateFeedbackEmailMixin(GetValByNameMixin):
+    def _create_email(self, instance):
         subject = 'User Feedback Form'
-        message = f'Reply to email: {instance.email_from}\n' + \
-                  f'Subject: {instance.subject}\n' + \
-                  f'Body: {instance.message}\n'
+        message = f'Reply to email: {self.get_val(instance, "email_from")}\n' + \
+                  f'Subject: {self.get_val(instance, "subject")}\n' + \
+                  f'Body: {self.get_val(instance, "message")}\n'
 
         email = {'subject': subject,
                  'message': message,

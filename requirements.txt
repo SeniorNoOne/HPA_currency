@@ -1,22 +1,35 @@
+# Core Frameworks and Tools
 Celery
 Django
 django-extensions
 ipython
-django-phonenumber-field
-phonenumbers
-django-debug-toolbar
-django-admin-rangefilter
-django-import-export
-Pillow
-django-storages
-boto3
-django-crispy-forms
-crispy_bootstrap5
-requests
-beautifulsoup4
-django-filter
 
-# flake8
+# Third-Party Libraries and Packages
+django-admin-rangefilter
+django-debug-toolbar
+django-filter
+django-import-export
+django-phonenumber-field
+beautifulsoup4
+crispy_bootstrap5
+phonenumbers
+requests
+
+# REST APIs and Serialization
+djangorestframework
+djangorestframework-simplejwt
+drf-yasg
+
+# REST API renderers
+djangorestframework-xml
+djangorestframework-yaml
+
+# Storage and File Handling
+boto3
+django-storages
+Pillow
+
+# Code Quality and Linting
 flake8
 flake8-builtins
 flake8-print
