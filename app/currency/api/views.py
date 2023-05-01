@@ -1,9 +1,10 @@
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 
+from currency.api.paginators import CurrencyApiLimitOffsetPagination
 from currency.api.serializers import (RateSerializer, SourceSerializer,
                                       ContactUsSerializer, RequestResponseLogSerializer)
-from currency.api.paginators import CurrencyApiLimitOffsetPagination
+from currency.api.throttling import CurrencyAnonThrottle, CurrencyUserThrottle
 from currency.filters import RateFilter, SourceFilter, ContactUsFilter, RequestResponseLogFilter
 from currency.models import Rate, Source, ContactUs, RequestResponseLog
 
@@ -16,6 +17,7 @@ class RateApiViewSet(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     ordering_fields = ('id', 'buy', 'sell',)
     search_fields = ('source__name',)
+    throttle_classes = [CurrencyAnonThrottle, CurrencyUserThrottle]
 
 
 class ContactUsApiViewSet(viewsets.ModelViewSet):
@@ -25,6 +27,7 @@ class ContactUsApiViewSet(viewsets.ModelViewSet):
     filterset_class = ContactUsFilter
     ordering_fields = ('id', 'email_from', 'subject',)
     search_fields = ('email_from', 'subject', 'message',)
+    throttle_classes = [CurrencyAnonThrottle, CurrencyUserThrottle]
 
 
 class SourceApiViewSet(viewsets.ModelViewSet):
@@ -35,6 +38,7 @@ class SourceApiViewSet(viewsets.ModelViewSet):
     filterset_class = SourceFilter
     ordering_fields = ('id', 'name', 'url',)
     search_fields = ('name', 'url', 'city',)
+    throttle_classes = [CurrencyAnonThrottle, CurrencyUserThrottle]
 
 
 class RequestResponseLogApiViewSet(viewsets.ModelViewSet):
@@ -45,3 +49,4 @@ class RequestResponseLogApiViewSet(viewsets.ModelViewSet):
     filterset_class = RequestResponseLogFilter
     ordering_fields = ('id', 'path', 'time',)
     search_fields = ('path', 'request_method')
+    throttle_classes = [CurrencyAnonThrottle, CurrencyUserThrottle]

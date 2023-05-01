@@ -261,7 +261,21 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.OrderingFilter',
         'rest_framework.filters.SearchFilter',
-    )
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework_yaml.renderers.YAMLRenderer',
+        'rest_framework_xml.renderers.XMLRenderer',
+    ),
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '20/min',
+        'user': '50/min',
+    },
 }
 
 # Simple JWT

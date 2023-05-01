@@ -20,6 +20,10 @@ djangorestframework
 djangorestframework-simplejwt
 drf-yasg
 
+# REST API renderers
+djangorestframework-xml
+djangorestframework-yaml
+
 # Storage and File Handling
 boto3
 django-storages
