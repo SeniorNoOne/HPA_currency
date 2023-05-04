@@ -1,4 +1,6 @@
 .idea
+.pytest_cache
+.coverage
 venv
 __pycache__
 *.sqlite3

@@ -6,3 +6,5 @@ per-file-ignores =
     **/commands/*.py:A003
     # Unused imports
     **/apps.py:F401
+    # Test settings
+    **/settings_test.py:F401,F403

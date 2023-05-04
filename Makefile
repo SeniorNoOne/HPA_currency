@@ -1,7 +1,8 @@
 manage_py := python app/manage.py
 
 install:
-	pip install -r requirements.txt
+	python.exe -m pip install --upgrade pip
+	pip install -r requirements.txt --upgrade
 
 run:
 	$(manage_py) runserver
@@ -42,3 +43,6 @@ test_data:
 
 rm_test_data:
 	$(manage_py) delete_test_data
+
+pytest:
+	pytest ./app/tests --cov=app --cov-report html

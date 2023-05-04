@@ -7,6 +7,7 @@ ipython
 # Third-Party Libraries and Packages
 django-admin-rangefilter
 django-debug-toolbar
+django-crispy-forms
 django-filter
 django-import-export
 django-phonenumber-field
@@ -33,3 +34,9 @@ Pillow
 flake8
 flake8-builtins
 flake8-print
+
+# Testing
+pytest
+pytest-django
+pytest-cov
+model_bakery
