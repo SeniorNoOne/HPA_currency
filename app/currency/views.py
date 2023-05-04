@@ -59,7 +59,7 @@ class ContactUsCreateView(SendFeedbackMailMixin, CreateView):
 
 class ContactUsListView(CustomPaginationMixin, FilterView):
     template_name = 'contact_us/contact_us_list.html'
-    queryset = ContactUs.objects.all()
+    queryset = ContactUs.objects.all().order_by('id')
     filterset_class = ContactUsFilter
 
 

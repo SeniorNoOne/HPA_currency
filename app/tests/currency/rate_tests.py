@@ -3,7 +3,7 @@ from currency.models import Rate
 
 # Create
 def test_rate_create_status_200(client):
-    response = client.post('/currency/rate/create/')
+    response = client.get('/currency/rate/create/')
     assert response.status_code == 200
 
 

@@ -68,3 +68,15 @@ def super_user(active_user):
     active_user.is_superuser = True
     active_user.save()
     yield active_user
+
+
+@pytest.fixture(scope='function')
+def contact_us():
+    contact_us = baker.make('currency.ContactUs')
+    yield contact_us
+
+
+@pytest.fixture(scope='function')
+def contact_us_multiple():
+    contact_us = baker.make('currency.ContactUs', _quantity=10)
+    yield contact_us

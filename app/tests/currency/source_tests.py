@@ -3,7 +3,7 @@ from currency.models import Source
 
 # Create
 def test_source_create_status_200(client):
-    response = client.post('/currency/source/create/')
+    response = client.get('/currency/source/create/')
     assert response.status_code == 200
 
 
@@ -81,6 +81,31 @@ def test_source_create_duplicate_code_errors(client, source):
     response = client.post('/currency/source/create/', data=payload)
     assert response.context_data['form']._errors == \
            {'code': ['Source with this Code already exists.']}
+
+
+def test_source_create_valid_form_status_302(client, source):
+    payload = {
+        'url': source.url,
+        'name': source.name,
+        'code': source.code + 1
+    }
+    response = client.post('/currency/source/create/', data=payload)
+    assert response.status_code == 302
+
+
+def test_source_create_valid_form_data(client, source):
+    initial_count = Source.objects.count()
+    payload = {
+        'url': source.url,
+        'name': source.name,
+        'code': source.code + 1
+    }
+    response = client.post('/currency/source/create/', data=payload)
+    checks = (
+        response['location'] == '/currency/source/list/',
+        Source.objects.count() == initial_count + 1
+    )
+    assert all(checks)
 
 
 # List
