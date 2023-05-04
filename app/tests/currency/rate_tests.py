@@ -125,11 +125,11 @@ def test_rate_create_valid_form_status_302(client, source, rate, currency):
     assert response.status_code == 302
 
 
-def test_rate_create_valid_form_data(client, source, currency):
+def test_rate_create_valid_form_data(client, source, rate, currency):
     initial_count = Rate.objects.count()
     payload = {
-        'buy': 100,
-        'sell': 100,
+        'buy': rate.buy,
+        'sell': rate.sell,
         'currency': currency,
         'source': source.id
     }
@@ -242,12 +242,12 @@ def test_rate_update_super_user_empty_form_errors(client, super_user, rate):
     }
 
 
-def test_rate_update_super_user_invalid_buy_errors(client, super_user, source, rate, currency, ):
+def test_rate_update_super_user_invalid_buy_errors(client, super_user, source, rate, currency):
     payload = {
         'buy': 'WRONG',
         'sell': rate.sell,
         'currency': currency,
-        'source': source.id,
+        'source': source.id
     }
     client.force_login(super_user)
     response = client.post(f'/currency/rate/update/{rate.id}/', data=payload)
@@ -259,7 +259,7 @@ def test_rate_update_super_user_invalid_sell_errors(client, super_user, source, 
         'buy': rate.buy,
         'sell': 'WRONG',
         'currency': currency,
-        'source': source.id,
+        'source': source.id
     }
     client.force_login(super_user)
     response = client.post(f'/currency/rate/update/{rate.id}/', data=payload)
@@ -272,7 +272,7 @@ def test_rate_update_super_user_invalid_currency_errors(client, super_user, sour
         'buy': rate.buy,
         'sell': rate.sell,
         'currency': invalid_currency,
-        'source': source.id,
+        'source': source.id
     }
     client.force_login(super_user)
     response = client.post(f'/currency/rate/update/{rate.id}/', data=payload)
@@ -287,7 +287,7 @@ def test_rate_update_super_user_invalid_source_errors(client, super_user, source
         'buy': rate.buy,
         'sell': rate.sell,
         'currency': currency,
-        'source': 'WRONG',
+        'source': 'WRONG'
     }
     client.force_login(super_user)
     response = client.post(f'/currency/rate/update/{rate.id}/', data=payload)
@@ -301,7 +301,7 @@ def test_rate_update_super_user_valid_form_status_302(client, super_user, source
         'buy': rate.buy,
         'sell': rate.sell,
         'currency': currency,
-        'source': source.id,
+        'source': source.id
     }
     client.force_login(super_user)
     response = client.post(f'/currency/rate/update/{rate.id}/', data=payload)
@@ -313,7 +313,7 @@ def test_rate_update_super_user_valid_form_data(client, super_user, source, rate
         'buy': rate.buy,
         'sell': rate.sell,
         'currency': currency,
-        'source': source.id,
+        'source': source.id
     }
     client.force_login(super_user)
     response = client.post(f'/currency/rate/update/{rate.id}/', data=payload)

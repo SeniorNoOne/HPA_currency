@@ -95,7 +95,7 @@ class SourceCreateView(CreateView, SaveFileMixin):
 
 class SourceListView(SendFeedbackMailMixin, CustomPaginationMixin, FilterView):
     template_name = 'source/source_list.html'
-    queryset = Source.objects.all()
+    queryset = Source.objects.all().order_by('id')
     filterset_class = SourceFilter
 
 
