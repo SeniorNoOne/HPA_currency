@@ -174,6 +174,7 @@ def test_rate_details_inactive_user_status_302(client, user, rate):
     assert response.status_code == 302
 
 
+# noinspection DuplicatedCode
 def test_rate_details_active_user_status_200(client, active_user, rate):
     client.force_login(active_user)
     response = client.get(f'/currency/rate/details/{rate.id}/')

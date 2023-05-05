@@ -1,6 +1,7 @@
 import pytest
 from model_bakery import baker
 from random import choice, randint
+from rest_framework.test import APIClient
 
 from currency.choices import RateCurrencyChoices
 
@@ -8,6 +9,12 @@ from currency.choices import RateCurrencyChoices
 @pytest.fixture(autouse=True, scope='function')
 def enable_db_access_for_all_tests(db):
     yield
+
+
+@pytest.fixture(scope='function')
+def api_client():
+    client = APIClient()
+    yield client
 
 
 @pytest.fixture(scope='function')
