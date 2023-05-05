@@ -1,9 +1,12 @@
+from os import getcwd
+
 import pytest
 from model_bakery import baker
 from random import choice, randint
 from rest_framework.test import APIClient
 
 from currency.choices import RateCurrencyChoices
+from app.tests.fixtures import parser_data
 
 
 @pytest.fixture(autouse=True, scope='function')
@@ -87,3 +90,20 @@ def contact_us():
 def contact_us_multiple():
     contact_us = baker.make('currency.ContactUs', _quantity=10)
     yield contact_us
+
+
+@pytest.fixture()
+def privatbank_parser_data():
+    yield parser_data.privat_data
+
+
+@pytest.fixture()
+def monobank_parser_data():
+    yield parser_data.mono_data
+
+
+@pytest.fixture()
+def nbu_parser_data():
+    with open(getcwd() + '/app/tests/fixtures/nbu_response_content', 'rb') as f:
+        content = f.read()
+    yield content
