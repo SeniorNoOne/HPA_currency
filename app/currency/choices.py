@@ -1,19 +1,11 @@
 from django.db import models
 
 
-class CurrencyInfoCurrencyChoices(models.IntegerChoices):
+class RateCurrencyChoices(models.IntegerChoices):
     USD = 1, 'Dollar'
     EUR = 2, 'Euro'
     GBP = 3, 'Pound Sterling'
     JPY = 4, 'Yen'
-
-
-CurrencyInfoCurrencyMap = {
-    CurrencyInfoCurrencyChoices.USD: ('Dollar', 'url1'),
-    CurrencyInfoCurrencyChoices.EUR: ('Euro', 'url2'),
-    CurrencyInfoCurrencyChoices.GBP: ('Pound Sterling', 'url3'),
-    CurrencyInfoCurrencyChoices.JPY: ('Yen', 'url5'),
-}
 
 
 class RequestMethodChoices(models.IntegerChoices):
@@ -24,10 +16,3 @@ class RequestMethodChoices(models.IntegerChoices):
     DELETE = 5, 'DELETE'
     HEAD = 6, 'HEAD'
     OPTIONS = 7, ' OPTIONS'
-
-
-class RateCurrencyChoices(models.IntegerChoices):
-    USD = 1, 'Dollar'
-    EUR = 2, 'Euro'
-    GBP = 3, 'Pound Sterling'
-    JPY = 4, 'Yen'
