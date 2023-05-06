@@ -24,3 +24,10 @@ class RequestMethodChoices(models.IntegerChoices):
     DELETE = 5, 'DELETE'
     HEAD = 6, 'HEAD'
     OPTIONS = 7, ' OPTIONS'
+
+
+class RateCurrencyChoices(models.IntegerChoices):
+    USD = 1, 'Dollar'
+    EUR = 2, 'Euro'
+    GBP = 3, 'Pound Sterling'
+    JPY = 4, 'Yen'
