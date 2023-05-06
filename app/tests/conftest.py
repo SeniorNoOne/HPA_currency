@@ -9,7 +9,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 
 from currency.choices import RateCurrencyChoices
-from app.tests.fixtures import parser_data
+from tests.fixtures import parser_data
 
 
 @pytest.fixture(autouse=True, scope='function')
