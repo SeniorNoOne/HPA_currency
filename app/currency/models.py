@@ -2,8 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.templatetags.static import static
 
-from currency.choices import CurrencyInfoCurrencyChoices, RequestMethodChoices, \
-    CurrencyInfoCurrencyMap
+from currency.choices import RateCurrencyChoices, RequestMethodChoices
 
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -12,14 +11,16 @@ class Rate(models.Model):
     buy = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Buy')
     sell = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Sell')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Created at')
-    currency = models.ForeignKey('currency.CurrencyInfo', on_delete=models.CASCADE)
+    currency = models.PositiveSmallIntegerField(choices=RateCurrencyChoices.choices,
+                                                default=RateCurrencyChoices.USD,
+                                                verbose_name='Currency')
     source = models.ForeignKey('currency.Source', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('-created',)
 
     def __str__(self):
-        return f'Currency: {self.buy}/{self.sell}'
+        return f'Currency: {self.get_currency_display()} - {self.buy}/{self.sell}'
 
 
 class ContactUs(models.Model):
@@ -61,17 +62,3 @@ class RequestResponseLog(models.Model):
     path = models.CharField(max_length=255)
     request_method = models.PositiveSmallIntegerField(choices=RequestMethodChoices.choices)
     time = models.PositiveSmallIntegerField()
-
-
-class CurrencyInfo(models.Model):
-    code_name = models.PositiveSmallIntegerField(choices=CurrencyInfoCurrencyChoices.choices)
-    full_name = models.CharField(max_length=64)
-    icon_link = models.CharField(max_length=254)
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.full_name, self.icon_link = CurrencyInfoCurrencyMap.get(self.code_name, ('', ''))
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.full_name
