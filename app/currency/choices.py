@@ -11,8 +11,7 @@ class CurrencyInfoCurrencyChoices(models.IntegerChoices):
 CurrencyInfoCurrencyMap = {
     CurrencyInfoCurrencyChoices.USD: ('Dollar', 'url1'),
     CurrencyInfoCurrencyChoices.EUR: ('Euro', 'url2'),
-    CurrencyInfoCurrencyChoices.UAH: ('Hryvnia', 'url3'),
-    CurrencyInfoCurrencyChoices.GBP: ('Pound Sterling', 'url]4'),
+    CurrencyInfoCurrencyChoices.GBP: ('Pound Sterling', 'url3'),
     CurrencyInfoCurrencyChoices.JPY: ('Yen', 'url5'),
 }
 
