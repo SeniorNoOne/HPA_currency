@@ -1,9 +1,12 @@
 from os import getcwd
 
 import pytest
+from django.conf import settings
 from model_bakery import baker
 from random import choice, randint
 from rest_framework.test import APIClient
+from rest_framework_simplejwt.tokens import AccessToken
+
 
 from currency.choices import RateCurrencyChoices
 from app.tests.fixtures import parser_data
@@ -18,6 +21,20 @@ def enable_db_access_for_all_tests(db):
 def api_client():
     client = APIClient()
     yield client
+
+
+@pytest.fixture(scope='function')
+def api_client_authorized(api_client, active_user):
+    token = AccessToken.for_user(active_user)
+    api_client.force_authenticate(user=active_user, token=token)
+    yield api_client
+
+
+@pytest.fixture(scope='function')
+def api_throttling_rate():
+    throttling_rate = settings.REST_FRAMEWORK['DEFAULT_THROTTLE_RATES']['currency_anon']
+    throttling_rate = int(throttling_rate.split('/')[0])
+    yield throttling_rate
 
 
 @pytest.fixture(scope='function')

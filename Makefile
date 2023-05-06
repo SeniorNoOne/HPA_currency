@@ -1,7 +1,7 @@
 manage_py := python app/manage.py
 
 install:
-	python.exe -m pip install --upgrade pip
+	python -m pip install --upgrade pip
 	pip install -r requirements.txt --upgrade
 
 run:
