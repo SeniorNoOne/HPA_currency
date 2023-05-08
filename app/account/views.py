@@ -5,10 +5,10 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, RedirectView, UpdateView
 
 from account.forms import UserSignUpForm
-from utils.mixins import SendSignupMailMixin, SaveFileMixin
+from utils.mixins import SendSignupMailMixin
 
 
-class UserSignupView(SendSignupMailMixin, CreateView, SaveFileMixin):
+class UserSignupView(SendSignupMailMixin, CreateView):
     queryset = get_user_model().objects.all()
     template_name = "signup.html"
     success_url = reverse_lazy("index")
@@ -18,7 +18,6 @@ class UserSignupView(SendSignupMailMixin, CreateView, SaveFileMixin):
         instance = form.save(commit=False)
         cleaned_data = form.cleaned_data
         cleaned_data['username'] = instance.username
-        self._save_file(cleaned_data, 'user', 'avatar', 'username')
         email = self._create_email(instance)
         self._send_mail(email)
         try:
@@ -44,7 +43,7 @@ class UserActivateView(RedirectView):
         return url
 
 
-class ProfileView(LoginRequiredMixin, UpdateView, SaveFileMixin):
+class ProfileView(LoginRequiredMixin, UpdateView):
     template_name = 'registration/profile.html'
     success_url = reverse_lazy('index')
     queryset = get_user_model().objects.all()
@@ -58,5 +57,4 @@ class ProfileView(LoginRequiredMixin, UpdateView, SaveFileMixin):
         return self.request.user
 
     def form_valid(self, form):
-        self._save_file(form, 'avatar', 'username')
         return super().form_valid(form)

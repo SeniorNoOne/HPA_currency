@@ -9,7 +9,7 @@ from currency.forms import ContactUsForm, RateForm, SourceForm
 from currency.models import ContactUs, Rate, Source, RequestResponseLog
 from currency.filters import RateFilter, RequestResponseLogFilter, ContactUsFilter, SourceFilter
 from utils.mixins import (
-    SendFeedbackMailMixin, SuperUserTestMixin, SaveFileMixin, DeleteFileMixin, CustomPaginationMixin
+    SendFeedbackMailMixin, SuperUserTestMixin, CustomPaginationMixin
 )
 
 from django_filters.views import FilterView
@@ -81,16 +81,11 @@ class ContactUsDeleteView(DeleteView):
     success_url = reverse_lazy('currency:contactus-list')
 
 
-class SourceCreateView(CreateView, SaveFileMixin):
+class SourceCreateView(CreateView):
     form_class = SourceForm
     template_name = 'source/source_create.html'
     queryset = Source.objects.all()
     success_url = reverse_lazy('currency:source-list')
-
-    def form_valid(self, form):
-        cleaned_data = form.cleaned_data
-        self._save_file(cleaned_data, 'source', 'logo', 'code')
-        return super().form_valid(form)
 
 
 class SourceListView(SendFeedbackMailMixin, CustomPaginationMixin, FilterView):
@@ -104,27 +99,17 @@ class SourceDetailView(DetailView):
     queryset = Source.objects.all()
 
 
-class SourceUpdateView(UpdateView, SaveFileMixin):
+class SourceUpdateView(UpdateView):
     form_class = SourceForm
     template_name = 'source/source_update.html'
     queryset = Source.objects.all()
     success_url = reverse_lazy('currency:source-list')
 
-    def form_valid(self, form):
-        cleaned_data = form.cleaned_data
-        self._save_file(cleaned_data, 'source', 'logo', 'code')
-        return super().form_valid(form)
 
-
-class SourceDeleteView(DeleteView, DeleteFileMixin):
+class SourceDeleteView(DeleteView):
     template_name = 'source/source_delete.html'
     queryset = Source.objects.all()
     success_url = reverse_lazy('currency:source-list')
-
-    def form_valid(self, form):
-        instance = self.get_object()
-        self._delete_file_dir(instance, 'code')
-        return super().form_valid(form)
 
 
 class LogListView(CustomPaginationMixin, FilterView):
