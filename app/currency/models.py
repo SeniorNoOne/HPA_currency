@@ -3,6 +3,8 @@ from django.db import models
 from django.templatetags.static import static
 
 from currency.choices import RateCurrencyChoices, RequestMethodChoices
+from utils.common import upload_to_path
+from currency.constants import StorageUniqueFields
 
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -43,7 +45,8 @@ class Source(models.Model):
     name = models.CharField(max_length=64)
     city = models.CharField(max_length=64, blank=True)
     phone = PhoneNumberField(blank=True, unique=True, null=True)
-    logo = models.ImageField(blank=True, null=True)
+    logo = models.ImageField(blank=True, null=True,
+                             upload_to=upload_to_path(StorageUniqueFields.source))
 
     def __str__(self):
         return self.name.capitalize()

@@ -68,14 +68,6 @@ class SendSignupMailMixin(CreateSignUpEmailMixin, SendMailMixin):
     pass
 
 
-class SaveFileMixin:
-    pass
-
-
-class DeleteFileMixin:
-    pass
-
-
 class SuperUserTestMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_superuser
