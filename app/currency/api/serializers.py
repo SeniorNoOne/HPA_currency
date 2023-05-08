@@ -22,7 +22,6 @@ class SourceSerializer(serializers.ModelSerializer):
         fields = (
             'url',
             'code',
-            'name',
             'city',
             'phone',
         )
