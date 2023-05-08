@@ -1,12 +1,9 @@
-from os import getcwd
-
 import pytest
 from django.conf import settings
 from model_bakery import baker
 from random import choice, randint
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import AccessToken
-
 
 from currency.choices import RateCurrencyChoices
 from tests.fixtures import parser_data
@@ -121,6 +118,6 @@ def monobank_parser_data():
 
 @pytest.fixture()
 def nbu_parser_data():
-    with open(getcwd() + '/app/tests/fixtures/nbu_response_content', 'rb') as f:
+    with open(str(settings.BASE_DIR) + '/tests/fixtures/nbu_response_content', 'rb') as f:
         content = f.read()
     yield content
