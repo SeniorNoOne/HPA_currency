@@ -1,14 +1,34 @@
 import re
 import requests
-
 from decimal import Decimal
 from pathlib import Path
 
+from django.core.files.storage import default_storage
 
-def get_upload_to_path(model_name, unique_key, file_name):
-    instance_path = get_instance_path(model_name, unique_key)
-    file_path = instance_path + '/' + file_name
-    return file_path
+
+def upload_to_path(unique_field_name):
+    def inner(instance, filename):
+        unique_field_names = [field.name for field in instance._meta.fields if field.unique]
+        if unique_field_name not in unique_field_names:
+            raise ValueError('Field name specified in "unique_field_name" should '
+                             'have unique constraint')
+
+        model_name = instance.__class__.__name__
+        instance_path = get_instance_path(model_name, str(getattr(instance, unique_field_name)))
+        return instance_path + '/' + filename
+    return inner
+
+
+def delete_dir(model_name, unique_val):
+    path_to_instance = get_instance_path(model_name, unique_val)
+    try:
+        dirs = default_storage.listdir(path_to_instance)
+        for file_name in dirs[1]:
+            file_path = f"{path_to_instance}/{file_name}"
+            default_storage.delete(file_path)
+        default_storage.delete(path_to_instance)
+    except FileNotFoundError:
+        pass
 
 
 def get_instance_path(model_name, unique_key):

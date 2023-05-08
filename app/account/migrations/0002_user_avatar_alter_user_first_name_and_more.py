@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             model_name='user',
             name='avatar',
             field=models.ImageField(blank=True, null=True,
-                                    upload_to=utils.common.get_upload_to_path),
+                                    upload_to=utils.common.upload_to_path),
         ),
         migrations.AlterField(
             model_name='user',
