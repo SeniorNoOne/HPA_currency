@@ -75,3 +75,7 @@ class NBUConfig:
         'url': url,
         'logo': logo
     }
+
+
+class StorageUniqueFields:
+    source = 'code'

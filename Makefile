@@ -45,4 +45,4 @@ rm_test_data:
 	$(manage_py) delete_test_data
 
 pytest:
-	pytest ./app/tests --cov=app --cov-report html
+	pytest ./app/tests --cov=app --cov-report html && coverage report --fail-under=80

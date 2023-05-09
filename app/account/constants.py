@@ -1,0 +1,2 @@
+class StorageUniqueFields:
+    user = 'username'
