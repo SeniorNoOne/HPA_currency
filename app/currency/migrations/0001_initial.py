@@ -7,7 +7,6 @@ import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -17,7 +16,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ContactUs',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False,
+                                           verbose_name='ID')),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('email_from', models.EmailField(max_length=100)),
                 ('subject', models.CharField(max_length=100)),
@@ -31,7 +31,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='RequestResponseLog',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False,
+                                           verbose_name='ID')),
                 ('path', models.CharField(max_length=255)),
                 ('request_method', models.PositiveSmallIntegerField(choices=[(1, 'GET'),
                                                                              (2, 'POST'),
@@ -49,20 +50,24 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Source',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False,
+                                           verbose_name='ID')),
                 ('url', models.CharField(max_length=255)),
                 ('code', models.SmallIntegerField(unique=True)),
                 ('name', models.CharField(max_length=64)),
                 ('city', models.CharField(blank=True, max_length=64)),
-                ('phone', phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=128, null=True,
+                ('phone', phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=128,
+                                                                         null=True,
                                                                          region=None, unique=True)),
-                ('logo', models.ImageField(blank=True, null=True, upload_to=currency.models.source_upload_to)),
+                ('logo', models.ImageField(blank=True, null=True,
+                                           upload_to=currency.models.source_upload_to)),
             ],
         ),
         migrations.CreateModel(
             name='Rate',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False,
+                                           verbose_name='ID')),
                 ('buy', models.DecimalField(decimal_places=2, max_digits=6, verbose_name='Buy')),
                 ('sell', models.DecimalField(decimal_places=2, max_digits=6, verbose_name='Sell')),
                 ('created', models.DateTimeField(auto_now_add=True, verbose_name='Created at')),
@@ -74,7 +79,8 @@ class Migration(migrations.Migration):
                                                               default=1,
                                                               verbose_name='Currency')
                  ),
-                ('source', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='currency.source')),
+                ('source', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                             to='currency.source')),
             ],
             options={
                 'ordering': ('-created',),
