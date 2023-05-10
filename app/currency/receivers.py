@@ -7,6 +7,4 @@ from currency.constants import StorageUniqueFields
 
 @receiver(pre_delete, sender=Source)
 def delete_content_dir(sender, instance, **kwargs):
-    model_name = instance.__class__.__name__
-    unique_val = str(getattr(instance, StorageUniqueFields.source))
-    delete_dir(model_name, unique_val)
+    delete_dir(instance, StorageUniqueFields.source)
