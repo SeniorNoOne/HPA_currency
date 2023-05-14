@@ -3,10 +3,14 @@ from django.db import models
 from django.templatetags.static import static
 
 from currency.choices import RateCurrencyChoices, RequestMethodChoices
-from utils.common import upload_to_path
 from currency.constants import StorageUniqueFields
+from utils.common import get_upload_to_path
 
 from phonenumber_field.modelfields import PhoneNumberField
+
+
+def source_upload_to(instance, filename):
+    return get_upload_to_path(instance, StorageUniqueFields.source, filename)
 
 
 class Rate(models.Model):
@@ -46,7 +50,7 @@ class Source(models.Model):
     city = models.CharField(max_length=64, blank=True)
     phone = PhoneNumberField(blank=True, unique=True, null=True)
     logo = models.ImageField(blank=True, null=True,
-                             upload_to=upload_to_path(StorageUniqueFields.source))
+                             upload_to=source_upload_to)
 
     def __str__(self):
         return self.name.capitalize()
