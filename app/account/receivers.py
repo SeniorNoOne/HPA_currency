@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.db.models.signals import pre_save, pre_delete
+from django.db.models.signals import pre_save, post_delete
 from django.dispatch import receiver
 
 from account.constants import StorageUniqueFields
@@ -25,6 +25,6 @@ def user_clean_phone(sender, instance, **kwargs):
         instance.phone = ''.join(token for token in instance.phone if token.isdigit())
 
 
-@receiver(pre_delete, sender=User)
-def delete_content_dir(sender, instance, **kwargs):
+@receiver(post_delete, sender=User)
+def delete_user_content_dir(sender, instance, **kwargs):
     delete_dir(instance, StorageUniqueFields.user)

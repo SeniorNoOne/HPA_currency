@@ -1,13 +1,13 @@
 from django.core.cache import cache
-from django.db.models.signals import pre_delete, post_save
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from currency.models import Source, Rate
 from utils.common import delete_dir
 from currency.constants import StorageUniqueFields, LATEST_RATE_CACHE_KEY
 
 
-@receiver(pre_delete, sender=Source)
-def delete_content_dir(sender, instance, **kwargs):
+@receiver(post_delete, sender=Source)
+def delete_source_content_dir(sender, instance, **kwargs):
     delete_dir(instance, StorageUniqueFields.source)
 
 
