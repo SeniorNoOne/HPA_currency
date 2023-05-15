@@ -79,3 +79,6 @@ class NBUConfig:
 
 class StorageUniqueFields:
     source = 'code'
+
+
+LATEST_RATE_CACHE_KEY = 'api::currency::rates::latest'

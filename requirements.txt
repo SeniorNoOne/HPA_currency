@@ -41,3 +41,6 @@ pytest-django
 pytest-cov
 pytest-mock
 model_bakery
+
+# Caching
+pymemcache

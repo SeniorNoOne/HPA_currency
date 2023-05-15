@@ -1,6 +1,11 @@
+from django.core.cache import cache
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 
+from currency.constants import LATEST_RATE_CACHE_KEY
+from currency.choices import RateCurrencyChoices
 from currency.api.paginators import CurrencyApiLimitOffsetPagination
 from currency.api.serializers import (RateSerializer, SourceSerializer,
                                       ContactUsSerializer, RequestResponseLogSerializer)
@@ -18,6 +23,21 @@ class RateApiViewSet(viewsets.ModelViewSet):
     ordering_fields = ('id', 'buy', 'sell',)
     search_fields = ('source__name',)
     throttle_classes = [CurrencyAnonThrottle, CurrencyUserThrottle]
+
+    @action(detail=False, methods=('GET',))
+    def latest(self, request, *args, **kwargs):
+        latest_rates = []
+        if cached_rates := cache.get(LATEST_RATE_CACHE_KEY):
+            return Response(cached_rates)
+
+        for source_obj in Source.objects.all():
+            for currency in RateCurrencyChoices:
+                if latest := Rate.objects.filter(source=source_obj,
+                                                 currency=currency).order_by('-created').first():
+                    latest_rates.append(RateSerializer(instance=latest).data)
+
+        cache.set(LATEST_RATE_CACHE_KEY, latest_rates, 60 * 60 * 24 * 7)
+        return Response(latest_rates)
 
 
 class ContactUsApiViewSet(viewsets.ModelViewSet):
