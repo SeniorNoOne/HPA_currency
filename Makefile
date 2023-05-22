@@ -46,3 +46,6 @@ rm_test_data:
 
 pytest:
 	pytest ./app/tests --cov=app --cov-report html && coverage report --fail-under=80
+
+gunicorn:
+	cd ./app && gunicorn --workers 4 --threads 4 settings.wsgi --timeout 36000 --max-requests 10000 -b localhost:8000
