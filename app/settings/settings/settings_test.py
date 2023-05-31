@@ -1,4 +1,4 @@
-from .settings import *
+from .base import *
 
 DEBUG = False
 
@@ -11,6 +11,12 @@ REST_FRAMEWORK.update(
     }
 )
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 CACHES = {
     'default': {
