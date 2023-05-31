@@ -30,7 +30,7 @@ createsuperuser:
 	$(manage_py) createsuperuser
 
 worker:
-	cd app && celery -A settings worker -l info --autoscale=0,2
+	cd app && celery -A settings worker -l info --autoscale=1,3 --pool threads
 
 schedule_worker:
 	cd app && celery -A settings worker -Q scheduled_tasks -l info --autoscale=0,3
