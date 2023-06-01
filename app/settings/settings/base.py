@@ -1,12 +1,10 @@
+import environ
+
 from datetime import timedelta
-
-from celery.schedules import crontab
-from django.urls import reverse_lazy
-
-from configparser import ConfigParser
 from pathlib import Path
 
-import environ
+from django.urls import reverse_lazy
+from celery.schedules import crontab
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,10 +19,8 @@ env.read_env(env_file)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
 
 # Application definition
@@ -99,9 +95,9 @@ WSGI_APPLICATION = 'settings.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env.str('DB_NAME', 'currency-db'),
-        'USER': env.str('DB_USER', ''),
-        'PASSWORD': env.str('DB_PASSWORD', ''),
+        'NAME': env.str('DB_NAME', 'postgres-db'),
+        'USER': env.str('DB_USER', 'postgres'),
+        'PASSWORD': env.str('DB_PASSWORD', 'postgres'),
         'HOST': env.str('DB_HOST', 'localhost'),
         'PORT': env.str('DB_PORT', '5432'),
     }
@@ -140,31 +136,31 @@ STATIC_ROOT = BASE_DIR.parent / 'static_content' / 'static'
 
 # SMTP
 EMAIL_BACKEND = env.str('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST = env.str('EMAIL_HOST')
-EMAIL_PORT = env.str('EMAIL_PORT')
+EMAIL_HOST = env.str('EMAIL_HOST', 'localhost')
+EMAIL_PORT = env.str('EMAIL_PORT', '2525')
 
-EMAIL_HOST_USERNAME = env.str('EMAIL_HOST_USERNAME')
-EMAIL_HOST_PASSWORD = env.str('EMAIL_PASSWORD')
-EMAIL_USE_TLS = env.bool('EMAIL_USR_TLS')
+EMAIL_HOST_USERNAME = env.str('EMAIL_HOST_USERNAME', 'user')
+EMAIL_HOST_PASSWORD = env.str('EMAIL_PASSWORD', 'password')
+EMAIL_USE_TLS = env.bool('EMAIL_USR_TLS', True)
 
 DEFAULT_FROM_EMAIL = env.str('EMAIL_VALIDATED_SENDER_USER', 'test_sender@example.com')
 EMAIL_RECEIVER = env.list('EMAIL_TARGET_USERS', default='test_receiver@example.com')
 
 
 # Static and media
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DEFAULT_FILE_STORAGE = env.str('STORAGE_BACKEND', 'django.core.files.storage.FileSystemStorage')
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 MEDIA_ROOT = BASE_DIR.parent / 'static_content' / 'media'
 MEDIA_URL = '/media/'
 
 
 # Storage
-AWS_ACCESS_KEY_ID = env.str('STORAGE_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = env.str('STORAGE_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = env.str('STORAGE_BUCKER_NAME')
-AWS_S3_ENDPOINT_URL = env.str('STORAGE_ENDPOINT_URL')
-AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME + env.str('STORAGE_CUSTOM_DOMAIN')
-AWS_S3_FILE_OVERWRITE = env.bool('STORAGE_FILE_OVERWRITE')
+AWS_ACCESS_KEY_ID = env.str('STORAGE_ACCESS_KEY_ID', '')
+AWS_SECRET_ACCESS_KEY = env.str('STORAGE_SECRET_ACCESS_KEY', '')
+AWS_STORAGE_BUCKET_NAME = env.str('STORAGE_BUCKET_NAME', '')
+AWS_S3_ENDPOINT_URL = env.str('STORAGE_ENDPOINT_URL', '')
+AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME + env.str('STORAGE_CUSTOM_DOMAIN', '')
+AWS_S3_FILE_OVERWRITE = env.bool('STORAGE_FILE_OVERWRITE', False)
 
 
 # Debug toolbar fix
