@@ -95,11 +95,11 @@ WSGI_APPLICATION = 'settings.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env.str('DB_NAME', 'postgres-db'),
-        'USER': env.str('DB_USER', 'postgres'),
-        'PASSWORD': env.str('DB_PASSWORD', 'postgres'),
-        'HOST': env.str('DB_HOST', 'localhost'),
-        'PORT': env.str('DB_PORT', '5432'),
+        'NAME': env.str('POSTGRES_DB', 'postgres-db'),
+        'USER': env.str('POSTGRES_USER', 'postgres'),
+        'PASSWORD': env.str('POSTGRES_PASSWORD', 'postgres'),
+        'HOST': env.str('POSTGRES_HOST', 'localhost'),
+        'PORT': env.str('POSTGRES_PORT', '5432'),
     }
 }
 
@@ -191,7 +191,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # Celery
 CELERY_BROKER_URL = 'amqp://{0}:{1}@{2}:{3}//'.format(
     env.str('RABBITMQ_DEFAULT_USER', 'guest'),
-    env.str('RABBITMQ_DEFAULT_PASSWORD', 'guest'),
+    env.str('RABBITMQ_DEFAULT_PASS', 'guest'),
     env.str('RABBITMQ_DEFAULT_HOST', '127.0.0.1'),
     env.str('RABBITMQ_DEFAULT_PORT', '5672'),
 )
