@@ -85,3 +85,12 @@ pytest_d:
 
 gunicorn:
 	cd ./app && gunicorn --workers 4 --threads 4 settings.wsgi --timeout 36000 --max-requests 10000 -b localhost:8000
+
+collectstatic:
+	$(manage_py) collectstatic --no-input
+
+collectstatic_d:
+	$(docker_backend_python) collectstatic --no-input
+
+terminal_d:
+	docker-compose -f docker/docker-compose-dev.yml exec -it backend bash
