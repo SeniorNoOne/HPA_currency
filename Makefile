@@ -57,7 +57,7 @@ createsuperuser_d:
 	$(docker_backend_python) createsuperuser
 
 celery_worker:
-	cd app && celery -A settings worker -l info --autoscale=0,2
+	cd app && celery -A settings worker -l info --autoscale=0,2 --pool threads
 
 celery_schedule_worker:
 	cd app && celery -A settings worker -Q scheduled_tasks -l info --autoscale=0,3
