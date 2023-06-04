@@ -17,6 +17,7 @@ crispy_bootstrap5
 phonenumbers
 requests
 psycopg2-binary
+flower
 
 # REST APIs and Serialization
 djangorestframework
