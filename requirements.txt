@@ -11,10 +11,13 @@ django-crispy-forms
 django-filter
 django-import-export
 django-phonenumber-field
+django-environ
 beautifulsoup4
 crispy_bootstrap5
 phonenumbers
 requests
+psycopg2-binary
+flower
 
 # REST APIs and Serialization
 djangorestframework
