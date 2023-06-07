@@ -1,6 +1,13 @@
 import random
 
 
+def mileage_handler(x):
+    if x.contents[0].startswith('Даних про пробіг не виявлено'):
+        return None
+    else:
+        return int(x.contents[0].replace('км', '').replace('тис.', ''))
+
+
 class AutoriaConfig:
     url = 'https://auto.ria.com/uk/search/'
     base_url = 'https://auto.ria.com/uk'
@@ -13,7 +20,7 @@ class AutoriaConfig:
             'headers': None,
             'data': {
                 'key': 'data-id',
-                'handler': None
+                'handler': lambda x: int(x)
             }
         },
 
@@ -21,7 +28,7 @@ class AutoriaConfig:
             'headers': None,
             'data': {
                 'key': 'data-link-to-view',
-                'handler': None
+                'handler': lambda x: x.replace('/', ' ')
             }
         },
 
@@ -40,7 +47,7 @@ class AutoriaConfig:
                 'search_kwargs': {
                     'class_': 'argument',
                 },
-                'handler': lambda x: x.contents[0].replace('км', '').replace(' тис.', 'K').strip()
+                'handler': mileage_handler
             }
         },
 
@@ -74,7 +81,7 @@ class AutoriaConfig:
                 'search_kwargs': {
                     'class_': 'argument'
                 },
-                'handler': lambda x: x.text.replace('• ', '').replace(' л', 'L')
+                'handler': lambda x: x.text.replace('• ', '').replace(' л', 'L').strip()
             }
         }
     }
@@ -109,3 +116,20 @@ class RandomUserAgent:
 
 
 RandomUserAgent = RandomUserAgent()
+
+
+TABLE_QUERIES = [
+    """
+    CREATE TABLE IF NOT EXISTS autoria (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        car_id INTEGER NOT NULL,
+        data_link TEXT NOT NULL,
+        mileage INT NULL,
+        car_decs TEXT NULL,
+        engine TEXT NULL
+    );
+    """,
+]
+
+INSERT_QUERY = "INSERT INTO autoria (car_id, data_link, mileage, car_decs, engine) " \
+               "VALUES (?, ?, ?, ?, ?)"

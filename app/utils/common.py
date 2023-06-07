@@ -6,8 +6,8 @@ from bs4 import BeautifulSoup
 from django.core.files.storage import default_storage
 
 
-from constants import AutoriaConfig, RandomUserAgent
-from classes import CSVWriter
+from constants import AutoriaConfig, RandomUserAgent, TABLE_QUERIES, INSERT_QUERY
+from classes import CSVWriter, SQLiteWriter
 
 
 def get_instance_path(instance, unique_field_name):
@@ -72,7 +72,10 @@ def parse_item(search_result, config):
 
 
 def parse_autoria():
-    file_writers = (CSVWriter('test.csv', AutoriaConfig.headers),)
+    file_writers = (
+        CSVWriter('autoria.csv', AutoriaConfig.headers),
+        SQLiteWriter('autoria.db', TABLE_QUERIES, INSERT_QUERY)
+    )
     params = AutoriaConfig.query_params
     page = 0
 
@@ -90,7 +93,7 @@ def parse_autoria():
             break
 
         for ticket_item in items:
-            data = {}
+            data = {key: None for key in AutoriaConfig.headers}
             post_details = ticket_item.find("div", {"class": "hide"})
             data |= parse_item(post_details, AutoriaConfig.headers_config)
 
