@@ -5,9 +5,12 @@ from decimal import Decimal
 from bs4 import BeautifulSoup
 from django.core.files.storage import default_storage
 
-
-from constants import AutoriaConfig, RandomUserAgent, TABLE_QUERIES, INSERT_QUERY
-from classes import CSVWriter, SQLiteWriter
+try:
+    from utils.constants import AutoriaConfig, RandomUserAgent, TABLE_QUERIES, INSERT_QUERY
+    from utils.classes import CSVWriter, SQLiteWriter
+except ModuleNotFoundError:
+    from constants import AutoriaConfig, RandomUserAgent, TABLE_QUERIES, INSERT_QUERY
+    from classes import CSVWriter, SQLiteWriter
 
 
 def get_instance_path(instance, unique_field_name):
