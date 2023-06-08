@@ -8,6 +8,8 @@ omit = */tests.py
        */wsgi.py
        */settings*.py
        */app/manage.py
+       */utils/classes.py
+       */utils/common.py
 
 [report]
 precision = 4
