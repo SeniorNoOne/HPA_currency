@@ -2,11 +2,11 @@ from django.conf import settings
 from django.db import models
 from django.templatetags.static import static
 
+from phonenumber_field.modelfields import PhoneNumberField
+
 from currency.choices import RateCurrencyChoices, RequestMethodChoices
 from currency.constants import StorageUniqueFields
 from utils.common import get_upload_to_path
-
-from phonenumber_field.modelfields import PhoneNumberField
 
 
 def source_upload_to(instance, filename):
@@ -62,7 +62,7 @@ class Source(models.Model):
                 return str(self.logo)
             else:
                 return self.logo.url
-        return static('source_logo_default.png')
+        return static('images/source_logo_default.png')
 
 
 class RequestResponseLog(models.Model):
