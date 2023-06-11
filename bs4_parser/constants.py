@@ -94,7 +94,7 @@ class AutoriaConfig:
 
     sql = {
         'insert_query':
-            "INSERT INTO autoria (car_id, data_link, mileage, car_decs, engine) " \
+            "INSERT INTO autoria (car_id, data_link, mileage, car_decs, engine) "
             "VALUES (?, ?, ?, ?, ?)",
 
         'table_queries': (
