@@ -4,6 +4,7 @@
 venv
 __pycache__
 *.sqlite3
+*.db
 config.ini
 .env
 *.csv

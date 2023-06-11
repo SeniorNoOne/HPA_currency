@@ -2,15 +2,7 @@ import re
 import requests
 from decimal import Decimal
 
-from bs4 import BeautifulSoup
 from django.core.files.storage import default_storage
-
-try:
-    from utils.constants import AutoriaConfig, RandomUserAgent, TABLE_QUERIES, INSERT_QUERY
-    from utils.classes import CSVWriter, SQLiteWriter
-except ModuleNotFoundError:
-    from constants import AutoriaConfig, RandomUserAgent, TABLE_QUERIES, INSERT_QUERY
-    from classes import CSVWriter, SQLiteWriter
 
 
 def get_instance_path(instance, unique_field_name):
@@ -52,67 +44,3 @@ def json_to_decimal(json_lst, decimal_places=2, keys_to_convert=None):
                 value = value.replace(',', '.')
                 _json[key] = Decimal(value).quantize(Decimal(f'1.{"0" * decimal_places}'))
     return json_lst
-
-
-def parse_item(search_result, config):
-    items_data = {}
-    for item_config in config:
-        item_headers = config[item_config]['headers']
-        item_data = config[item_config]['data']
-        if item_headers:
-            data = search_result.find(item_headers['tag'], **item_headers['search_kwargs'])
-            if data and data.text == item_headers['value']:
-                data = search_result.find(item_data['tag'], **item_data['search_kwargs'])
-                if data and item_data['handler']:
-                    data = item_data['handler'](data)
-                items_data[item_config] = data
-        else:
-            data = search_result[item_data['key']]
-            if data and item_data['handler']:
-                data = item_data['handler'](data)
-            items_data[item_config] = data
-    return items_data
-
-
-def parse_autoria():
-    file_writers = (
-        CSVWriter('autoria.csv', AutoriaConfig.headers),
-        SQLiteWriter('autoria.db', TABLE_QUERIES, INSERT_QUERY)
-    )
-    params = AutoriaConfig.query_params
-    page = 0
-
-    while True:
-        headers = RandomUserAgent()
-        params['page'] = page
-        content = get_response(AutoriaConfig.url, params=params, headers=headers, return_html=True)
-
-        soup = BeautifulSoup(content, features="html.parser")
-
-        search_results = soup.find("div", {"id": "searchResults"})
-        items = search_results.find_all("section", {"class": "ticket-item"})
-
-        if not items:
-            break
-
-        for ticket_item in items:
-            data = {key: None for key in AutoriaConfig.headers}
-            post_details = ticket_item.find("div", {"class": "hide"})
-            data |= parse_item(post_details, AutoriaConfig.headers_config)
-
-            car_page = get_response(AutoriaConfig.base_url +
-                                    post_details['data-link-to-view'],
-                                    return_html=True)
-            soup_1 = BeautifulSoup(car_page, features='html.parser')
-            item_details = soup_1.find('div', {'class': 'technical-info'})
-            item_details = item_details.find_all('dd')
-            for lst in item_details:
-                data |= parse_item(lst, AutoriaConfig.items_config)
-
-            for writer in file_writers:
-                writer.write_row(data)
-        page += 1
-
-
-if __name__ == '__main__':
-    parse_autoria()
