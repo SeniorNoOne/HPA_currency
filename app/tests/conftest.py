@@ -1,6 +1,7 @@
 from os import getcwd
 
 import pytest
+
 from django.conf import settings
 from model_bakery import baker
 from random import choice, randint

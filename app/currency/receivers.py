@@ -1,9 +1,10 @@
 from django.core.cache import cache
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
+
+from currency.constants import StorageUniqueFields, LATEST_RATE_CACHE_KEY
 from currency.models import Source, Rate
 from utils.common import delete_dir
-from currency.constants import StorageUniqueFields, LATEST_RATE_CACHE_KEY
 
 
 @receiver(post_delete, sender=Source)
