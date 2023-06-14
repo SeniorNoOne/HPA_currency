@@ -28,10 +28,11 @@ def delete_dir(instance, unique_field_name):
         pass
 
 
-def get_response(url, return_html=False):
-    response = requests.get(url)
+# Beautiful soup 4 parser
+def get_response(url, return_html=False, params=None, headers=None):
+    response = requests.get(url, params=params, headers=headers)
     response.raise_for_status()
-    return response.content if return_html else response.json()
+    return response.text if return_html else response.json()
 
 
 def json_to_decimal(json_lst, decimal_places=2, keys_to_convert=None):

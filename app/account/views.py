@@ -10,7 +10,7 @@ from utils.mixins import SendSignupMailMixin
 
 class UserSignupView(SendSignupMailMixin, CreateView):
     queryset = get_user_model().objects.all()
-    template_name = "signup.html"
+    template_name = "registration/signup.html"
     success_url = reverse_lazy("index")
     form_class = UserSignUpForm
 

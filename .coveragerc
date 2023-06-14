@@ -8,6 +8,7 @@ omit = */tests.py
        */wsgi.py
        */settings*.py
        */app/manage.py
+       */bs4_parser/*.py
 
 [report]
 precision = 4

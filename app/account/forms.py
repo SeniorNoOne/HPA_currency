@@ -1,12 +1,12 @@
 import uuid
 
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Column, HTML, Layout, Row, Submit
-
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.password_validation import validate_password
+
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Column, HTML, Layout, Row, Submit
 
 User = get_user_model()
 
@@ -128,7 +128,8 @@ class CustomLoginForm(AuthenticationForm):
                     HTML(
                         '<a href="{% url "password_reset" %}" '
                         'class="btn btn-danger col-12" role="button">Reset Password</a>'
-                    ), css_class='col-2'
+                    ),
+                    css_class='col-2'
                 ),
                 css_class='row justify-content-center',
             )

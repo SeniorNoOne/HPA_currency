@@ -1,8 +1,9 @@
 import random
 
 from django.core.management.base import BaseCommand
-from currency.models import Rate, Source
+
 from currency.choices import RateCurrencyChoices
+from currency.models import Rate, Source
 
 
 class Command(BaseCommand):

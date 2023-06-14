@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.11'
@@ -31,11 +31,7 @@ jobs:
         run: |
           printf "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> ./env/.env
           printf "LOCAL_HOSTS=${{ secrets.LOCAL_HOSTS }}" >> ./env/.env
-          printf "SECRET_KEY=${{ secrets.LOCAL_HOSTS }}"
-          cat ./env/.env
       - name: Setup Python
-        uses: actions/setup-python@v2
-      - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.11'
