@@ -80,16 +80,18 @@ def rates(db):
 
 @pytest.fixture(scope='function')
 def user_data(db):
-    username = uuid.uuid4()
-    user = baker.prepare('account.User', username=username)
+    user = baker.prepare('account.User', _fill_optional=('first_name', 'last_name'))
     user.is_active = False
     yield user
 
 
 @pytest.fixture(scope='function')
-def user(user_data):
-    user_data.save()
-    yield user_data
+def user(db):
+    username = uuid.uuid4()
+    user = baker.make('account.User', username=username)
+    user.is_active = False
+    user.save()
+    yield user
 
 
 @pytest.fixture(scope='function')
@@ -114,7 +116,7 @@ def user_with_avatar(active_user):
         avatar = SimpleUploadedFile(temp_file.name, b'random_image_content')
         active_user.avatar = avatar
         active_user.save()
-        return active_user, avatar.name
+        yield active_user, avatar.name
 
 
 @pytest.fixture(scope='function')
