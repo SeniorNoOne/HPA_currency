@@ -1,16 +1,18 @@
-from os import getcwd
-
 import pytest
+import tempfile
+import uuid
+from random import choice, randint
 
 from django.conf import settings
+from django.contrib.auth.hashers import make_password
+from django.core.files.uploadedfile import SimpleUploadedFile
+
 from model_bakery import baker
-from random import choice, randint
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import AccessToken
 
-
 from currency.choices import RateCurrencyChoices
-from app.tests.fixtures import parser_data
+from tests.fixtures import parser_data
 
 
 @pytest.fixture(autouse=True, scope='function')
@@ -77,11 +79,17 @@ def rates(db):
 
 
 @pytest.fixture(scope='function')
-def user(db):
-    user = baker.make('account.User')
+def user_data(db):
+    username = uuid.uuid4()
+    user = baker.prepare('account.User', username=username)
     user.is_active = False
-    user.save()
     yield user
+
+
+@pytest.fixture(scope='function')
+def user(user_data):
+    user_data.save()
+    yield user_data
 
 
 @pytest.fixture(scope='function')
@@ -89,6 +97,24 @@ def active_user(user):
     user.is_active = True
     user.save()
     yield user
+
+
+@pytest.fixture(scope='function')
+def signed_up_user(active_user):
+    raw_password = active_user.password
+    active_user.password = make_password(raw_password)
+    active_user.raw_password = raw_password
+    active_user.save()
+    yield active_user
+
+
+@pytest.fixture(scope='function')
+def user_with_avatar(active_user):
+    with tempfile.NamedTemporaryFile(suffix='.png') as temp_file:
+        avatar = SimpleUploadedFile(temp_file.name, b'random_image_content')
+        active_user.avatar = avatar
+        active_user.save()
+        return active_user, avatar.name
 
 
 @pytest.fixture(scope='function')
@@ -122,6 +148,6 @@ def monobank_parser_data():
 
 @pytest.fixture()
 def nbu_parser_data():
-    with open(getcwd() + '/app/tests/fixtures/nbu_response_content', 'rb') as f:
+    with open(str(settings.BASE_DIR) + '/tests/fixtures/nbu_response_content', 'rb') as f:
         content = f.read()
     yield content

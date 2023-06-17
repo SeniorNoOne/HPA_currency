@@ -3,10 +3,10 @@ from django_filters.views import FilterView
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView, TemplateView
 
+from currency.filters import RateFilter, RequestResponseLogFilter, ContactUsFilter, SourceFilter
 from currency.forms import ContactUsForm, RateForm, SourceForm
 from currency.models import ContactUs, Rate, Source, RequestResponseLog
-from currency.filters import RateFilter, RequestResponseLogFilter, ContactUsFilter, SourceFilter
-from utils.mixins import SendFeedbackMailMixin, SuperUserTestMixin, CustomPaginationMixin
+from utils.mixins.view_mixins import SuperUserTestMixin, CustomPaginationMixin
 
 
 class MainPageView(TemplateView):
@@ -44,7 +44,7 @@ class RateDeleteView(SuperUserTestMixin, DeleteView):
     success_url = reverse_lazy('currency:rate-list')
 
 
-class ContactUsCreateView(SendFeedbackMailMixin, CreateView):
+class ContactUsCreateView(CreateView):
     form_class = ContactUsForm
     template_name = 'contact_us/contact_us_create.html'
     queryset = ContactUs.objects.all()
@@ -62,7 +62,7 @@ class ContactUsDetailView(DetailView):
     queryset = ContactUs.objects.all()
 
 
-class ContactUsUpdateView(SendFeedbackMailMixin, UpdateView):
+class ContactUsUpdateView(UpdateView):
     form_class = ContactUsForm
     template_name = 'contact_us/contact_us_update.html'
     queryset = ContactUs.objects.all()
@@ -82,7 +82,7 @@ class SourceCreateView(CreateView):
     success_url = reverse_lazy('currency:source-list')
 
 
-class SourceListView(SendFeedbackMailMixin, CustomPaginationMixin, FilterView):
+class SourceListView(CustomPaginationMixin, FilterView):
     template_name = 'source/source_list.html'
     queryset = Source.objects.all().order_by('id')
     filterset_class = SourceFilter

@@ -23,3 +23,11 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+MEDIA_ROOT = BASE_DIR / 'tests' / 'media_test_dir'
+
+MEDIA_URL = '/media/'

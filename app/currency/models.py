@@ -7,6 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from currency.choices import RateCurrencyChoices, RequestMethodChoices
 from currency.constants import StorageUniqueFields
 from utils.common import get_upload_to_path
+from utils.mixins.model_mixins import FeedbackEmailMixin
 
 
 def source_upload_to(instance, filename):
@@ -29,7 +30,7 @@ class Rate(models.Model):
         return f'Currency: {self.get_currency_display()} - {self.buy}/{self.sell}'
 
 
-class ContactUs(models.Model):
+class ContactUs(FeedbackEmailMixin, models.Model):
     created = models.DateTimeField(auto_now_add=True)
     email_from = models.EmailField(max_length=100)
     subject = models.CharField(max_length=100)

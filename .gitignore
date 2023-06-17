@@ -1,10 +1,18 @@
+# Dirs
 .idea
 .pytest_cache
-.coverage
 venv
 __pycache__
+
+# Config files
+.coverage
+.env
+config.ini
+
+# DB
 *.sqlite3
 *.db
-config.ini
-.env
+
+# Other files with potentially sensitive data
 *.csv
+**/local.py
