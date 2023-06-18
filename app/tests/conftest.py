@@ -6,12 +6,14 @@ from random import choice, randint
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.cache import cache
 
 from model_bakery import baker
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import AccessToken
 
 from currency.choices import RateCurrencyChoices
+from currency.constants import LATEST_RATE_CACHE_KEY
 from tests.fixtures import parser_data
 
 
@@ -35,9 +37,7 @@ def api_client_authorized(api_client, active_user):
 
 @pytest.fixture(scope='function')
 def api_throttling_rate():
-    throttling_rate = settings.REST_FRAMEWORK['DEFAULT_THROTTLE_RATES']['currency_anon']
-    throttling_rate = int(throttling_rate.split('/')[0])
-    yield throttling_rate
+    yield settings.THROTTLING_RATE
 
 
 @pytest.fixture(scope='function')
@@ -73,6 +73,12 @@ def rate(db):
 
 
 @pytest.fixture(scope='function')
+def rate_data(db):
+    rate = baker.prepare('currency.Rate')
+    yield rate
+
+
+@pytest.fixture(scope='function')
 def rates(db):
     rates = baker.make('currency.Rate', _quantity=10)
     yield rates
@@ -102,7 +108,7 @@ def active_user(user):
 
 
 @pytest.fixture(scope='function')
-def signed_up_user(active_user):
+def active_user_with_hashed_password(active_user):
     raw_password = active_user.password
     active_user.password = make_password(raw_password)
     active_user.raw_password = raw_password
@@ -111,12 +117,12 @@ def signed_up_user(active_user):
 
 
 @pytest.fixture(scope='function')
-def user_with_avatar(active_user):
+def active_user_with_avatar(active_user):
     with tempfile.NamedTemporaryFile(suffix='.png') as temp_file:
         avatar = SimpleUploadedFile(temp_file.name, b'random_image_content')
         active_user.avatar = avatar
         active_user.save()
-        yield active_user, avatar.name
+    yield active_user, avatar.name
 
 
 @pytest.fixture(scope='function')
@@ -153,3 +159,8 @@ def nbu_parser_data():
     with open(str(settings.BASE_DIR) + '/tests/fixtures/nbu_response_content', 'rb') as f:
         content = f.read()
     yield content
+
+
+@pytest.fixture(scope='function')
+def rate_caching():
+    yield cache, LATEST_RATE_CACHE_KEY

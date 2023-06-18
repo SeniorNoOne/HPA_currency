@@ -7,6 +7,7 @@ omit = */tests.py
        */asgi.py
        */wsgi.py
        */settings*.py
+       */local_sample.py
        */app/manage.py
        */bs4_parser/*.py
 

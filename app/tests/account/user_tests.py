@@ -1,14 +1,13 @@
 from django.conf import settings
 from django.templatetags.static import static
+from django.urls import reverse
 
 from account.models import User
 from account.constants import StorageUniqueFields
 from utils.common import get_upload_to_path
 
-from django.urls import reverse
 
-
-# Singup form
+# Singup form test
 def test_singup_form_status_code_on_get_request(client):
     response = client.get(reverse('account:signup'))
     assert response.status_code == 200
@@ -176,7 +175,7 @@ def test_send_email_signal_on_signup(client, user_data, mailoutbox):
     assert all(checks)
 
 
-# Login form
+# Login form tests
 def test_login_form_status_code_on_get_request(client):
     response = client.get(reverse('login'))
     assert response.status_code == 200
@@ -239,10 +238,10 @@ def test_login_form_errors_on_wrong_password(client, active_user):
     }
 
 
-def test_login_form_on_valid_submission(client, signed_up_user):
+def test_login_form_on_valid_submission(client, active_user_with_hashed_password):
     payload = {
-        'username': signed_up_user.email,
-        'password': signed_up_user.raw_password
+        'username': active_user_with_hashed_password.email,
+        'password': active_user_with_hashed_password.raw_password
     }
     response = client.post(reverse('login'), data=payload)
     checks = (
@@ -257,13 +256,13 @@ def test_avatar_url_property_on_default_value(client, user):
     assert user.avatar_url == static('images/account_avatar_default.png')
 
 
-def test_avatar_url_property_on_uploaded_image(client, user_with_avatar):
+def test_avatar_url_property_on_uploaded_image(client, active_user_with_avatar):
     # Since there is actually passed an image to ImageField there will be:
     # - created a dir in corresponding MEDIA_URL, so upload_to property of model and
     #   related functions form utils.common will be tested as well
     # - to delete dir user.delete method is called which will invoke post_delete signal
     #   and related functions from utils.common, so these will be tested too
-    user, avatar = user_with_avatar
+    user, avatar = active_user_with_avatar
     checks = (
         user.avatar_url == settings.MEDIA_URL + get_upload_to_path(user,
                                                                    StorageUniqueFields.user,
@@ -300,7 +299,8 @@ def test_activation_url(client, user):
     assert all(checks)
 
 
-def test_profile_view_on_inactive_user_login(client, user):
+# Profile form tests
+def test_profile_form_on_inactive_user_login(client, user):
     client.force_login(user)
     response = client.get(reverse('account:profile'))
     checks = (
@@ -310,13 +310,13 @@ def test_profile_view_on_inactive_user_login(client, user):
     assert all(checks)
 
 
-def test_profile_view_status_code_on_active_user_login(client, active_user):
+def test_profile_form_status_code_on_active_user_login(client, active_user):
     client.force_login(active_user)
     response = client.get(reverse('account:profile'))
     assert response.status_code == 200
 
 
-def test_profile_view_on_first_name_update(client, user_data, active_user):
+def test_profile_form_on_first_name_update(client, user_data, active_user):
     client.force_login(active_user)
     payload = {
         'first_name': user_data.first_name
@@ -331,7 +331,7 @@ def test_profile_view_on_first_name_update(client, user_data, active_user):
     assert all(checks)
 
 
-def test_profile_view_on_last_name_update(client, user_data, active_user):
+def test_profile_form_on_last_name_update(client, user_data, active_user):
     client.force_login(active_user)
     response = client.post(reverse('account:profile'), data={'last_name': user_data.last_name})
     active_user.refresh_from_db()
@@ -343,9 +343,9 @@ def test_profile_view_on_last_name_update(client, user_data, active_user):
     assert all(checks)
 
 
-def test_profile_view_on_avatar_update(client, user_with_avatar, active_user):
+def test_profile_form_on_avatar_update(client, active_user, active_user_with_avatar):
     client.force_login(active_user)
-    user, avatar = user_with_avatar
+    user, avatar = active_user_with_avatar
     payload = {
         'avatar': user.avatar.read()
     }

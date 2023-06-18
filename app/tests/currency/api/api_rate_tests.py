@@ -1,45 +1,50 @@
+from django.urls import reverse
+
+api_rates_list_url = reverse('api-currency:rates-list')
+
+
 # LIST GET
-def test_get_rate_list_status_200(api_client):
-    response = api_client.get('/api/currency/rates/')
+def test_api_rate_list_status_code_on_get(api_client):
+    response = api_client.get(api_rates_list_url)
     assert response.status_code == 200
 
 
-def test_get_rate_list_empty_db(api_client):
-    response = api_client.get('/api/currency/rates/')
+def test_api_rate_list_on_get_with_empty_db(api_client):
+    response = api_client.get(api_rates_list_url)
     assert len(response.json()['results']) == 0
 
 
-def test_get_rate_list_single_entity(api_client, rate):
-    response = api_client.get('/api/currency/rates/')
+def test_api_rate_list_on_get_with_one_record(api_client, rate):
+    response = api_client.get(api_rates_list_url)
     assert len(response.json()['results']) == 1
 
 
-def test_get_rate_list_multiple_entities(api_client, rates):
-    response = api_client.get('/api/currency/rates/')
+def test_api_rate_list_on_get_with_multiple_records(api_client, rates):
+    response = api_client.get(api_rates_list_url)
     assert len(response.json()['results']) == len(rates)
 
 
-def test_get_rate_list_pagination(api_client, rates):
-    response = api_client.get('/api/currency/rates/')
-    json = response.json()
+def test_api_rate_list_pagination_on_get(api_client, rates):
+    response = api_client.get(api_rates_list_url)
+    data = response.json()
     checks = {
-        'count' in json,
-        'next' in json,
-        'previous' in json
+        'count' in data,
+        'next' in data,
+        'previous' in data
     }
     assert all(checks)
 
 
 # LIST POST
-def test_post_rate_list_empty_payload_status_400(api_client):
+def test_api_rate_list_status_code_on_post_empty_data(api_client):
     payload = {}
-    response = api_client.post('/api/currency/rates/', data=payload)
+    response = api_client.post(api_rates_list_url, data=payload)
     assert response.status_code == 400
 
 
-def test_post_rate_list_empty_payload_errors(api_client):
+def test_api_rate_list_errors_on_post_empty_data(api_client):
     payload = {}
-    response = api_client.post('/api/currency/rates/', data=payload)
+    response = api_client.post(api_rates_list_url, data=payload)
     assert response.json() == {
         'buy': ['This field is required.'],
         'sell': ['This field is required.'],
@@ -47,205 +52,267 @@ def test_post_rate_list_empty_payload_errors(api_client):
     }
 
 
-def test_post_rate_list_invalid_buy_status_400(api_client, source, rate, currency):
-    payload = {
-        'buy': '',
-        'sell': rate.sell,
-        'currency': currency,
-        'source': source.id
-    }
-    response = api_client.post('/api/currency/rates/', data=payload)
-    assert response.status_code == 400
-
-
-def test_post_rate_list_invalid_buy_errors(api_client, source, rate):
+def test_api_rate_list_status_code_on_post_invalid_buy_field(api_client, source, rate):
     payload = {
         'buy': '',
         'sell': rate.sell,
         'source': source.id
     }
-    response = api_client.post('/api/currency/rates/', data=payload)
-    assert response.json() == {'buy': ['A valid number is required.']}
-
-
-def test_post_rate_list_empty_buy_status_400(api_client, source, rate):
-    payload = {
-        'sell': rate.sell,
-        'source': source.id
-    }
-    response = api_client.post('/api/currency/rates/', data=payload)
+    response = api_client.post(api_rates_list_url, data=payload)
     assert response.status_code == 400
 
 
-def test_post_rate_list_empty_buy_errors(api_client, source, rate):
+def test_api_rate_list_errors_on_post_invalid_buy_field(api_client, source, rate):
+    payload = {
+        'buy': '',
+        'sell': rate.sell,
+        'source': source.id
+    }
+    response = api_client.post(api_rates_list_url, data=payload)
+    assert response.json() == {
+        'buy': ['A valid number is required.']
+    }
+
+
+def test_api_rate_list_status_code_on_post_empty_buy_field(api_client, source, rate):
     payload = {
         'sell': rate.sell,
         'source': source.id
     }
-    response = api_client.post('/api/currency/rates/', data=payload)
-    assert response.json() == {'buy': ['This field is required.']}
+    response = api_client.post(api_rates_list_url, data=payload)
+    assert response.status_code == 400
 
 
-def test_post_rate_list_invalid_sell_status_400(api_client, source, rate):
+def test_api_rate_list_errors_on_post_empty_buy_field(api_client, source, rate):
+    payload = {
+        'sell': rate.sell,
+        'source': source.id
+    }
+    response = api_client.post(api_rates_list_url, data=payload)
+    assert response.json() == {
+        'buy': ['This field is required.']
+    }
+
+
+def test_api_rate_list_status_code_on_post_invalid_sell_field(api_client, source, rate):
     payload = {
         'buy': rate.buy,
         'sell': '',
         'source': source.id
     }
-    response = api_client.post('/api/currency/rates/', data=payload)
+    response = api_client.post(api_rates_list_url, data=payload)
     assert response.status_code == 400
 
 
-def test_post_rate_list_invalid_sell_errors(api_client, source, rate):
+def test_api_rate_list_errors_on_post_invalid_sell_field(api_client, source, rate):
     payload = {
         'buy': rate.buy,
         'sell': '',
         'source': source.id
     }
-    response = api_client.post('/api/currency/rates/', data=payload)
-    assert response.json() == {'sell': ['A valid number is required.']}
+    response = api_client.post(api_rates_list_url, data=payload)
+    assert response.json() == {
+        'sell': ['A valid number is required.']
+    }
 
 
-def test_post_rate_list_empty_sell_status_400(api_client, source, rate):
+def test_api_rate_list_status_code_on_post_empty_sell_field(api_client, source, rate):
     payload = {
         'buy': rate.buy,
         'source': source.id
     }
-    response = api_client.post('/api/currency/rates/', data=payload)
+    response = api_client.post(api_rates_list_url, data=payload)
     assert response.status_code == 400
 
 
-def test_post_rate_list_empty_sell_errors(api_client, source, rate):
+def test_api_rate_list_errors_on_post_empty_sell_field(api_client, source, rate):
     payload = {
         'buy': rate.buy,
         'source': source.id
     }
-    response = api_client.post('/api/currency/rates/', data=payload)
-    assert response.json() == {'sell': ['This field is required.']}
+    response = api_client.post(api_rates_list_url, data=payload)
+    assert response.json() == {
+        'sell': ['This field is required.']
+    }
 
 
-def test_post_rate_list_invalid_source_status_400(api_client, source, rate):
+def test_api_rate_list_status_code_on_post_invalid_source_field(api_client, source, rate):
     payload = {
         'buy': rate.buy,
         'sell': rate.sell,
         'source': ''
     }
-    response = api_client.post('/api/currency/rates/', data=payload)
+    response = api_client.post(api_rates_list_url, data=payload)
     assert response.status_code == 400
 
 
-def test_post_rate_list_invalid_source_errors(api_client, source, rate):
+def test_api_rate_list_errors_on_post_invalid_source_field(api_client, source, rate):
     payload = {
         'buy': rate.buy,
         'sell': rate.sell,
         'source': ''
     }
-    response = api_client.post('/api/currency/rates/', data=payload)
-    assert response.json() == {'source': ['This field may not be null.']}
+    response = api_client.post(api_rates_list_url, data=payload)
+    assert response.json() == {
+        'source': ['This field may not be null.']
+    }
 
 
-def test_post_rate_list_empty_source_status_400(api_client, source, rate):
+def test_api_rate_list_status_code_on_post_empty_source_field(api_client, source, rate):
     payload = {
         'buy': rate.buy,
         'sell': rate.sell,
     }
-    response = api_client.post('/api/currency/rates/', data=payload)
+    response = api_client.post(api_rates_list_url, data=payload)
     assert response.status_code == 400
 
 
-def test_post_rate_list_empty_source_errors(api_client, source, rate):
+def test_api_rate_list_errors_on_post_empty_source_field(api_client, source, rate):
     payload = {
         'buy': rate.buy,
         'sell': rate.sell,
     }
-    response = api_client.post('/api/currency/rates/', data=payload)
-    assert response.json() == {'source': ['This field is required.']}
+    response = api_client.post(api_rates_list_url, data=payload)
+    assert response.json() == {
+        'source': ['This field is required.']
+    }
 
 
-def test_post_rate_list_valid_data_status_200(api_client, source, rate):
+def test_api_rate_list_status_code_on_post_valid_submission(api_client, source, rate):
     payload = {
         'buy': rate.buy,
         'sell': rate.sell,
         'source': source.id
     }
-    response = api_client.post('/api/currency/rates/', data=payload)
+    response = api_client.post(api_rates_list_url, data=payload)
     assert response.status_code == 201
 
 
-def test_post_rate_list_valid_data_return_obj(api_client, source, rate):
+def test_api_rate_list_return_obj_on_post_valid_submission(api_client, rate):
     payload = {
         'buy': str(rate.buy),
         'sell': str(rate.sell),
-        'source': source.id
+        'currency': rate.currency,
+        'source': rate.source.id
     }
-    response = api_client.post('/api/currency/rates/', data=payload)
-    json = response.json()
-    json['created'] = json['created'][:-11]
+    response = api_client.post(api_rates_list_url, data=payload)
+    data = response.json()
+    data.pop('created')
     payload['id'] = rate.id + 1
-    payload['created'] = rate.created.strftime("%Y-%m-%dT%H:%M")
-    assert json == payload
+    assert data == payload
 
 
-# DETAILS GET
-def test_get_rate_details_status_200(api_client, rate):
-    response = api_client.get(f'/api/currency/rates/{rate.id}/')
+# LIST PUT
+def test_api_rate_list_status_code_on_put(api_client):
+    response = api_client.put(api_rates_list_url)
+    assert response.status_code == 405
+
+
+def test_api_rate_list_errors_on_put(api_client):
+    response = api_client.put(api_rates_list_url)
+    assert response.json() == {
+        'detail': 'Method \"PUT\" not allowed.'
+    }
+
+
+# LIST PATCH
+def test_api_rate_list_status_code_on_patch(api_client):
+    response = api_client.patch(api_rates_list_url)
+    assert response.status_code == 405
+
+
+def test_api_rate_list_errors_on_patch(api_client):
+    response = api_client.patch(api_rates_list_url)
+    assert response.json() == {
+        'detail': 'Method \"PATCH\" not allowed.'
+    }
+
+
+# LIST HEAD
+def test_api_rate_list_status_code_on_head(api_client):
+    response = api_client.head(api_rates_list_url)
     assert response.status_code == 200
 
 
-def test_get_rate_details_status_404(api_client):
-    response = api_client.get(f'/api/currency/rates/{-1}/')
-    assert response.status_code == 404
+# LIST OPTIONS
+def test_api_rate_list_status_code_on_options(api_client):
+    response = api_client.options(api_rates_list_url)
+    assert response.status_code == 200
 
 
-# Really strange behaviour for test_get_rate_details_data(api_client, source, rate)
-def test_get_rate_details_data(api_client, rate):
-    response = api_client.get(f'/api/currency/rates/{rate.id}/')
-    json = response.json()
-    json['created'] = json['created'][:-11]
-    assert json == {
+# LIST DELETE
+def test_api_rate_list_status_code_on_delete(api_client):
+    response = api_client.head(api_rates_list_url)
+    assert response.status_code == 200
+
+
+# DETAILS GET
+def test_api_rate_details_status_code_on_get(api_client, rate):
+    response = api_client.get(api_rates_list_url + f'{rate.id}/')
+    assert response.status_code == 200
+
+
+def test_api_rate_details_return_obj_on_get(api_client, rate):
+    response = api_client.get(api_rates_list_url + f'{rate.id}/')
+    data = response.json()
+    data.pop('created')
+    assert data == {
         'id': rate.id,
         'buy': str(rate.buy),
         'sell': str(rate.sell),
-        'created': rate.created.strftime("%Y-%m-%dT%H:%M"),
-        'source': 1
+        'currency': rate.currency,
+        'source': rate.source.id
+    }
+
+
+def test_api_rate_details_status_code_on_get_invalid_id(api_client):
+    response = api_client.get(api_rates_list_url + f'{-1}/')
+    assert response.status_code == 404
+
+
+def test_api_rate_details_errors_on_get_invalid_id(api_client):
+    response = api_client.get(api_rates_list_url + f'{-1}/')
+    assert response.json() == {
+        'detail': 'Not found.'
     }
 
 
 # DETAILS PUT
-def test_put_rate_details_same_rate_status_200(api_client, rate):
+def test_api_rate_details_status_code_on_put_valid_submission(api_client, rate):
     payload = {
         'id': rate.id,
         'buy': str(rate.buy),
         'sell': str(rate.sell),
+        'currency': rate.currency,
         'source': rate.source.id
     }
-    response = api_client.put(f'/api/currency/rates/{rate.id}/', data=payload)
+    response = api_client.put(api_rates_list_url + f'{rate.id}/', data=payload)
     assert response.status_code == 200
 
 
-def test_put_rate_details_same_rate_data(api_client, rate):
+def test_api_rate_details_errors_on_put_valid_submission(api_client, rate):
     payload = {
         'id': rate.id,
         'buy': str(rate.buy),
         'sell': str(rate.sell),
+        'currency': rate.currency,
         'source': rate.source.id
     }
-    response = api_client.put(f'/api/currency/rates/{rate.id}/', data=payload)
-    json = response.json()
-    json['created'] = json['created'][:-11]
-    payload['created'] = rate.created.strftime("%Y-%m-%dT%H:%M")
-    assert json == payload
+    response = api_client.put(api_rates_list_url + f'{rate.id}/', data=payload)
+    data = response.json()
+    data.pop('created')
+    assert data == payload
 
 
-def test_put_rate_details_empty_payload_status_400(api_client, rate):
+def test_api_rate_details_status_code_on_put_empty_submission(api_client, rate):
     payload = {}
-    response = api_client.put(f'/api/currency/rates/{rate.id}/', data=payload)
+    response = api_client.put(api_rates_list_url + f'{rate.id}/', data=payload)
     assert response.status_code == 400
 
 
-def test_put_rate_details_empty_payload_data(api_client, rate):
+def test_api_rate_details_errors_on_put_empty_submission(api_client, rate):
     payload = {}
-    response = api_client.put(f'/api/currency/rates/{rate.id}/', data=payload)
+    response = api_client.put(api_rates_list_url + f'{rate.id}/', data=payload)
     assert response.json() == {
         'buy': ['This field is required.'],
         'sell': ['This field is required.'],
@@ -253,82 +320,163 @@ def test_put_rate_details_empty_payload_data(api_client, rate):
     }
 
 
-def test_put_rate_details_alter_buy_status_200(api_client, rate):
+def test_api_rate_details_status_code_on_put_new_buy_field(api_client, rate):
     payload = {
         'id': rate.id,
         'buy': str(rate.buy + 1),
         'sell': str(rate.sell),
+        'currency': rate.currency,
         'source': rate.source.id
     }
-    response = api_client.put(f'/api/currency/rates/{rate.id}/', data=payload)
+    response = api_client.put(api_rates_list_url + f'{rate.id}/', data=payload)
     assert response.status_code == 200
 
 
-def test_put_rate_details_alter_buy_data(api_client, rate):
+def test_api_rate_details_return_obj_on_put_new_buy_field(api_client, rate):
     payload = {
         'id': rate.id,
         'buy': str(rate.buy + 1),
         'sell': str(rate.sell),
+        'currency': rate.currency,
         'source': rate.source.id
     }
-    response = api_client.put(f'/api/currency/rates/{rate.id}/', data=payload)
-    json = response.json()
-    json['created'] = json['created'][:-11]
-    payload['created'] = rate.created.strftime("%Y-%m-%dT%H:%M")
-    assert response.json() == payload
+    response = api_client.put(api_rates_list_url + f'{rate.id}/', data=payload)
+    data = response.json()
+    data.pop('created')
+    assert data == payload
 
 
-def test_put_rate_details_alter_sell_status_200(api_client, rate):
+def test_api_rate_details_status_code_on_put_new_sell_field(api_client, rate):
     payload = {
         'id': rate.id,
         'buy': str(rate.buy),
         'sell': str(rate.sell + 1),
+        'currency': rate.currency,
         'source': rate.source.id
     }
-    response = api_client.put(f'/api/currency/rates/{rate.id}/', data=payload)
+    response = api_client.put(api_rates_list_url + f'{rate.id}/', data=payload)
     assert response.status_code == 200
 
 
-def test_put_rate_details_alter_sell_data(api_client, rate):
+def test_api_rate_details_return_obj_on_put_new_sell_field(api_client, rate):
     payload = {
         'id': rate.id,
         'buy': str(rate.buy),
         'sell': str(rate.sell + 1),
+        'currency': rate.currency,
         'source': rate.source.id
     }
-    response = api_client.put(f'/api/currency/rates/{rate.id}/', data=payload)
-    json = response.json()
-    json['created'] = json['created'][:-11]
-    payload['created'] = rate.created.strftime("%Y-%m-%dT%H:%M")
-    assert response.json() == payload
+    response = api_client.put(api_rates_list_url + f'{rate.id}/', data=payload)
+    data = response.json()
+    data.pop('created')
+    assert data == payload
 
 
-def test_put_rate_details_alter_source_status_200(api_client, source, rate):
+def test_api_rate_details_status_code_on_put_new_currency_field(api_client, source, rate):
     payload = {
         'id': rate.id,
         'buy': str(rate.buy),
         'sell': str(rate.sell),
-        'source': source.id
+        'currency': rate.currency + 1,
+        'source': rate.source.id
     }
-    response = api_client.put(f'/api/currency/rates/{rate.id}/', data=payload)
+    response = api_client.put(api_rates_list_url + f'{rate.id}/', data=payload)
     assert response.status_code == 200
 
 
-def test_put_rate_details_alter_source_data(api_client, source, rate):
+def test_api_rate_details_return_obj_on_put_new_currency_field(api_client, source, rate):
     payload = {
         'id': rate.id,
         'buy': str(rate.buy),
         'sell': str(rate.sell),
+        'currency': rate.currency + 1,
+        'source': rate.source.id
+    }
+    response = api_client.put(api_rates_list_url + f'{rate.id}/', data=payload)
+    data = response.json()
+    data.pop('created')
+    assert data == payload
+
+
+def test_api_rate_details_status_code_on_put_new_source_field(api_client, source, rate):
+    payload = {
+        'id': rate.id,
+        'buy': str(rate.buy),
+        'sell': str(rate.sell),
+        'currency': rate.currency,
         'source': source.id
     }
-    response = api_client.put(f'/api/currency/rates/{rate.id}/', data=payload)
-    json = response.json()
-    json['created'] = json['created'][:-11]
-    payload['created'] = rate.created.strftime("%Y-%m-%dT%H:%M")
-    assert response.json() == payload
+    response = api_client.put(api_rates_list_url + f'{rate.id}/', data=payload)
+    assert response.status_code == 200
+
+
+def test_api_rate_details_return_obj_on_put_new_source_field(api_client, source, rate):
+    payload = {
+        'id': rate.id,
+        'buy': str(rate.buy),
+        'sell': str(rate.sell),
+        'currency': rate.currency,
+        'source': source.id
+    }
+    response = api_client.put(api_rates_list_url + f'{rate.id}/', data=payload)
+    data = response.json()
+    data.pop('created')
+    assert data == payload
 
 
 # DETAILS DELETE
-def test_delete_rate_details_status_204(api_client, rate):
-    response = api_client.delete(f'/api/currency/rates/{rate.id}/')
+def test_api_rate_details_status_code_on_delete_valid_submission(api_client, rate):
+    response = api_client.delete(api_rates_list_url + f'{rate.id}/')
     assert response.status_code == 204
+
+
+def test_api_rate_details_status_code_on_delete_invalid_submission(api_client):
+    response = api_client.delete(api_rates_list_url + '-1/')
+    assert response.status_code == 404
+
+
+# Caching test of latest endpoint
+def test_api_rate_list_latest_endpoint_status_code_on_get(api_client, rate):
+    response = api_client.get(api_rates_list_url + 'latest/')
+    assert response.status_code == 200
+
+
+def test_api_rate_list_latest_endpoint_return_obj_on_get(api_client, rate, rate_caching):
+    cache, cache_key = rate_caching
+    payload = {
+        'id': rate.id,
+        'buy': str(rate.buy),
+        'sell': str(rate.sell),
+        'currency': rate.currency,
+        'source': rate.source.id,
+    }
+
+    # Creating cache
+    api_client.get(api_rates_list_url + 'latest/')
+
+    # Accessing cache
+    api_client.get(api_rates_list_url + 'latest/')
+
+    # Reading cache value
+    cache_val = cache.get(cache_key)[0]
+    cache_val.pop('created')
+    assert payload == cache_val
+
+
+def test_api_rate_list_latest_endpoint_status_code_on_get_rate_creation(api_client, rate, rate_data,
+                                                                        rate_caching):
+    cache, cache_key = rate_caching
+
+    # Creating cache
+    api_client.get(api_rates_list_url + 'latest/')
+    cache_initial_val = cache.get(cache_key)[0]
+
+    # Creating new rate which deletes cache key
+    rate_data.source.save()
+    rate_data.save()
+
+    checks = (
+        len(cache_initial_val),
+        cache.get(cache_key) is None
+    )
+    assert all(checks)
