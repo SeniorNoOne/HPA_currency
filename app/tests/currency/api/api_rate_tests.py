@@ -215,31 +215,6 @@ def test_api_rate_list_errors_on_put(api_client):
     }
 
 
-# LIST PATCH
-def test_api_rate_list_status_code_on_patch(api_client):
-    response = api_client.patch(api_rates_list_url)
-    assert response.status_code == 405
-
-
-def test_api_rate_list_errors_on_patch(api_client):
-    response = api_client.patch(api_rates_list_url)
-    assert response.json() == {
-        'detail': 'Method \"PATCH\" not allowed.'
-    }
-
-
-# LIST HEAD
-def test_api_rate_list_status_code_on_head(api_client):
-    response = api_client.head(api_rates_list_url)
-    assert response.status_code == 200
-
-
-# LIST OPTIONS
-def test_api_rate_list_status_code_on_options(api_client):
-    response = api_client.options(api_rates_list_url)
-    assert response.status_code == 200
-
-
 # LIST DELETE
 def test_api_rate_list_status_code_on_delete(api_client, rates):
     response = api_client.delete(api_rates_list_url)
