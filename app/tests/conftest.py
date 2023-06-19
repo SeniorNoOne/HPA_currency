@@ -108,7 +108,7 @@ def active_user(user):
 
 
 @pytest.fixture(scope='function')
-def active_user_with_hashed_password(active_user):
+def active_user_hashed_password(active_user):
     raw_password = active_user.password
     active_user.password = make_password(raw_password)
     active_user.raw_password = raw_password

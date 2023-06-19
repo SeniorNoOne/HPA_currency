@@ -8,18 +8,18 @@ from utils.common import get_upload_to_path
 
 
 # Singup form test
-def test_singup_form_status_code_on_get_request(client):
+def test_singup_form_status_code_on_get(client):
     response = client.get(reverse('account:signup'))
     assert response.status_code == 200
 
 
-def test_signup_form_status_code_on_empty_submission(client):
+def test_signup_form_status_code_on_post_empty_submission(client):
     payload = {}
     response = client.post(reverse('account:signup'), data=payload)
     assert response.status_code == 200
 
 
-def test_signup_form_errors_on_empty_submission(client):
+def test_signup_form_errors_on_post_empty_submission(client):
     payload = {}
     response = client.post(reverse('account:signup'), data=payload)
     assert response.context_data['form']._errors == {
@@ -29,7 +29,7 @@ def test_signup_form_errors_on_empty_submission(client):
     }
 
 
-def test_signup_form_status_code_on_wrong_email_field(client, user_data):
+def test_signup_form_status_code_on_post_wrong_email_field(client, user_data):
     payload = {
         'email': 'WRONG_EMAIL',
         'password1': user_data.password,
@@ -39,7 +39,7 @@ def test_signup_form_status_code_on_wrong_email_field(client, user_data):
     assert response.status_code == 200
 
 
-def test_signup_form_errors_on_wrong_email_field(client, user_data):
+def test_signup_form_errors_on_post_wrong_email_field(client, user_data):
     payload = {
         'email': 'WRONG_EMAIL',
         'password1': user_data.password,
@@ -51,7 +51,7 @@ def test_signup_form_errors_on_wrong_email_field(client, user_data):
     }
 
 
-def test_signup_form_status_code_on_wrong_password1_field(client, user_data):
+def test_signup_form_status_code_on_post_wrong_password1_field(client, user_data):
     payload = {
         'email': user_data.email,
         'password1': '_',
@@ -61,7 +61,7 @@ def test_signup_form_status_code_on_wrong_password1_field(client, user_data):
     assert response.status_code == 200
 
 
-def test_signup_form_errors_on_wrong_password1_field(client, user_data):
+def test_signup_form_errors_on_post_wrong_password1_field(client, user_data):
     payload = {
         'email': user_data.email,
         'password1': '_',
@@ -74,7 +74,7 @@ def test_signup_form_errors_on_wrong_password1_field(client, user_data):
     }
 
 
-def test_signup_form_status_code_on_wrong_password2_field(client, user_data):
+def test_signup_form_status_code_on_post_wrong_password2_field(client, user_data):
     payload = {
         'email': user_data.email,
         'password1': user_data.password,
@@ -84,7 +84,7 @@ def test_signup_form_status_code_on_wrong_password2_field(client, user_data):
     assert response.status_code == 200
 
 
-def test_signup_form_errors_on_wrong_password2_field(client, user_data):
+def test_signup_form_errors_on_post_wrong_password2_field(client, user_data):
     payload = {
         'email': user_data.email,
         'password1': user_data.password,
@@ -97,7 +97,7 @@ def test_signup_form_errors_on_wrong_password2_field(client, user_data):
     }
 
 
-def test_signup_form_status_code_on_same_invalid_passwords(client, user_data):
+def test_signup_form_status_code_on_post_same_invalid_passwords(client, user_data):
     payload = {
         'email': user_data.email,
         'password1': '_',
@@ -107,7 +107,7 @@ def test_signup_form_status_code_on_same_invalid_passwords(client, user_data):
     assert response.status_code == 200
 
 
-def test_signup_form_errors_on_same_invalid_passwords(client, user_data):
+def test_signup_form_errors_on_post_same_invalid_passwords(client, user_data):
     payload = {
         'email': user_data.email,
         'password1': '_',
@@ -119,7 +119,7 @@ def test_signup_form_errors_on_same_invalid_passwords(client, user_data):
     }
 
 
-def test_signup_form_status_code_on_existing_user(client, user):
+def test_signup_form_status_code_on_post_existing_user(client, user):
     payload = {
         'email': user.email,
         'password1': user.password,
@@ -129,7 +129,7 @@ def test_signup_form_status_code_on_existing_user(client, user):
     assert response.status_code == 200
 
 
-def test_signup_form_errors_on_existing_user(client, user):
+def test_signup_form_errors_on_post_existing_user(client, user):
     payload = {
         'email': user.email,
         'password1': user.password,
@@ -141,7 +141,7 @@ def test_signup_form_errors_on_existing_user(client, user):
     }
 
 
-def test_signup_form_on_valid_submission(client, user_data):
+def test_signup_form_on_post_valid_submission(client, user_data):
     payload = {
         'email': user_data.email,
         'password1': user_data.password,
@@ -176,18 +176,18 @@ def test_send_email_signal_on_signup(client, user_data, mailoutbox):
 
 
 # Login form tests
-def test_login_form_status_code_on_get_request(client):
+def test_login_form_status_code_on_get(client):
     response = client.get(reverse('login'))
     assert response.status_code == 200
 
 
-def test_login_form_status_code_on_empty_submission(client):
+def test_login_form_status_code_on_post_empty_submission(client):
     payload = {}
     response = client.post(reverse('login'), data=payload)
     assert response.status_code == 200
 
 
-def test_login_form_errors_on_empty_submission(client):
+def test_login_form_errors_on_post_empty_submission(client):
     payload = {}
     response = client.post(reverse('login'), data=payload)
     assert response.context_data['form']._errors == {
@@ -196,7 +196,7 @@ def test_login_form_errors_on_empty_submission(client):
     }
 
 
-def test_login_form_status_code_on_wrong_username(client, active_user):
+def test_login_form_status_code_on_post_wrong_username(client, active_user):
     payload = {
         'username': 'WRONG_USERNAME',
         'password': active_user.password
@@ -205,7 +205,7 @@ def test_login_form_status_code_on_wrong_username(client, active_user):
     assert response.status_code == 200
 
 
-def test_login_form_errors_on_wrong_username(client, active_user):
+def test_login_form_errors_on_post_wrong_username(client, active_user):
     payload = {
         'username': 'WRONG_USERNAME',
         'password': active_user.password
@@ -217,7 +217,7 @@ def test_login_form_errors_on_wrong_username(client, active_user):
     }
 
 
-def test_login_form_status_code_on_wrong_password(client, active_user):
+def test_login_form_status_code_on_post_wrong_password(client, active_user):
     payload = {
         'username': active_user.email,
         'password': '_'
@@ -226,7 +226,7 @@ def test_login_form_status_code_on_wrong_password(client, active_user):
     assert response.status_code == 200
 
 
-def test_login_form_errors_on_wrong_password(client, active_user):
+def test_login_form_errors_on_post_wrong_password(client, active_user):
     payload = {
         'username': active_user.email,
         'password': '_'
@@ -238,10 +238,10 @@ def test_login_form_errors_on_wrong_password(client, active_user):
     }
 
 
-def test_login_form_on_valid_submission(client, active_user_with_hashed_password):
+def test_login_form_on_post_valid_submission(client, active_user_hashed_password):
     payload = {
-        'username': active_user_with_hashed_password.email,
-        'password': active_user_with_hashed_password.raw_password
+        'username': active_user_hashed_password.email,
+        'password': active_user_hashed_password.raw_password
     }
     response = client.post(reverse('login'), data=payload)
     checks = (

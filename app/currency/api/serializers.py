@@ -20,8 +20,10 @@ class SourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Source
         fields = (
+            'id',
             'url',
             'code',
+            'name',
             'city',
             'phone',
         )
