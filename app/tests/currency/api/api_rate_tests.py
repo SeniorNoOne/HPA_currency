@@ -1,5 +1,7 @@
 from django.urls import reverse
 
+from currency.models import Rate
+
 api_rates_list_url = reverse('api-currency:rates-list')
 
 
@@ -36,13 +38,13 @@ def test_api_rate_list_pagination_on_get(api_client, rates):
 
 
 # LIST POST
-def test_api_rate_list_status_code_on_post_empty_data(api_client):
+def test_api_rate_list_status_code_on_post_empty_submission(api_client):
     payload = {}
     response = api_client.post(api_rates_list_url, data=payload)
     assert response.status_code == 400
 
 
-def test_api_rate_list_errors_on_post_empty_data(api_client):
+def test_api_rate_list_errors_on_post_empty_submission(api_client):
     payload = {}
     response = api_client.post(api_rates_list_url, data=payload)
     assert response.json() == {
@@ -248,12 +250,12 @@ def test_api_rate_details_return_obj_on_get(api_client, rate):
 
 
 def test_api_rate_details_status_code_on_get_invalid_id(api_client):
-    response = api_client.get(api_rates_list_url + f'{-1}/')
+    response = api_client.get(api_rates_list_url + '-1/')
     assert response.status_code == 404
 
 
 def test_api_rate_details_errors_on_get_invalid_id(api_client):
-    response = api_client.get(api_rates_list_url + f'{-1}/')
+    response = api_client.get(api_rates_list_url + '-1/')
     assert response.json() == {
         'detail': 'Not found.'
     }
@@ -380,25 +382,25 @@ def test_api_rate_details_return_obj_on_put_new_currency_field(api_client, rate)
     assert data == payload
 
 
-def test_api_rate_details_status_code_on_put_new_source_field(api_client, rate):
+def test_api_rate_details_status_code_on_put_new_source_field(api_client, rate, source):
     payload = {
         'id': rate.id,
         'buy': str(rate.buy),
         'sell': str(rate.sell),
         'currency': rate.currency,
-        'source': rate.source.id
+        'source': source.id
     }
     response = api_client.put(api_rates_list_url + f'{rate.id}/', data=payload)
     assert response.status_code == 200
 
 
-def test_api_rate_details_return_obj_on_put_new_source_field(api_client, rate):
+def test_api_rate_details_return_obj_on_put_new_source_field(api_client, rate, source):
     payload = {
         'id': rate.id,
         'buy': str(rate.buy),
         'sell': str(rate.sell),
         'currency': rate.currency,
-        'source': rate.source.id
+        'source': source.id
     }
     response = api_client.put(api_rates_list_url + f'{rate.id}/', data=payload)
     data = response.json()
@@ -412,12 +414,18 @@ def test_api_rate_details_status_code_on_delete_valid_submission(api_client, rat
     assert response.status_code == 204
 
 
+def test_api_rate_details_obj_count_on_delete_valid_submission(api_client, rate):
+    initial_count = Rate.objects.count()
+    api_client.delete(api_rates_list_url + f'{rate.id}/')
+    assert Rate.objects.count() == initial_count - 1
+
+
 def test_api_rate_details_status_code_on_delete_invalid_submission(api_client):
     response = api_client.delete(api_rates_list_url + '-1/')
     assert response.status_code == 404
 
 
-# Caching test of latest endpoint
+# Caching test
 def test_api_rate_list_latest_endpoint_status_code_on_get(api_client, rate):
     response = api_client.get(api_rates_list_url + 'latest/')
     assert response.status_code == 200

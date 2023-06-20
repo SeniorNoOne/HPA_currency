@@ -1,5 +1,7 @@
 from django.urls import reverse
 
+from currency.models import ContactUs
+
 api_contact_us_list_url = reverse('api-currency:feedbacks-list')
 
 
@@ -47,13 +49,13 @@ def test_api_contact_us_list_pagination_on_get(api_client_authorized, contact_us
 
 
 # LIST POST
-def test_api_contact_us_list_status_code_on_post_empty_data(api_client_authorized):
+def test_api_contact_us_list_status_code_on_post_empty_submission(api_client_authorized):
     payload = {}
     response = api_client_authorized.post(api_contact_us_list_url, data=payload)
     assert response.status_code == 400
 
 
-def test_api_contact_us_list_errors_on_post_empty_data(api_client_authorized):
+def test_api_contact_us_list_errors_on_post_empty_submission(api_client_authorized):
     payload = {}
     response = api_client_authorized.post(api_contact_us_list_url, data=payload)
     assert response.json() == {
@@ -205,24 +207,24 @@ def test_api_contact_us_list_errors_on_put(api_client_authorized):
 
 
 # LIST DELETE
-def test_api_contact_us_list_status_code_on_delete_no_auth(api_client):
+def test_api_contact_us_list_status_code_on_delete_no_auth(api_client, contact_us_multiple):
     response = api_client.delete(api_contact_us_list_url)
     assert response.status_code == 401
 
 
-def test_api_contact_us_list_errors_on_delete_no_auth(api_client):
+def test_api_contact_us_list_errors_on_delete_no_auth(api_client, contact_us_multiple):
     response = api_client.delete(api_contact_us_list_url)
     assert response.json() == {
         'detail': 'Authentication credentials were not provided.'
     }
 
 
-def test_api_contact_us_list_status_code_on_delete(api_client_authorized):
+def test_api_contact_us_list_status_code_on_delete(api_client_authorized, contact_us_multiple):
     response = api_client_authorized.delete(api_contact_us_list_url)
     assert response.status_code == 405
 
 
-def test_api_contact_us_list_errors_on_delete(api_client_authorized):
+def test_api_contact_us_list_errors_on_delete(api_client_authorized, contact_us_multiple):
     response = api_client_authorized.delete(api_contact_us_list_url)
     assert response.json() == {
         'detail': 'Method \"DELETE\" not allowed.'
@@ -253,6 +255,18 @@ def test_api_contact_us_details_return_obj_on_get(api_client_authorized, contact
         'email_from': contact_us.email_from,
         'subject': contact_us.subject,
         'message': contact_us.message
+    }
+
+
+def test_api_contact_us_details_status_code_on_get_invalid_id(api_client_authorized):
+    response = api_client_authorized.get(api_contact_us_list_url + '-1/')
+    assert response.status_code == 404
+
+
+def test_api_contact_us_details_errors_on_get_invalid_id(api_client_authorized):
+    response = api_client_authorized.get(api_contact_us_list_url + '-1/')
+    assert response.json() == {
+        'detail': 'Not found.'
     }
 
 
@@ -401,6 +415,13 @@ def test_api_contact_us_details_status_code_on_delete_valid_submission(api_clien
                                                                        contact_us):
     response = api_client_authorized.delete(api_contact_us_list_url + f'{contact_us.id}/')
     assert response.status_code == 204
+
+
+def test_api_contact_us_obj_count_on_delete_valid_submission(api_client_authorized,
+                                                             contact_us):
+    initial_count = ContactUs.objects.count()
+    api_client_authorized.delete(api_contact_us_list_url + f'{contact_us.id}/')
+    assert ContactUs.objects.count() == initial_count - 1
 
 
 def test_api_contact_us_details_status_code_on_delete_invalid_submission(api_client_authorized):
