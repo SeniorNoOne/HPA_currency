@@ -1,20 +1,26 @@
+from django.urls import reverse
+
 from currency.models import Source
+
+source_list_url = reverse('currency:source-list')
+source_create_url = reverse('currency:source-create')
 
 
 # Create
-def test_source_create_status_200(client):
-    response = client.get('/currency/source/create/')
+def test_source_create_status_code_on_get(client):
+    response = client.get(source_create_url)
     assert response.status_code == 200
 
 
-def test_source_create_empty_form_status_200(client):
-    response = client.post('/currency/source/create/')
-    assert response.status_code == 200
-
-
-def test_source_create_empty_form_errors(client):
+def test_source_create_status_code_on_post_empty_submission(client):
     payload = {}
-    response = client.post('/currency/source/create/', data=payload)
+    response = client.post(source_create_url, data=payload)
+    assert response.status_code == 200
+
+
+def test_source_create_errors_on_post_empty_submission(client):
+    payload = {}
+    response = client.post(source_create_url, data=payload)
     assert response.context_data['form']._errors == {
         'url': ['This field is required.'],
         'name': ['This field is required.'],
@@ -22,218 +28,261 @@ def test_source_create_empty_form_errors(client):
     }
 
 
-def test_source_create_invalid_url_status_200(client, source):
+def test_source_create_status_code_on_post_empty_url_field(client, source):
     payload = {
         'url': '',
         'name': source.name,
         'code': source.code + 1
     }
-    response = client.post('/currency/source/create/', data=payload)
+    response = client.post(source_create_url, data=payload)
     assert response.status_code == 200
 
 
-def test_source_create_invalid_url_errors(client, source, rate, currency):
+def test_source_create_errors_on_post_empty_url_field(client, source):
     payload = {
         'url': '',
         'name': source.name,
         'code': source.code + 1
     }
-    response = client.post('/currency/source/create/', data=payload)
-    assert response.context_data['form']._errors == {'url': ['This field is required.']}
+    response = client.post(source_create_url, data=payload)
+    assert response.context_data['form']._errors == {
+        'url': ['This field is required.']
+    }
 
 
-def test_source_create_invalid_name_status_200(client, source):
+def test_source_create_status_code_on_post_empty_name_field(client, source):
     payload = {
         'url': source.url,
         'name': '',
         'code': source.code + 1
     }
-    response = client.post('/currency/source/create/', data=payload)
+    response = client.post(source_create_url, data=payload)
     assert response.status_code == 200
 
 
-def test_source_create_invalid_name_errors(client, source):
+def test_source_create_errors_on_post_empty_name_field(client, source):
     payload = {
         'url': source.url,
         'name': '',
         'code': source.code + 1
     }
-    response = client.post('/currency/source/create/', data=payload)
-    assert response.context_data['form']._errors == {'name': ['This field is required.']}
+    response = client.post(source_create_url, data=payload)
+    assert response.context_data['form']._errors == {
+        'name': ['This field is required.']
+    }
 
 
-def test_source_create_duplicate_code_status_200(client, source):
+def test_source_create_status_code_on_post_existing_code_field(client, source):
     payload = {
         'url': source.url,
         'name': source.name,
         'code': source.code
     }
-    response = client.post('/currency/source/create/', data=payload)
+    response = client.post(source_create_url, data=payload)
     assert response.status_code == 200
 
 
-def test_source_create_duplicate_code_errors(client, source):
+def test_source_create_errors_on_post_existing_code_field(client, source):
     payload = {
         'url': source.url,
         'name': source.name,
         'code': source.code
     }
-    response = client.post('/currency/source/create/', data=payload)
-    assert response.context_data['form']._errors == \
-           {'code': ['Source with this Code already exists.']}
+    response = client.post(source_create_url, data=payload)
+    assert response.context_data['form']._errors == {
+        'code': ['Source with this Code already exists.']
+    }
 
 
-def test_source_create_valid_form_status_302(client, source):
+def test_source_create_status_code_on_post_invalid_code_field(client, source):
+    payload = {
+        'url': source.url,
+        'name': source.name,
+        'code': 'WRONG'
+    }
+    response = client.post(source_create_url, data=payload)
+    assert response.status_code == 200
+
+
+def test_source_create_errors_on_post_invalid_code_field(client, source):
+    payload = {
+        'url': source.url,
+        'name': source.name,
+        'code': 'WRONG'
+    }
+    response = client.post(source_create_url, data=payload)
+    assert response.context_data['form']._errors == {
+        'code': ['Enter a whole number.']
+    }
+
+
+def test_source_create_status_code_on_post_valid_submission(client, source):
     payload = {
         'url': source.url,
         'name': source.name,
         'code': source.code + 1
     }
-    response = client.post('/currency/source/create/', data=payload)
+    response = client.post(source_create_url, data=payload)
     assert response.status_code == 302
 
 
-def test_source_create_valid_form_data(client, source):
-    initial_count = Source.objects.count()
+def test_source_create_on_post_valid_submission(client, source):
     payload = {
         'url': source.url,
         'name': source.name,
         'code': source.code + 1
     }
-    response = client.post('/currency/source/create/', data=payload)
+    initial_count = Source.objects.count()
+    response = client.post(source_create_url, data=payload)
     checks = (
-        response['location'] == '/currency/source/list/',
+        response['location'] == source_list_url,
         Source.objects.count() == initial_count + 1
     )
     assert all(checks)
 
 
 # List
-def test_source_list_status_200(client):
-    response = client.get('/currency/source/list/')
+def test_source_list_status_code_on_get(client):
+    response = client.get(source_list_url)
     assert response.status_code == 200
 
 
-def test_source_list_empty_db(client):
-    response = client.get('/currency/source/list/')
+def test_source_list_on_get_with_empty_db(client):
+    response = client.get(source_list_url)
     assert not response.context_data['object_list'].exists()
 
 
-def test_source_list_single_entity(client, source):
-    response = client.get('/currency/source/list/')
+def test_source_list_on_get_with_one_record(client, source):
+    response = client.get(source_list_url)
     assert response.context_data['object_list'].count() == 1
 
 
-def test_source_list_multiple_entities(client, sources):
-    response = client.get('/currency/source/list/')
+def test_source_list_on_get_with_multiple_record(client, sources):
+    response = client.get(source_list_url)
     assert response.context_data['object_list'].count() == len(sources)
 
 
 # Details
-# noinspection DuplicatedCode
-def test_source_details_no_auth_status_200(client, source):
-    response = client.get(f'/currency/source/details/{source.id}/')
+def test_source_details_status_code_on_get_no_auth(client, source):
+    source_details_url = reverse('currency:source-details', args=(source.id,))
+    response = client.get(source_details_url)
     assert response.status_code == 200
 
 
-def test_source_details_no_auth_model_obj(client, source):
-    response = client.get(f'/currency/source/details/{source.id}/')
+def test_source_details_return_obj_on_get_no_auth(client, source):
+    source_details_url = reverse('currency:source-details', args=(source.id,))
+    response = client.get(source_details_url)
     assert response.context_data['object'] == source
 
 
-def test_source_details_inactive_user_status_200(client, user, source):
+def test_source_details_status_code_on_get_inactive_user(client, user, source):
     client.force_login(user)
-    response = client.get(f'/currency/source/details/{source.id}/')
+    source_details_url = reverse('currency:source-details', args=(source.id,))
+    response = client.get(source_details_url)
     assert response.status_code == 200
 
 
-def test_source_details_inactive_user_model_obj(client, user, source):
+def test_source_details_return_obj_on_get_inactive_user(client, user, source):
     client.force_login(user)
-    response = client.get(f'/currency/source/details/{source.id}/')
+    source_details_url = reverse('currency:source-details', args=(source.id,))
+    response = client.get(source_details_url)
     assert response.context_data['object'] == source
 
 
-def test_source_details_active_user_status_200(client, active_user, source):
+def test_source_details_status_code_on_get_active_user(client, active_user, source):
     client.force_login(active_user)
-    response = client.get(f'/currency/source/details/{source.id}/')
+    source_details_url = reverse('currency:source-details', args=(source.id,))
+    response = client.get(source_details_url)
     assert response.status_code == 200
 
 
-def test_source_details_active_user_model_obj(client, active_user, source):
+def test_source_details_return_obj_on_get_active_user(client, active_user, source):
     client.force_login(active_user)
-    response = client.get(f'/currency/source/details/{source.id}/')
+    source_details_url = reverse('currency:source-details', args=(source.id,))
+    response = client.get(source_details_url)
     assert response.context_data['object'] == source
 
 
-def test_source_details_super_user_status_200(client, super_user, source):
+def test_source_details_status_code_on_get_super_user(client, super_user, source):
     client.force_login(super_user)
-    response = client.get(f'/currency/source/details/{source.id}/')
+    source_details_url = reverse('currency:source-details', args=(source.id,))
+    response = client.get(source_details_url)
     assert response.status_code == 200
 
 
-def test_source_details_super_user_model_obj(client, super_user, source):
+def test_source_details_return_obj_on_get_super_user(client, super_user, source):
     client.force_login(super_user)
-    response = client.get(f'/currency/source/details/{source.id}/')
+    source_details_url = reverse('currency:source-details', args=(source.id,))
+    response = client.get(source_details_url)
     assert response.context_data['object'] == source
 
 
 # Update
-# noinspection DuplicatedCode
-def test_source_update_no_auth_status_200(client, source):
-    response = client.get(f'/currency/source/update/{source.id}/')
+def test_source_update_status_code_on_get_no_auth(client, source):
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.get(source_update_url)
     assert response.status_code == 200
 
 
-def test_source_update_no_auth_model_obj(client, source):
-    response = client.get(f'/currency/source/update/{source.id}/')
+def test_source_update_return_obj_on_get_no_auth(client, source):
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.get(source_update_url)
     assert response.context_data['object'] == source
 
 
-def test_source_update_inactive_user_status_200(client, user, source):
+def test_source_update_status_code_on_get_inactive_user(client, user, source):
     client.force_login(user)
-    response = client.get(f'/currency/source/update/{source.id}/')
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.get(source_update_url)
     assert response.status_code == 200
 
 
-def test_source_update_inactive_user_model_obj(client, user, source):
+def test_source_update_return_obj_on_get_inactive_user(client, user, source):
     client.force_login(user)
-    response = client.get(f'/currency/source/update/{source.id}/')
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.get(source_update_url)
     assert response.context_data['object'] == source
 
 
-def test_source_update_active_user_status_200(client, active_user, source):
+def test_source_update_status_code_on_get_active_user(client, active_user, source):
     client.force_login(active_user)
-    response = client.get(f'/currency/source/update/{source.id}/')
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.get(source_update_url)
     assert response.status_code == 200
 
 
-def test_source_update_active_user_model_obj(client, active_user, source):
+def test_source_update_return_obj_on_get_active_user(client, active_user, source):
     client.force_login(active_user)
-    response = client.get(f'/currency/source/update/{source.id}/')
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.get(source_update_url)
     assert response.context_data['object'] == source
 
 
-def test_source_update_super_user_status_200(client, super_user, source):
+def test_source_update_status_code_on_get_super_user(client, super_user, source):
     client.force_login(super_user)
-    response = client.get(f'/currency/source/update/{source.id}/')
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.get(source_update_url)
     assert response.status_code == 200
 
 
-def test_source_update_super_user_model_obj(client, super_user, source):
+def test_source_update_return_ojb_on_get_super_user(client, super_user, source):
     client.force_login(super_user)
-    response = client.get(f'/currency/source/update/{source.id}/')
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.get(source_update_url)
     assert response.context_data['object'] == source
 
 
-def test_source_update_empty_form_status_200(client, source):
+def test_source_update_status_code_on_post_empty_submission(client, source):
     payload = {}
-    response = client.post(f'/currency/source/update/{source.id}/', data=payload)
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.post(source_update_url, data=payload)
     assert response.status_code == 200
 
 
-def test_source_update_empty_form_errors(client, source):
+def test_source_update_errors_on_post_empty_submission(client, source):
     payload = {}
-    response = client.post(f'/currency/source/update/{source.id}/', data=payload)
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.post(source_update_url, data=payload)
     assert response.context_data['form']._errors == {
         'url': ['This field is required.'],
         'name': ['This field is required.'],
@@ -241,152 +290,167 @@ def test_source_update_empty_form_errors(client, source):
     }
 
 
-def test_source_update_invalid_url_status_200(client, source):
+def test_source_update_status_code_on_post_empty_url_field(client, source):
     payload = {
         'url': '',
         'name': source.name,
         'code': source.name
     }
-    response = client.post(f'/currency/source/update/{source.id}/', data=payload)
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.post(source_update_url, data=payload)
     assert response.status_code == 200
 
 
-def test_source_update_invalid_url_errors(client, source):
+def test_source_update_errors_on_post_empty_url_field(client, source):
     payload = {
         'url': '',
         'name': source.name,
         'code': source.code
     }
-    response = client.post(f'/currency/source/update/{source.id}/', data=payload)
-    assert response.context_data['form']._errors == {'url': ['This field is required.']}
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.post(source_update_url, data=payload)
+    assert response.context_data['form']._errors == {
+        'url': ['This field is required.']
+    }
 
 
-def test_source_update_invalid_name_status_200(client, source):
+def test_source_update_status_code_on_post_empty_name_field(client, source):
     payload = {
         'url': source.url,
         'name': '',
         'code': source.code
     }
-    response = client.post(f'/currency/source/update/{source.id}/', data=payload)
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.post(source_update_url, data=payload)
     assert response.status_code == 200
 
 
-def test_source_update_invalid_name_errors(client, source):
+def test_source_update_errors_on_post_empty_name_field(client, source):
     payload = {
         'url': source.url,
         'name': '',
         'code': source.code
     }
-    response = client.post(f'/currency/source/update/{source.id}/', data=payload)
-    assert response.context_data['form']._errors == {'name': ['This field is required.']}
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.post(source_update_url, data=payload)
+    assert response.context_data['form']._errors == {
+        'name': ['This field is required.']
+    }
 
 
-def test_source_update_invalid_code_status_200(client, source):
+def test_source_update_status_code_on_post_invalid_code_field(client, source):
     payload = {
         'url': source.url,
         'name': source.name,
         'code': 'WRONG'
     }
-    response = client.post(f'/currency/source/update/{source.id}/', data=payload)
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.post(source_update_url, data=payload)
     assert response.status_code == 200
 
 
-def test_source_update_invalid_code_errors(client, source):
+def test_source_update_errors_on_post_invalid_code_field(client, source):
     payload = {
         'url': source.url,
         'name': source.name,
         'code': 'WRONG'
     }
-    response = client.post(f'/currency/source/update/{source.id}/', data=payload)
-    assert response.context_data['form']._errors == {'code': ['Enter a whole number.']}
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.post(source_update_url, data=payload)
+    assert response.context_data['form']._errors == {
+        'code': ['Enter a whole number.']
+    }
 
 
-def test_source_update_valid_form_status_302(client, super_user, source):
+def test_source_update_on_post_valid_submission(client, source):
     payload = {
         'url': source.url,
         'name': source.name,
         'code': source.code + 1
     }
-    response = client.post(f'/currency/source/update/{source.id}/', data=payload)
-    assert response.status_code == 302
-
-
-def test_source_update_valid_form_data(client, super_user, source, rate, currency):
-    payload = {
-        'url': source.url,
-        'name': source.name,
-        'code': source.code + 1
-    }
-    response = client.post(f'/currency/source/update/{source.id}/', data=payload)
-    assert response['location'] == '/currency/source/list/'
+    source_update_url = reverse('currency:source-update', args=(source.id,))
+    response = client.post(source_update_url, data=payload)
+    checks = (
+        response.status_code == 302,
+        response['location'] == source_list_url
+    )
+    assert all(checks)
 
 
 # Delete
-# noinspection DuplicatedCode
-def test_source_delete_no_auth_status_200(client, source):
-    response = client.get(f'/currency/source/delete/{source.id}/')
+def test_source_delete_status_code_on_get_no_auth(client, source):
+    source_delete_url = reverse('currency:source-delete', args=(source.id,))
+    response = client.get(source_delete_url)
     assert response.status_code == 200
 
 
-def test_source_delete_no_auth_data(client, source):
+def test_source_delete_on_get_no_auth(client, source):
     initial_count = Source.objects.count()
-    response = client.post(f'/currency/source/delete/{source.id}/')
+    source_delete_url = reverse('currency:source-delete', args=(source.id,))
+    response = client.post(source_delete_url)
     checks = (
-        response['location'] == '/currency/source/list/',
+        response.status_code == 302,
+        response['location'] == source_list_url,
         Source.objects.count() == initial_count - 1
     )
     assert all(checks)
 
 
-# noinspection DuplicatedCode
-def test_source_delete_inactive_user_status_200(client, user, source):
+def test_source_delete_status_code_on_get_inactive_user(client, user, source):
     client.force_login(user)
-    response = client.get(f'/currency/source/delete/{source.id}/')
+    source_delete_url = reverse('currency:source-delete', args=(source.id,))
+    response = client.get(source_delete_url)
     assert response.status_code == 200
 
 
-def test_source_delete_inactive_user_data(client, user, source):
-    initial_count = Source.objects.count()
+def test_source_delete_on_get_inactive_user(client, user, source):
     client.force_login(user)
-    response = client.post(f'/currency/source/delete/{source.id}/')
+    initial_count = Source.objects.count()
+    source_delete_url = reverse('currency:source-delete', args=(source.id,))
+    response = client.post(source_delete_url)
     checks = (
-        response['location'] == '/currency/source/list/',
+        response.status_code == 302,
+        response['location'] == source_list_url,
         Source.objects.count() == initial_count - 1
     )
     assert all(checks)
 
 
-# noinspection DuplicatedCode
-def test_source_delete_active_user_status_200(client, active_user, source):
+def test_source_delete_status_code_on_get_active_user(client, active_user, source):
     client.force_login(active_user)
-    response = client.get(f'/currency/source/delete/{source.id}/')
+    source_delete_url = reverse('currency:source-delete', args=(source.id,))
+    response = client.get(source_delete_url)
     assert response.status_code == 200
 
 
 def test_source_delete_active_user_data(client, active_user, source):
-    initial_count = Source.objects.count()
     client.force_login(active_user)
-    response = client.post(f'/currency/source/delete/{source.id}/')
+    initial_count = Source.objects.count()
+    source_delete_url = reverse('currency:source-delete', args=(source.id,))
+    response = client.post(source_delete_url)
     checks = (
-        response['location'] == '/currency/source/list/',
+        response.status_code == 302,
+        response['location'] == source_list_url,
         Source.objects.count() == initial_count - 1
     )
     assert all(checks)
 
 
-# noinspection DuplicatedCode
-def test_source_delete_super_user_status_200(client, super_user, source):
+def test_source_delete_status_code_on_get_super_user(client, super_user, source):
     client.force_login(super_user)
-    response = client.get(f'/currency/source/delete/{source.id}/')
+    source_delete_url = reverse('currency:source-delete', args=(source.id,))
+    response = client.get(source_delete_url)
     assert response.status_code == 200
 
 
-def test_source_delete_super_user_data(client, super_user, source):
-    initial_count = Source.objects.count()
+def test_source_delete_on_get_super_user(client, super_user, source):
     client.force_login(super_user)
-    response = client.post(f'/currency/source/delete/{source.id}/')
+    initial_count = Source.objects.count()
+    source_delete_url = reverse('currency:source-delete', args=(source.id,))
+    response = client.post(source_delete_url)
     checks = (
-        response['location'] == '/currency/source/list/',
+        response.status_code == 302,
+        response['location'] == source_list_url,
         Source.objects.count() == initial_count - 1
     )
     assert all(checks)
