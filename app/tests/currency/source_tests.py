@@ -1,6 +1,10 @@
+from django.conf import settings
+from django.templatetags.static import static
 from django.urls import reverse
 
 from currency.models import Source
+from currency.constants import StorageUniqueFields
+from utils.common import get_upload_to_path
 
 source_list_url = reverse('currency:source-list')
 source_create_url = reverse('currency:source-create')
@@ -452,5 +456,49 @@ def test_source_delete_on_get_super_user(client, super_user, source):
         response.status_code == 302,
         response['location'] == source_list_url,
         Source.objects.count() == initial_count - 1
+    )
+    assert all(checks)
+
+
+# User logo_url property and signals tests
+def test_source_logo_url_property_on_default_value(client, source):
+    assert source.logo_url == static('images/source_logo_default.png')
+
+
+def test_source_logo_url_property_on_uploaded_image(client, source_with_logo):
+    # Since there is actually passed an image to ImageField there will be:
+    # - created a dir in corresponding MEDIA_URL, so upload_to property of model and
+    #   related functions form utils.common are tested as well
+    # - to delete dir source.delete method is called which invoke post_delete signal
+    #   and related functions from utils.common, so these are tested too
+    source, logo = source_with_logo
+    checks = (
+        source.logo_url == settings.MEDIA_URL + get_upload_to_path(source,
+                                                                   StorageUniqueFields.source,
+                                                                   logo
+                                                                   ),
+        source.delete() == (
+            # number of instances deleted
+            1,
+            # detailed info about what was deleted
+            {'currency.Source': 1}
+        )
+    )
+    assert all(checks)
+
+
+def test_source_logo_url_property_on_uploaded_image_(client, source):
+    # In celery beat parsers predefined images from static dir are used:
+    # This test ensures that those are served properly
+    logo_url = static('images/source_monobank_logo.png')
+    source.logo = logo_url
+    checks = (
+        source.logo_url == logo_url,
+        source.delete() == (
+            # number of instances deleted
+            1,
+            # detailed info about what was deleted
+            {'currency.Source': 1}
+        )
     )
     assert all(checks)

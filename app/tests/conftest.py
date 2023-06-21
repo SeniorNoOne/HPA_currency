@@ -52,6 +52,15 @@ def sources():
     yield sources
 
 
+@pytest.fixture(scope='function')
+def source_with_logo(source):
+    with tempfile.NamedTemporaryFile(suffix='.png') as temp_file:
+        logo = SimpleUploadedFile(temp_file.name, b'random_image_content')
+        source.logo = logo
+        source.save()
+    yield source, logo.name
+
+
 @pytest.fixture(scope='module')
 def currency():
     yield choice(RateCurrencyChoices.values)
@@ -83,6 +92,13 @@ def rate():
 def rates():
     rates = baker.make('currency.Rate', _quantity=10)
     yield rates
+
+
+@pytest.fixture(scope='function')
+def rates_pagination():
+    buy = 100
+    rates = baker.make('currency.Rate', buy=buy, _quantity=50)
+    yield buy, rates
 
 
 @pytest.fixture(scope='function')

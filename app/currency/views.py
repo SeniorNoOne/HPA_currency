@@ -108,5 +108,5 @@ class SourceDeleteView(DeleteView):
 
 class LogListView(CustomPaginationMixin, FilterView):
     template_name = 'log/log_list.html'
-    queryset = RequestResponseLog.objects.all()
+    queryset = RequestResponseLog.objects.all().order_by('id')
     filterset_class = RequestResponseLogFilter
