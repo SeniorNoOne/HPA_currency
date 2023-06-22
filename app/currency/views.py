@@ -3,10 +3,10 @@ from django_filters.views import FilterView
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView, TemplateView
 
-from currency.filters import RateFilter, RequestResponseLogFilter, ContactUsFilter, SourceFilter
+from currency.filters import ContactUsFilter, RateFilter, RequestResponseLogFilter, SourceFilter
 from currency.forms import ContactUsForm, RateForm, SourceForm
-from currency.models import ContactUs, Rate, Source, RequestResponseLog
-from utils.mixins.view_mixins import SuperUserTestMixin, CustomPaginationMixin
+from currency.models import ContactUs, Rate, RequestResponseLog, Source
+from utils.mixins.view_mixins import CustomPaginationMixin, SuperUserTestMixin
 
 
 class MainPageView(TemplateView):
@@ -108,5 +108,5 @@ class SourceDeleteView(DeleteView):
 
 class LogListView(CustomPaginationMixin, FilterView):
     template_name = 'log/log_list.html'
-    queryset = RequestResponseLog.objects.all().order_by('id')
+    queryset = RequestResponseLog.objects.all().order_by('-id')
     filterset_class = RequestResponseLogFilter

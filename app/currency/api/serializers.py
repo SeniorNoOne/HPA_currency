@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from currency.models import Rate, Source, ContactUs, RequestResponseLog
+from currency.models import ContactUs, Rate, RequestResponseLog, Source
 
 
 class RateSerializer(serializers.ModelSerializer):
@@ -12,7 +12,7 @@ class RateSerializer(serializers.ModelSerializer):
             'sell',
             'created',
             'source',
-            'currency'
+            'currency',
         )
 
 

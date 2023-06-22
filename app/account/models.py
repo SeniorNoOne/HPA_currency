@@ -12,13 +12,13 @@ def user_upload_to(instance, filename):
 
 
 class User(SignUpEmailMixin, AbstractUser):
+    # Fields required to create a superuser
+    REQUIRED_FIELDS = ['first_name', 'last_name']
+    USERNAME_FIELD = 'email'
+
     avatar = models.ImageField(blank=True, null=True, upload_to=user_upload_to)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=30, blank=True, null=True)
-
-    USERNAME_FIELD = 'email'
-    # Fields required to create a superuser
-    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     @property
     def avatar_url(self):

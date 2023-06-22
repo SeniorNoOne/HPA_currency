@@ -24,8 +24,7 @@ class UserActivateView(RedirectView):
             user.is_active = True
             user.save(update_fields=['is_active'])
 
-        url = super().get_redirect_url(*args, **kwargs)
-        return url
+        return super().get_redirect_url(*args, **kwargs)
 
 
 class ProfileView(LoginRequiredMixin, UpdateView):
@@ -33,9 +32,9 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('index')
     queryset = get_user_model().objects.all()
     fields = (
+        'avatar',
         'first_name',
         'last_name',
-        'avatar'
     )
 
     def get_object(self, queryset=None):

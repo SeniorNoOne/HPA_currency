@@ -1,5 +1,6 @@
 [run]
 branch = True
+data_file = .pytest_cache/coverage/data/.coverage
 omit = */tests.py
        */tests/*
        */migrations/*
@@ -7,7 +8,6 @@ omit = */tests.py
        */asgi.py
        */wsgi.py
        */settings/*.py
-       */local_sample.py
        */app/manage.py
 
 [report]

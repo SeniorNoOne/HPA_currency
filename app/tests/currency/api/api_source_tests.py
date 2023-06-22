@@ -40,7 +40,7 @@ def test_api_source_list_pagination_on_get(api_client_authorized, sources):
     response = api_client_authorized.get(api_sources_list_url)
     data = response.json()
     checks = {
-        'count' in data,
+        'results' in data,
         'next' in data,
         'previous' in data
     }

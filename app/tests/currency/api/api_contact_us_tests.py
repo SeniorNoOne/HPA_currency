@@ -41,7 +41,7 @@ def test_api_contact_us_list_pagination_on_get(api_client_authorized, contact_us
     response = api_client_authorized.get(api_contact_us_list_url)
     data = response.json()
     checks = {
-        'count' in data,
+        'results' in data,
         'next' in data,
         'previous' in data
     }

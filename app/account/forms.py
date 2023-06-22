@@ -30,15 +30,18 @@ class UserSignUpForm(forms.ModelForm):
             'first_name',
             'last_name',
             'password1',
-            'password2'
+            'password2',
         )
         widgets = {
             'email': forms.TextInput(attrs={'placeholder': 'Enter your email'}),
             'first_name': forms.TextInput(attrs={'placeholder': 'Enter your first name'}),
             'last_name': forms.TextInput(attrs={'placeholder': 'Enter your last name'}),
-            'phone': forms.TextInput(attrs={'placeholder': 'Enter your phone number',
-                                            'data-mask': '+000-00-000-00-00'}
-                                     )
+            'phone': forms.TextInput(
+                attrs={
+                    'placeholder': 'Enter your phone number',
+                    'data-mask': '+000-00-000-00-00',
+                }
+            )
         }
 
     def __init__(self, *args, **kwargs):
@@ -73,8 +76,10 @@ class UserSignUpForm(forms.ModelForm):
                 css_class='row justify-content-center'
             ),
             Row(
-                Column(Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
-                       css_class='offset-2')
+                Column(
+                    Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
+                    css_class='offset-2'
+                )
             )
         )
 
@@ -143,8 +148,10 @@ class CustomLoginForm(AuthenticationForm):
                 css_class='row justify-content-center'
             ),
             Row(
-                Column(Submit('submit', 'Login', css_class='btn btn-primary col-12'),
-                       css_class='col-2'),
+                Column(
+                    Submit('submit', 'Login', css_class='btn btn-primary col-12'),
+                    css_class='col-2'
+                ),
                 Column(
                     HTML(
                         '<a href="{% url "password_reset" %}" '

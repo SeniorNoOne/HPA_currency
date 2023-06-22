@@ -42,7 +42,7 @@ def test_api_req_resp_log_list_pagination_on_get(api_client_authorized, req_resp
     response = api_client_authorized.get(api_req_resp_log_list_url)
     data = response.json()
     checks = {
-        'count' in data,
+        'results' in data,
         'next' in data,
         'previous' in data
     }

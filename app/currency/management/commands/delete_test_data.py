@@ -14,3 +14,4 @@ class Command(BaseCommand):
         }
 
         Source.objects.filter(code=source_kwargs['code']).delete()
+        self.stdout.write(self.style.SUCCESS('Test data has been successfully removed'))

@@ -8,8 +8,8 @@ class RateFilter(django_filters.FilterSet):
         model = Rate
         fields = {
             'buy': ('exact', 'lt', 'lte', 'gt', 'gte',),
-            'sell': ('exact', 'lt', 'lte', 'gt', 'gte'),
-            'source__name': ('icontains',)
+            'sell': ('exact', 'lt', 'lte', 'gt', 'gte',),
+            'source__name': ('icontains',),
         }
 
 
@@ -19,7 +19,7 @@ class ContactUsFilter(django_filters.FilterSet):
         fields = {
             'email_from': ('icontains',),
             'subject': ('icontains',),
-            'message': ('icontains',)
+            'message': ('icontains',),
         }
 
 
@@ -29,7 +29,7 @@ class SourceFilter(django_filters.FilterSet):
         fields = {
             'url': ('icontains',),
             'name': ('icontains',),
-            'city': ('icontains',)
+            'city': ('icontains',),
         }
 
 
@@ -39,5 +39,5 @@ class RequestResponseLogFilter(django_filters.FilterSet):
         fields = {
             'path': ('icontains',),
             'request_method': ('exact',),
-            'time': ('exact', 'lt', 'lte', 'gt', 'gte')
+            'time': ('exact', 'lt', 'lte', 'gt', 'gte',),
         }

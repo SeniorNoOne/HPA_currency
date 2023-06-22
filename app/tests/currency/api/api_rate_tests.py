@@ -30,7 +30,7 @@ def test_api_rate_list_pagination_on_get(api_client, rates):
     response = api_client.get(api_rates_list_url)
     data = response.json()
     checks = {
-        'count' in data,
+        'results' in data,
         'next' in data,
         'previous' in data
     }

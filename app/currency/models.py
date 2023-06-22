@@ -50,8 +50,7 @@ class Source(models.Model):
     name = models.CharField(max_length=64)
     city = models.CharField(max_length=64, blank=True)
     phone = PhoneNumberField(blank=True, unique=True, null=True)
-    logo = models.ImageField(blank=True, null=True,
-                             upload_to=source_upload_to)
+    logo = models.ImageField(blank=True, null=True, upload_to=source_upload_to)
 
     def __str__(self):
         return self.name.capitalize()
