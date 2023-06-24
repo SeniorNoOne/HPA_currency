@@ -4,10 +4,13 @@ max-line-length = 100
 per-file-ignores =
     # Shadowing built-in
     **/commands/*.py:A003
+
     # Unused imports
     **/apps.py:F401
+
     # Test settings
     **/settings_test.py:F401,F403,F405
     */settings/__init__.py:F401,F403
     */settings/base.py:F401,F403
     */settings/local.py:F401,F403
+    */settings/local_sample.py:F401,F403

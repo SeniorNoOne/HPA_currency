@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from celery import shared_task
 
-from currency.constants import PrivatbankConfig, MonobankConfig, NBUConfig, AvailableCurrency
+from currency.constants import AvailableCurrency, MonobankConfig, NBUConfig, PrivatbankConfig
 from currency.models import RateCurrencyChoices
 from utils.celery_classes import BaseTaskWithRetry
 from utils.common import get_response, json_to_decimal
@@ -92,8 +92,7 @@ def parse_nbu():
             last_rate = Rate.objects.filter(currency=RateCurrencyChoices[rate['short_name']],
                                             source=source).first()
 
-            if last_rate is None or last_rate.buy != rate['buy'] \
-                    or last_rate.sell != rate['sell']:
+            if last_rate is None or last_rate.buy != rate['buy'] or last_rate.sell != rate['sell']:
                 Rate.objects.create(
                     buy=rate['buy'],
                     sell=rate['sell'],

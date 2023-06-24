@@ -1,7 +1,7 @@
 from django.urls import path
 
 from currency.views import (
-    RateListView, RateDetailView, RateUpdateView, RateCreateView, RateDeleteView,
+    RateCreateView, RateListView, RateDetailView, RateUpdateView, RateDeleteView,
     ContactUsCreateView, ContactUsListView, ContactUsDetailView, ContactUsUpdateView,
     ContactUsDeleteView,
     SourceCreateView, SourceListView, SourceDetailView, SourceUpdateView, SourceDeleteView,

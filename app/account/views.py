@@ -1,31 +1,16 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ValidationError
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, RedirectView, UpdateView
 
 from account.forms import UserSignUpForm
-from utils.mixins import SendSignupMailMixin
 
 
-class UserSignupView(SendSignupMailMixin, CreateView):
+class UserSignupView(CreateView):
     queryset = get_user_model().objects.all()
     template_name = "registration/signup.html"
     success_url = reverse_lazy("index")
     form_class = UserSignUpForm
-
-    def form_valid(self, form):
-        instance = form.save(commit=False)
-        cleaned_data = form.cleaned_data
-        cleaned_data['username'] = instance.username
-        email = self._create_email(instance)
-        self._send_mail(email)
-        try:
-            instance.save()
-            return super().form_valid(form)
-        except ValidationError as error:
-            form.add_error('email', ''.join(error))
-            return self.form_invalid(form)
 
 
 class UserActivateView(RedirectView):
@@ -39,8 +24,7 @@ class UserActivateView(RedirectView):
             user.is_active = True
             user.save(update_fields=['is_active'])
 
-        url = super().get_redirect_url(*args, **kwargs)
-        return url
+        return super().get_redirect_url(*args, **kwargs)
 
 
 class ProfileView(LoginRequiredMixin, UpdateView):
@@ -48,9 +32,9 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('index')
     queryset = get_user_model().objects.all()
     fields = (
+        'avatar',
         'first_name',
         'last_name',
-        'avatar'
     )
 
     def get_object(self, queryset=None):

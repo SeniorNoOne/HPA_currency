@@ -1,14 +1,14 @@
 [run]
 branch = True
+data_file = .pytest_cache/coverage/data/.coverage
 omit = */tests.py
        */tests/*
        */migrations/*
        */management/*
        */asgi.py
        */wsgi.py
-       */settings*.py
+       */settings/*.py
        */app/manage.py
-       */bs4_parser/*.py
 
 [report]
 precision = 4

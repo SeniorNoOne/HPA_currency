@@ -26,3 +26,4 @@ class Command(BaseCommand):
                 currency=random.choices(RateCurrencyChoices.choices)[0][0],
                 source=test_source
             )
+        self.stdout.write(self.style.SUCCESS('Test data has been created successfully'))

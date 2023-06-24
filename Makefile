@@ -78,10 +78,10 @@ rm_test_data_d:
 	$(docker_backend_python) delete_test_data
 
 pytest:
-	pytest ./app/tests --cov=app --cov-report html && coverage report --fail-under=80
+	pytest ./app/tests --cov=app --cov-report html && coverage report --fail-under=85
 
 pytest_d:
-	$(docker_backend) pytest ./app/tests --cov=app --cov-report html && coverage report --fail-under=80
+	$(docker_backend) pytest ./app/tests --cov=app --cov-report html && coverage report --fail-under=85
 
 gunicorn:
 	cd ./app && gunicorn --workers 4 --threads 4 settings.wsgi --timeout 36000 --max-requests 10000 -b localhost:8000
