@@ -1,6 +1,21 @@
 # Django Pet Project
 This is a pet project built using Django, featuring various implemented features and technologies. It serves as a showcase of Django best practices and commonly used tools in Django development.
 
+Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+
+## Installation
+
+Installation guid
+
+## Usage
+
+Usage guide
+
 ## Features
 The project includes the following implemented features:
 
