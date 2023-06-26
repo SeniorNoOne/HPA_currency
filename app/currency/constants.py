@@ -48,7 +48,7 @@ class PrivatbankConfig:
         'code': code,
         'name': name,
         'url': url,
-        'logo': logo
+        'logo': logo,
     }
 
 
@@ -61,7 +61,7 @@ class MonobankConfig:
         'code': code,
         'name': name,
         'url': url,
-        'logo': logo
+        'logo': logo,
     }
 
 
@@ -74,7 +74,7 @@ class NBUConfig:
         'code': code,
         'name': name,
         'url': url,
-        'logo': logo
+        'logo': logo,
     }
 
 

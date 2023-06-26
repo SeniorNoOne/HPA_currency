@@ -2,7 +2,7 @@ from currency.models import Rate
 from currency.tasks import parse_privatbank, parse_monobank, parse_nbu
 
 
-def test_privatbank_parser_empty_db(mocker, privatbank_parser_data, monkeypatch):
+def test_privatbank_parser_with_empty_db(mocker, privatbank_parser_data):
     initial_count = Rate.objects.all().count()
     mocker.patch(
         'currency.tasks.get_response',
@@ -12,7 +12,7 @@ def test_privatbank_parser_empty_db(mocker, privatbank_parser_data, monkeypatch)
     assert Rate.objects.all().count() == initial_count + 2
 
 
-def test_privatbank_parser_two_runs(mocker, privatbank_parser_data):
+def test_privatbank_parser_with_empty_db_two_runs(mocker, privatbank_parser_data):
     initial_count = Rate.objects.all().count()
     mocker.patch(
         'currency.tasks.get_response',
@@ -23,7 +23,7 @@ def test_privatbank_parser_two_runs(mocker, privatbank_parser_data):
     assert Rate.objects.all().count() == initial_count + 2
 
 
-def test_monobank_parser_empty_db(mocker, monobank_parser_data):
+def test_monobank_parser_with_empty_db(mocker, monobank_parser_data):
     initial_count = Rate.objects.all().count()
     mocker.patch(
         'currency.tasks.get_response',
@@ -33,7 +33,7 @@ def test_monobank_parser_empty_db(mocker, monobank_parser_data):
     assert Rate.objects.all().count() == initial_count + 4
 
 
-def test_monobank_parser_two_runs(mocker, monobank_parser_data):
+def test_monobank_parser_with_empty_db_two_runs(mocker, monobank_parser_data):
     initial_count = Rate.objects.all().count()
     mocker.patch(
         'currency.tasks.get_response',
@@ -44,7 +44,7 @@ def test_monobank_parser_two_runs(mocker, monobank_parser_data):
     assert Rate.objects.all().count() == initial_count + 4
 
 
-def test_nbu_parser_empty_db(mocker, nbu_parser_data):
+def test_nbu_parser_with_empty_db(mocker, nbu_parser_data):
     initial_count = Rate.objects.all().count()
     mocker.patch(
         'currency.tasks.get_response',
@@ -54,7 +54,7 @@ def test_nbu_parser_empty_db(mocker, nbu_parser_data):
     assert Rate.objects.all().count() == initial_count + 4
 
 
-def test_nbu_parser_empty_two_runs(mocker, nbu_parser_data):
+def test_nbu_parser_with_empty_db_two_runs(mocker, nbu_parser_data):
     initial_count = Rate.objects.all().count()
     mocker.patch(
         'currency.tasks.get_response',

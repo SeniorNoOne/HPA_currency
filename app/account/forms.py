@@ -12,12 +12,14 @@ User = get_user_model()
 
 
 class UserSignUpForm(forms.ModelForm):
-    password1 = forms.CharField(label='Password',
-                                widget=forms.PasswordInput(
-                                    attrs={'placeholder': 'Enter password'}))
-    password2 = forms.CharField(label='Confirm Password',
-                                widget=forms.PasswordInput(
-                                    attrs={'placeholder': 'Confirm password'}))
+    password1 = forms.CharField(
+        label='Password',
+        widget=forms.PasswordInput(attrs={'placeholder': 'Enter password'})
+    )
+    password2 = forms.CharField(
+        label='Confirm Password',
+        widget=forms.PasswordInput(attrs={'placeholder': 'Confirm password'})
+    )
 
     class Meta:
         model = User
@@ -28,14 +30,18 @@ class UserSignUpForm(forms.ModelForm):
             'first_name',
             'last_name',
             'password1',
-            'password2'
+            'password2',
         )
         widgets = {
             'email': forms.TextInput(attrs={'placeholder': 'Enter your email'}),
             'first_name': forms.TextInput(attrs={'placeholder': 'Enter your first name'}),
             'last_name': forms.TextInput(attrs={'placeholder': 'Enter your last name'}),
-            'phone': forms.TextInput(attrs={'placeholder': 'Enter your phone number',
-                                            'data-mask': '+000-00-000-00-00'})
+            'phone': forms.TextInput(
+                attrs={
+                    'placeholder': 'Enter your phone number',
+                    'data-mask': '+000-00-000-00-00',
+                }
+            )
         }
 
     def __init__(self, *args, **kwargs):
@@ -70,16 +76,36 @@ class UserSignUpForm(forms.ModelForm):
                 css_class='row justify-content-center'
             ),
             Row(
-                Column(Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
-                       css_class='offset-2')
+                Column(
+                    Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
+                    css_class='offset-2'
+                )
             )
         )
 
     def clean(self):
         cleaned_data = super().clean()
-        if cleaned_data['password1'] != cleaned_data['password2']:
-            raise forms.ValidationError('Passwords should match!')
-        validate_password(cleaned_data['password1'])
+
+        # Validating passwords
+        password_1 = cleaned_data.get('password1')
+        password_2 = cleaned_data.get('password2')
+        if password_1 and password_2:
+            if cleaned_data['password1'] != cleaned_data['password2']:
+                raise forms.ValidationError(
+                    {
+                        'password1': 'Passwords should match!',
+                        'password2': 'Passwords should match!'
+                    }
+                )
+            validate_password(cleaned_data['password1'])
+
+        # Validating email
+        email = cleaned_data.get('email')
+        if email:
+            if User.objects.filter(email__iexact=email).exists():
+                raise forms.ValidationError({'email': 'Email is already in use!'})
+            cleaned_data['email'] = email.lower()
+
         return cleaned_data
 
     def save(self, commit=True):
@@ -122,8 +148,10 @@ class CustomLoginForm(AuthenticationForm):
                 css_class='row justify-content-center'
             ),
             Row(
-                Column(Submit('submit', 'Login', css_class='btn btn-primary col-12'),
-                       css_class='col-2'),
+                Column(
+                    Submit('submit', 'Login', css_class='btn btn-primary col-12'),
+                    css_class='col-2'
+                ),
                 Column(
                     HTML(
                         '<a href="{% url "password_reset" %}" '

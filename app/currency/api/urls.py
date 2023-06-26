@@ -1,7 +1,9 @@
 from rest_framework.routers import DefaultRouter
 
-from currency.api.views import (RateApiViewSet, SourceApiViewSet,
-                                ContactUsApiViewSet, RequestResponseLogApiViewSet)
+from currency.api.views import (ContactUsApiViewSet,
+                                RateApiViewSet,
+                                RequestResponseLogApiViewSet,
+                                SourceApiViewSet)
 
 app_name = 'api-currency'
 

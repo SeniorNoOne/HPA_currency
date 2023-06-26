@@ -2,15 +2,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import LoginView
-from django.urls import path, include, re_path
+from django.urls import include, path, re_path
 
-from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
 from account.forms import CustomLoginForm
 from currency.views import MainPageView
-
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -22,40 +21,42 @@ schema_view = get_schema_view(
       license=openapi.License(name="BSD License"),
    ),
    public=True,
-   permission_classes=[permissions.AllowAny]
+   permission_classes=[permissions.AllowAny],
 )
 
-
 urlpatterns = [
+    # Django
+    path('__debug__/', include('debug_toolbar.urls')),
+
     path('admin/', admin.site.urls, name='admin:index'),
 
-    path('auth/login/', LoginView.as_view(template_name='registration/login.html',
-                                          authentication_form=CustomLoginForm),
+    path('auth/login/',
+         LoginView.as_view(template_name='registration/login.html',
+                           authentication_form=CustomLoginForm),
          name='login'),
-
-    path('', MainPageView.as_view(), name='index'),
 
     path('account/', include('account.urls')),
 
     path('auth/', include('django.contrib.auth.urls')),
 
-    path('__debug__/', include('debug_toolbar.urls')),
-
     path('currency/', include('currency.urls')),
 
+    path('', MainPageView.as_view(), name='index'),
+
+    # REST API
     path('api/', include('account.api.urls')),
     path('api/currency/', include('currency.api.urls')),
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',
             schema_view.without_ui(cache_timeout=0),
-            name='schema-json'
-            ),
+            name='schema-json'),
+
     re_path(r'^swagger/$',
             schema_view.with_ui('swagger', cache_timeout=0),
-            name='schema-swagger-ui'
-            ),
+            name='schema-swagger-ui'),
+
     re_path(r'^redoc/$',
             schema_view.with_ui('redoc', cache_timeout=0),
-            name='schema-redoc'
-            ),
+            name='schema-redoc'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

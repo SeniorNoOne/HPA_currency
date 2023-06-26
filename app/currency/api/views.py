@@ -1,29 +1,33 @@
 from django.core.cache import cache
 
-from rest_framework import viewsets
+from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from currency.constants import LATEST_RATE_CACHE_KEY
-from currency.choices import RateCurrencyChoices
-from currency.api.paginators import CurrencyApiLimitOffsetPagination
-from currency.api.serializers import (RateSerializer, SourceSerializer,
-                                      ContactUsSerializer, RequestResponseLogSerializer)
+from currency.filters import ContactUsFilter, RateFilter, RequestResponseLogFilter, SourceFilter
+from currency.api.paginators import CurrencyApiCursorPagination
+from currency.api.serializers import (ContactUsSerializer,
+                                      RateSerializer,
+                                      RequestResponseLogSerializer,
+                                      SourceSerializer)
 from currency.api.throttling import CurrencyAnonThrottle, CurrencyUserThrottle
-from currency.filters import RateFilter, SourceFilter, ContactUsFilter, RequestResponseLogFilter
-from currency.models import Rate, Source, ContactUs, RequestResponseLog
+from currency.choices import RateCurrencyChoices
+from currency.constants import LATEST_RATE_CACHE_KEY
+from currency.models import ContactUs, Rate, RequestResponseLog, Source
 
 
 class RateApiViewSet(viewsets.ModelViewSet):
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
-    pagination_class = CurrencyApiLimitOffsetPagination
     filterset_class = RateFilter
+    pagination_class = CurrencyApiCursorPagination
     permission_classes = (AllowAny,)
+    throttle_classes = [CurrencyAnonThrottle, CurrencyUserThrottle]
+
+    ordering = ('-id',)
     ordering_fields = ('id', 'buy', 'sell',)
     search_fields = ('source__name',)
-    throttle_classes = [CurrencyAnonThrottle, CurrencyUserThrottle]
 
     @action(detail=False, methods=('GET',))
     def latest(self, request, *args, **kwargs):
@@ -44,30 +48,39 @@ class RateApiViewSet(viewsets.ModelViewSet):
 class ContactUsApiViewSet(viewsets.ModelViewSet):
     queryset = ContactUs.objects.all()
     serializer_class = ContactUsSerializer
-    pagination_class = CurrencyApiLimitOffsetPagination
     filterset_class = ContactUsFilter
+    pagination_class = CurrencyApiCursorPagination
+    throttle_classes = [CurrencyAnonThrottle, CurrencyUserThrottle]
+
+    ordering = ('-id',)
     ordering_fields = ('id', 'email_from', 'subject',)
     search_fields = ('email_from', 'subject', 'message',)
-    throttle_classes = [CurrencyAnonThrottle, CurrencyUserThrottle]
 
 
-class SourceApiViewSet(viewsets.ModelViewSet):
+class SourceApiViewSet(mixins.ListModelMixin,
+                       mixins.RetrieveModelMixin,
+                       viewsets.GenericViewSet):
     queryset = Source.objects.all()
     serializer_class = SourceSerializer
-    pagination_class = CurrencyApiLimitOffsetPagination
-    http_method_names = ('get',)
     filterset_class = SourceFilter
+    pagination_class = CurrencyApiCursorPagination
+    throttle_classes = [CurrencyAnonThrottle, CurrencyUserThrottle]
+
+    ordering = ('-id',)
     ordering_fields = ('id', 'name', 'url',)
     search_fields = ('name', 'url', 'city',)
-    throttle_classes = [CurrencyAnonThrottle, CurrencyUserThrottle]
 
 
-class RequestResponseLogApiViewSet(viewsets.ModelViewSet):
+class RequestResponseLogApiViewSet(mixins.ListModelMixin,
+                                   mixins.RetrieveModelMixin,
+                                   mixins.DestroyModelMixin,
+                                   viewsets.GenericViewSet):
     queryset = RequestResponseLog.objects.all()
     serializer_class = RequestResponseLogSerializer
-    pagination_class = CurrencyApiLimitOffsetPagination
-    http_method_names = ('get', 'delete')
     filterset_class = RequestResponseLogFilter
-    ordering_fields = ('id', 'path', 'time',)
-    search_fields = ('path', 'request_method')
+    pagination_class = CurrencyApiCursorPagination
     throttle_classes = [CurrencyAnonThrottle, CurrencyUserThrottle]
+
+    ordering = ('-id',)
+    ordering_fields = ('id', 'path', 'time',)
+    search_fields = ('path', 'request_method',)

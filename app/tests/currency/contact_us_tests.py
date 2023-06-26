@@ -1,20 +1,26 @@
+from django.urls import reverse
+
 from currency.models import ContactUs
+
+contact_us_list_url = reverse('currency:contactus-list')
+contact_us_create_url = reverse('currency:contactus-create')
 
 
 # Create
-def test_contact_us_create_status_200(client):
-    response = client.get('/currency/contact_us/create/')
+def test_contact_us_create_status_code_on_get(client):
+    response = client.get(contact_us_create_url)
     assert response.status_code == 200
 
 
-def test_contact_us_create_empty_form_status_200(client):
-    response = client.post('/currency/contact_us/create/')
-    assert response.status_code == 200
-
-
-def test_contact_us_create_empty_form_errors(client):
+def test_contact_us_create_status_code_on_post_empty_submission(client):
     payload = {}
-    response = client.post('/currency/contact_us/create/', data=payload)
+    response = client.post(contact_us_create_url, data=payload)
+    assert response.status_code == 200
+
+
+def test_contact_us_create_errors_on_post_empty_submission(client):
+    payload = {}
+    response = client.post(contact_us_create_url, data=payload)
     assert response.context_data['form']._errors == {
         'email_from': ['This field is required.'],
         'subject': ['This field is required.'],
@@ -22,217 +28,239 @@ def test_contact_us_create_empty_form_errors(client):
     }
 
 
-def test_contact_us_create_invalid_email_status_200(client, contact_us):
+def test_contact_us_create_status_code_on_post_invalid_email_from_field(client, contact_us):
     payload = {
         'email_from': 'WRONG',
         'subject': contact_us.subject,
         'message': contact_us.message
     }
-    response = client.post('/currency/contact_us/create/', data=payload)
+    response = client.post(contact_us_create_url, data=payload)
     assert response.status_code == 200
 
 
-def test_contact_us_create_invalid_email_errors(client, contact_us):
+def test_contact_us_create_errors_on_post_invalid_email_from_field(client, contact_us):
     payload = {
         'email_from': 'WRONG',
         'subject': contact_us.subject,
         'message': contact_us.message
     }
-    response = client.post('/currency/contact_us/create/', data=payload)
-    assert response.context_data['form']._errors == {'email_from': ['Enter a valid email address.']}
+    response = client.post(contact_us_create_url, data=payload)
+    assert response.context_data['form']._errors == {
+        'email_from': ['Enter a valid email address.']
+    }
 
 
-def test_contact_us_create_invalid_subject_status_200(client, contact_us):
+def test_contact_us_create_status_code_on_post_invalid_subject_field(client, contact_us):
     payload = {
         'email_from': contact_us.email_from,
         'subject': '',
         'message': contact_us.message
     }
-    response = client.post('/currency/contact_us/create/', data=payload)
+    response = client.post(contact_us_create_url, data=payload)
     assert response.status_code == 200
 
 
-def test_contact_us_create_invalid_subject_errors(client, contact_us):
+def test_contact_us_create_errors_on_post_invalid_subject_field(client, contact_us):
     payload = {
         'email_from': contact_us.email_from,
         'subject': '',
         'message': contact_us.message
     }
-    response = client.post('/currency/contact_us/create/', data=payload)
-    assert response.context_data['form']._errors == {'subject':  ['This field is required.']}
+    response = client.post(contact_us_create_url, data=payload)
+    assert response.context_data['form']._errors == {
+        'subject':  ['This field is required.']
+    }
 
 
-def test_contact_us_create_invalid_message_status_200(client, contact_us):
+def test_contact_us_create_status_code_on_post_invalid_message_field(client, contact_us):
     payload = {
         'email_from': contact_us.email_from,
         'subject': contact_us.subject,
         'message': ''
     }
-    response = client.post('/currency/contact_us/create/', data=payload)
+    response = client.post(contact_us_create_url, data=payload)
     assert response.status_code == 200
 
 
-def test_contact_us_create_invalid_message_errors(client, contact_us):
+def test_contact_us_create_errors_on_post_invalid_message_field(client, contact_us):
     payload = {
         'email_from': contact_us.email_from,
         'subject': contact_us.subject,
         'message': ''
     }
-    response = client.post('/currency/contact_us/create/', data=payload)
-    assert response.context_data['form']._errors == {'message':  ['This field is required.']}
+    response = client.post(contact_us_create_url, data=payload)
+    assert response.context_data['form']._errors == {
+        'message':  ['This field is required.']
+    }
 
 
-def test_contact_us_create_valid_form_status_302(client, contact_us):
+def test_contact_us_create_status_code_on_post_valid_submission(client, contact_us):
     payload = {
         'email_from': contact_us.email_from,
         'subject': contact_us.subject,
         'message': contact_us.message
     }
-    response = client.post('/currency/contact_us/create/', data=payload)
+    response = client.post(contact_us_create_url, data=payload)
     assert response.status_code == 302
 
 
-def test_contact_us_create_valid_form_data(client, contact_us):
-    initial_count = ContactUs.objects.count()
+def test_contact_us_create_on_post_valid_submission(client, contact_us):
     payload = {
         'email_from': contact_us.email_from,
         'subject': contact_us.subject,
         'message': contact_us.message
     }
-    response = client.post('/currency/contact_us/create/', data=payload)
+    initial_count = ContactUs.objects.count()
+    response = client.post(contact_us_create_url, data=payload)
     checks = (
-        response['location'] == '/currency/contact_us/list/',
+        response['location'] == contact_us_list_url,
         ContactUs.objects.count() == initial_count + 1
     )
     assert all(checks)
 
 
 # List
-def test_contact_us_list_status_200(client):
-    response = client.get('/currency/contact_us/list/')
+def test_contact_us_list_status_code_on_get(client):
+    response = client.get(contact_us_list_url)
     assert response.status_code == 200
 
 
-def test_contact_us_list_empty_db(client):
-    response = client.get('/currency/contact_us/list/')
+def test_contact_us_list_on_get_with_empty_db(client):
+    response = client.get(contact_us_list_url)
     assert not response.context_data['object_list'].exists()
 
 
-def test_contact_us_list_single_entity(client, contact_us):
-    response = client.get('/currency/contact_us/list/')
+def test_contact_us_list_on_get_with_one_record(client, contact_us):
+    response = client.get(contact_us_list_url)
     assert response.context_data['object_list'].count() == 1
 
 
-def test_contact_us_list_multiple_entities(client, contact_us_multiple):
-    response = client.get('/currency/contact_us/list/')
+def test_contact_us_list_on_get_with_multiple_records(client, contact_us_multiple):
+    response = client.get(contact_us_list_url)
     assert response.context_data['object_list'].count() == len(contact_us_multiple)
 
 
 # Details
-# noinspection DuplicatedCode
-def test_contact_us_details_no_auth_status_200(client, contact_us):
-    response = client.get(f'/currency/contact_us/details/{contact_us.id}/')
+def test_contact_us_details_status_code_on_get_no_auth(client, contact_us):
+    contact_us_details_url = reverse('currency:contactus-details', args=(contact_us.id,))
+    response = client.get(contact_us_details_url)
     assert response.status_code == 200
 
 
-def test_contact_us_details_no_auth_model_obj(client, contact_us):
-    response = client.get(f'/currency/contact_us/details/{contact_us.id}/')
+def test_contact_us_details_return_obj_on_get_no_auth(client, contact_us):
+    contact_us_details_url = reverse('currency:contactus-details', args=(contact_us.id,))
+    response = client.get(contact_us_details_url)
     assert response.context_data['object'] == contact_us
 
 
-def test_contact_us_details_inactive_user_status_200(client, user, contact_us):
+def test_contact_us_details_status_code_on_get_inactive_user(client, user, contact_us):
     client.force_login(user)
-    response = client.get(f'/currency/contact_us/details/{contact_us.id}/')
+    contact_us_details_url = reverse('currency:contactus-details', args=(contact_us.id,))
+    response = client.get(contact_us_details_url)
     assert response.status_code == 200
 
 
-def test_contact_us_details_inactive_user_model_obj(client, user, contact_us):
+def test_contact_us_details_return_obj_on_get_inactive_user(client, user, contact_us):
     client.force_login(user)
-    response = client.get(f'/currency/contact_us/details/{contact_us.id}/')
+    contact_us_details_url = reverse('currency:contactus-details', args=(contact_us.id,))
+    response = client.get(contact_us_details_url)
     assert response.context_data['object'] == contact_us
 
 
-def test_contact_us_details_active_user_status_200(client, active_user, contact_us):
+def test_contact_us_details_status_code_on_get_active_user(client, active_user, contact_us):
     client.force_login(active_user)
-    response = client.get(f'/currency/contact_us/details/{contact_us.id}/')
+    contact_us_details_url = reverse('currency:contactus-details', args=(contact_us.id,))
+    response = client.get(contact_us_details_url)
     assert response.status_code == 200
 
 
-def test_contact_us_details_active_user_model_obj(client, active_user, contact_us):
+def test_contact_us_details_return_obj_on_get_active_user(client, active_user, contact_us):
     client.force_login(active_user)
-    response = client.get(f'/currency/contact_us/details/{contact_us.id}/')
+    contact_us_details_url = reverse('currency:contactus-details', args=(contact_us.id,))
+    response = client.get(contact_us_details_url)
     assert response.context_data['object'] == contact_us
 
 
-def test_contact_us_details_super_user_status_200(client, super_user, contact_us):
+def test_contact_us_details_status_code_on_get_super_user(client, super_user, contact_us):
     client.force_login(super_user)
-    response = client.get(f'/currency/contact_us/details/{contact_us.id}/')
+    contact_us_details_url = reverse('currency:contactus-details', args=(contact_us.id,))
+    response = client.get(contact_us_details_url)
     assert response.status_code == 200
 
 
-def test_contact_us_details_super_user_model_obj(client, super_user, contact_us):
+def test_contact_us_details_return_obj_on_get_super_user(client, super_user, contact_us):
     client.force_login(super_user)
-    response = client.get(f'/currency/contact_us/details/{contact_us.id}/')
+    contact_us_details_url = reverse('currency:contactus-details', args=(contact_us.id,))
+    response = client.get(contact_us_details_url)
     assert response.context_data['object'] == contact_us
 
 
 # Update
-# noinspection DuplicatedCode
-def test_contact_us_update_no_auth_status_200(client, contact_us):
-    response = client.get(f'/currency/contact_us/update/{contact_us.id}/')
+def test_contact_us_update_status_code_on_get_no_auth(client, contact_us):
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.get(contact_us_update_url)
     assert response.status_code == 200
 
 
-def test_contact_us_update_no_auth_model_obj(client, contact_us):
-    response = client.get(f'/currency/contact_us/update/{contact_us.id}/')
+def test_contact_us_update_return_obj_on_get_no_auth(client, contact_us):
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.get(contact_us_update_url)
     assert response.context_data['object'] == contact_us
 
 
-def test_contact_us_update_inactive_user_status_200(client, user, contact_us):
+def test_contact_us_update_status_code_on_get_inactive_user(client, user, contact_us):
     client.force_login(user)
-    response = client.get(f'/currency/contact_us/update/{contact_us.id}/')
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.get(contact_us_update_url)
     assert response.status_code == 200
 
 
-def test_contact_us_update_inactive_user_model_obj(client, user, contact_us):
+def test_contact_us_update_return_obj_on_get_inactive_user(client, user, contact_us):
     client.force_login(user)
-    response = client.get(f'/currency/contact_us/update/{contact_us.id}/')
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.get(contact_us_update_url)
     assert response.context_data['object'] == contact_us
 
 
-def test_contact_us_update_active_user_status_200(client, active_user, contact_us):
+def test_contact_us_update_status_code_on_get_active_user(client, active_user, contact_us):
     client.force_login(active_user)
-    response = client.get(f'/currency/contact_us/update/{contact_us.id}/')
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.get(contact_us_update_url)
     assert response.status_code == 200
 
 
-def test_contact_us_update_active_user_model_obj(client, active_user, contact_us):
+def test_contact_us_update_return_obj_on_get_active_user(client, active_user, contact_us):
     client.force_login(active_user)
-    response = client.get(f'/currency/contact_us/update/{contact_us.id}/')
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.get(contact_us_update_url)
     assert response.context_data['object'] == contact_us
 
 
-def test_contact_us_update_super_user_status_200(client, super_user, contact_us):
+def test_contact_us_update_status_code_on_get_super_user(client, super_user, contact_us):
     client.force_login(super_user)
-    response = client.get(f'/currency/contact_us/update/{contact_us.id}/')
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.get(contact_us_update_url)
     assert response.status_code == 200
 
 
-def test_contact_us_update_super_user_model_obj(client, super_user, contact_us):
+def test_contact_us_update_return_obj_on_get_super_user(client, super_user, contact_us):
     client.force_login(super_user)
-    response = client.get(f'/currency/contact_us/update/{contact_us.id}/')
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.get(contact_us_update_url)
     assert response.context_data['object'] == contact_us
 
 
-def test_contact_us_update_empty_form_status_200(client, contact_us):
+def test_contact_us_update_status_code_on_post_empty_submission(client, contact_us):
     payload = {}
-    response = client.post(f'/currency/contact_us/update/{contact_us.id}/', data=payload)
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.post(contact_us_update_url, data=payload)
     assert response.status_code == 200
 
 
-def test_contact_us_update_empty_form_errors(client, contact_us):
+def test_contact_us_update_errors_on_post_empty_submission(client, contact_us):
     payload = {}
-    response = client.post(f'/currency/contact_us/update/{contact_us.id}/', data=payload)
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.post(contact_us_update_url, data=payload)
     assert response.context_data['form']._errors == {
         'email_from': ['This field is required.'],
         'subject': ['This field is required.'],
@@ -240,162 +268,191 @@ def test_contact_us_update_empty_form_errors(client, contact_us):
     }
 
 
-def test_contact_us_update_invalid_email_from_status_200(client, contact_us):
+def test_contact_us_update_status_code_on_post_empty_email_from_field(client, contact_us):
     payload = {
         'email_from': '',
         'subject': contact_us.subject,
         'message': contact_us.message
     }
-    response = client.post(f'/currency/contact_us/update/{contact_us.id}/', data=payload)
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.post(contact_us_update_url, data=payload)
     assert response.status_code == 200
 
 
-def test_contact_us_update_invalid_email_from_errors(client, contact_us):
+def test_contact_us_update_errors_on_post_empty_email_from_field(client, contact_us):
     payload = {
         'email_from': '',
         'subject': contact_us.subject,
         'message': contact_us.message
     }
-    response = client.post(f'/currency/contact_us/update/{contact_us.id}/', data=payload)
-    assert response.context_data['form']._errors == {'email_from': ['This field is required.']}
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.post(contact_us_update_url, data=payload)
+    assert response.context_data['form']._errors == {
+        'email_from': ['This field is required.']
+    }
 
 
-def test_contact_us_update_empty_email_from_errors(client, contact_us):
+def test_contact_us_update_status_code_on_post_invalid_email_from_field(client, contact_us):
     payload = {
         'email_from': 'WRONG',
         'subject': contact_us.subject,
         'message': contact_us.message
     }
-    response = client.post(f'/currency/contact_us/update/{contact_us.id}/', data=payload)
-    assert response.context_data['form']._errors == {'email_from': ['Enter a valid email address.']}
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.post(contact_us_update_url, data=payload)
+    assert response.status_code == 200
 
 
-def test_contact_us_update_invalid_subject_status_200(client, contact_us):
+def test_contact_us_update_errors_on_post_invalid_email_from_field(client, contact_us):
+    payload = {
+        'email_from': 'WRONG',
+        'subject': contact_us.subject,
+        'message': contact_us.message
+    }
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.post(contact_us_update_url, data=payload)
+    assert response.context_data['form']._errors == {
+        'email_from': ['Enter a valid email address.']
+    }
+
+
+def test_contact_us_update_status_code_on_post_empty_subject_field(client, contact_us):
     payload = {
         'email_from': contact_us.email_from,
         'subject': '',
         'message': contact_us.message
     }
-    response = client.post(f'/currency/contact_us/update/{contact_us.id}/', data=payload)
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.post(contact_us_update_url, data=payload)
     assert response.status_code == 200
 
 
-def test_contact_us_update_invalid_subject_errors(client, contact_us):
+def test_contact_us_update_errors_on_post_empty_subject_field(client, contact_us):
     payload = {
         'email_from': contact_us.email_from,
         'subject': '',
         'message': contact_us.message
     }
-    response = client.post(f'/currency/contact_us/update/{contact_us.id}/', data=payload)
-    assert response.context_data['form']._errors == {'subject': ['This field is required.']}
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.post(contact_us_update_url, data=payload)
+    assert response.context_data['form']._errors == {
+        'subject': ['This field is required.']
+    }
 
 
-def test_contact_us_update_invalid_message_status_200(client, contact_us):
+def test_contact_us_update_status_code_on_post_empty_message_field(client, contact_us):
     payload = {
         'email_from': contact_us.email_from,
         'subject': contact_us.subject,
         'message': ''
     }
-    response = client.post(f'/currency/contact_us/update/{contact_us.id}/', data=payload)
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.post(contact_us_update_url, data=payload)
     assert response.status_code == 200
 
 
-def test_contact_us_update_invalid_message_errors(client, contact_us):
+def test_contact_us_update_errors_on_post_empty_message_field(client, contact_us):
     payload = {
         'email_from': contact_us.email_from,
         'subject': contact_us.subject,
         'message': ''
     }
-    response = client.post(f'/currency/contact_us/update/{contact_us.id}/', data=payload)
-    assert response.context_data['form']._errors == {'message': ['This field is required.']}
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.post(contact_us_update_url, data=payload)
+    assert response.context_data['form']._errors == {
+        'message': ['This field is required.']
+    }
 
 
-def test_contact_us_update_valid_form_status_302(client, contact_us):
+def test_contact_us_update_on_post_valid_submission(client, contact_us):
     payload = {
         'email_from': contact_us.email_from,
         'subject': contact_us.subject,
         'message': contact_us.message
     }
-    response = client.post(f'/currency/contact_us/update/{contact_us.id}/', data=payload)
-    assert response.status_code == 302
-
-
-def test_contact_us_update_valid_form_data(client, contact_us):
-    payload = {
-        'email_from': contact_us.email_from,
-        'subject': contact_us.subject,
-        'message': contact_us.message
-    }
-    response = client.post(f'/currency/contact_us/update/{contact_us.id}/', data=payload)
-    assert response['location'] == '/currency/contact_us/list/'
+    contact_us_update_url = reverse('currency:contactus-update', args=(contact_us.id,))
+    response = client.post(contact_us_update_url, data=payload)
+    checks = (
+        response.status_code == 302,
+        response['location'] == contact_us_list_url
+    )
+    assert all(checks)
 
 
 # Delete
-# noinspection DuplicatedCode
-def test_contact_us_delete_no_auth_status_200(client, contact_us):
-    response = client.get(f'/currency/contact_us/delete/{contact_us.id}/')
+def test_contact_us_delete_status_code_on_get_no_auth(client, contact_us):
+    contact_us_delete_url = reverse('currency:contactus-delete', args=(contact_us.id,))
+    response = client.get(contact_us_delete_url)
     assert response.status_code == 200
 
 
-def test_contact_us_delete_no_auth_data(client, contact_us):
+def test_contact_us_delete_on_post_no_auth(client, contact_us):
     initial_count = ContactUs.objects.count()
-    response = client.post(f'/currency/contact_us/delete/{contact_us.id}/')
+    contact_us_delete_url = reverse('currency:contactus-delete', args=(contact_us.id,))
+    response = client.post(contact_us_delete_url)
     checks = (
-        response['location'] == '/currency/contact_us/list/',
+        response.status_code == 302,
+        response['location'] == contact_us_list_url,
         ContactUs.objects.count() == initial_count - 1
     )
     assert all(checks)
 
 
-# noinspection DuplicatedCode
-def test_contact_us_delete_inactive_user_status_200(client, user, contact_us):
+def test_contact_us_delete_status_code_on_get_inactive_user(client, user, contact_us):
     client.force_login(user)
-    response = client.get(f'/currency/contact_us/delete/{contact_us.id}/')
+    contact_us_delete_url = reverse('currency:contactus-delete', args=(contact_us.id,))
+    response = client.get(contact_us_delete_url)
     assert response.status_code == 200
 
 
-def test_contact_us_delete_inactive_user_data(client, user, contact_us):
-    initial_count = ContactUs.objects.count()
+def test_contact_us_delete_on_post_inactive_user(client, user, contact_us):
     client.force_login(user)
-    response = client.post(f'/currency/contact_us/delete/{contact_us.id}/')
+    initial_count = ContactUs.objects.count()
+    contact_us_delete_url = reverse('currency:contactus-delete', args=(contact_us.id,))
+    response = client.post(contact_us_delete_url)
     checks = (
-        response['location'] == '/currency/contact_us/list/',
+        response.status_code == 302,
+        response['location'] == contact_us_list_url,
         ContactUs.objects.count() == initial_count - 1
     )
     assert all(checks)
 
 
-# noinspection DuplicatedCode
-def test_contact_us_delete_active_user_status_200(client, active_user, contact_us):
+def test_contact_us_delete_status_code_on_get_active_user(client, active_user, contact_us):
     client.force_login(active_user)
-    response = client.get(f'/currency/contact_us/delete/{contact_us.id}/')
+    contact_us_delete_url = reverse('currency:contactus-delete', args=(contact_us.id,))
+    response = client.get(contact_us_delete_url)
     assert response.status_code == 200
 
 
-def test_contact_us_delete_active_user_data(client, active_user, contact_us):
-    initial_count = ContactUs.objects.count()
+def test_contact_us_delete_on_post_active_user(client, active_user, contact_us):
     client.force_login(active_user)
-    response = client.post(f'/currency/contact_us/delete/{contact_us.id}/')
+    initial_count = ContactUs.objects.count()
+    contact_us_delete_url = reverse('currency:contactus-delete', args=(contact_us.id,))
+    response = client.post(contact_us_delete_url)
     checks = (
-        response['location'] == '/currency/contact_us/list/',
+        response.status_code == 302,
+        response['location'] == contact_us_list_url,
         ContactUs.objects.count() == initial_count - 1
     )
     assert all(checks)
 
 
-# noinspection DuplicatedCode
-def test_contact_us_delete_super_user_status_200(client, super_user, contact_us):
+def test_contact_us_delete_status_code_on_get_super_user(client, super_user, contact_us):
     client.force_login(super_user)
-    response = client.get(f'/currency/contact_us/delete/{contact_us.id}/')
+    contact_us_delete_url = reverse('currency:contactus-delete', args=(contact_us.id,))
+    response = client.get(contact_us_delete_url)
     assert response.status_code == 200
 
 
-def test_contact_us_delete_super_user_data(client, super_user, contact_us):
-    initial_count = ContactUs.objects.count()
+def test_contact_us_delete_on_post_super_user(client, super_user, contact_us):
     client.force_login(super_user)
-    response = client.post(f'/currency/contact_us/delete/{contact_us.id}/')
+    initial_count = ContactUs.objects.count()
+    contact_us_delete_url = reverse('currency:contactus-delete', args=(contact_us.id,))
+    response = client.post(contact_us_delete_url)
     checks = (
-        response['location'] == '/currency/contact_us/list/',
+        response.status_code == 302,
+        response['location'] == contact_us_list_url,
         ContactUs.objects.count() == initial_count - 1
     )
     assert all(checks)

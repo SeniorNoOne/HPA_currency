@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
-from currency.models import Rate, Source, ContactUs, RequestResponseLog
-from utils.mixins import SendFeedbackMailMixin
+from currency.models import ContactUs, Rate, RequestResponseLog, Source
 
 
 class RateSerializer(serializers.ModelSerializer):
@@ -13,6 +12,7 @@ class RateSerializer(serializers.ModelSerializer):
             'sell',
             'created',
             'source',
+            'currency',
         )
 
 
@@ -20,14 +20,16 @@ class SourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Source
         fields = (
+            'id',
             'url',
             'code',
+            'name',
             'city',
             'phone',
         )
 
 
-class ContactUsSerializer(serializers.ModelSerializer, SendFeedbackMailMixin):
+class ContactUsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactUs
         fields = (
@@ -35,11 +37,6 @@ class ContactUsSerializer(serializers.ModelSerializer, SendFeedbackMailMixin):
             'subject',
             'message',
         )
-
-    def create(self, validated_data):
-        mail = self._create_email(validated_data)
-        self._send_mail(mail)
-        return ContactUs(**validated_data)
 
 
 class RequestResponseLogSerializer(serializers.ModelSerializer):

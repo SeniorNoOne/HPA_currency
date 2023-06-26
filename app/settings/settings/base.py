@@ -45,7 +45,7 @@ EXTERNAL_APPS = [
     'django_filters',
     'rest_framework',
     'rest_framework_simplejwt',
-    'drf_yasg'
+    'drf_yasg',
 ]
 
 CUSTOM_APPS = [
@@ -64,7 +64,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'currency.middlewares.RequestResponseTimeMiddleware'
+    'currency.middlewares.RequestResponseTimeMiddleware',
 ]
 
 ROOT_URLCONF = 'settings.urls'
@@ -169,6 +169,8 @@ if DEBUG:
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 
+
+# Login URLs
 LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGOUT_REDIRECT_URL = reverse_lazy('index')
 LOGIN_URL = reverse_lazy('login')
@@ -184,8 +186,8 @@ HTTP_SCHEMA = 'http'
 
 
 # Bootstrap
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 
 # Celery
@@ -202,7 +204,7 @@ CELERY_QUEUES = {
     'scheduled_tasks': {
         'exchange': 'scheduled_tasks',
         'exchange_type': 'direct',
-        'routing_key': 'scheduled_tasks'
+        'routing_key': 'scheduled_tasks',
     },
 }
 
@@ -213,19 +215,19 @@ CELERY_DEFAULT_ROUTING_KEY = 'default'
 CELERY_ROUTES = {
     'utils.tasks.celery_send_mail': {
         'queue': 'default',
-        'routing_key': 'default'
+        'routing_key': 'default',
     },
     'currency.tasks.parse_privatbank': {
         'queue': 'scheduled_tasks',
-        'routing_key': 'scheduled_tasks'
+        'routing_key': 'scheduled_tasks',
     },
     'currency.tasks.parse_monobank': {
         'queue': 'scheduled_tasks',
-        'routing_key': 'scheduled_tasks'
+        'routing_key': 'scheduled_tasks',
     },
     'currency.tasks.parse_nbu': {
         'queue': 'scheduled_tasks',
-        'routing_key': 'scheduled_tasks'
+        'routing_key': 'scheduled_tasks',
     }
 }
 
@@ -235,21 +237,21 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(
             minute=env.str('CELERY_CRONTAB', '*/15')
         ),
-        'options': {'queue': 'scheduled_tasks'}
+        'options': {'queue': 'scheduled_tasks'},
     },
     'parse_monobank_scheduled_task': {
         'task': 'currency.tasks.parse_monobank',
         'schedule': crontab(
             minute=env.str('CELERY_CRONTAB', '*/15')
         ),
-        'options': {'queue': 'scheduled_tasks'}
+        'options': {'queue': 'scheduled_tasks'},
     },
     'parse_nbu_scheduled_task': {
         'task': 'currency.tasks.parse_nbu',
         'schedule': crontab(
             minute=env.str('CELERY_CRONTAB', '*/15')
         ),
-        'options': {'queue': 'scheduled_tasks'}
+        'options': {'queue': 'scheduled_tasks'},
     }
 }
 
@@ -286,16 +288,16 @@ REST_FRAMEWORK = {
 
 # Simple JWT
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "AUTH_HEADER_TYPES": ("Bearer", "JWT"),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),
 }
 
 # Caching
 CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
-        "LOCATION": "{0}:{1}".format(
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': '{0}:{1}'.format(
             env.str('CACHE_HOST', '127.0.0.1'),
             env.str('CACHE_PORT', '11211'),
         ),

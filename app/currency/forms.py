@@ -13,7 +13,7 @@ class RateForm(forms.ModelForm):
             'buy',
             'sell',
             'source',
-            'currency'
+            'currency',
         )
         widgets = {
             'buy': forms.NumberInput(attrs={'placeholder': 'Enter buying rate'}),
@@ -36,8 +36,10 @@ class RateForm(forms.ModelForm):
                 css_class='row justify-content-center'
             ),
             Row(
-                Column(Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
-                       css_class='offset-2')
+                Column(
+                    Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
+                    css_class='offset-2'
+                )
             )
         )
 
@@ -53,9 +55,11 @@ class ContactUsForm(forms.ModelForm):
         widgets = {
             'email_from': forms.TextInput(attrs={'placeholder': 'Enter your email'}),
             'subject': forms.TextInput(attrs={'placeholder': 'Enter subject'}),
-            'message': forms.Textarea(attrs={
-                'placeholder': 'Provide us your detailed feedback',
-                'rows': '10'}
+            'message': forms.Textarea(
+                attrs={
+                    'placeholder': 'Provide us your detailed feedback',
+                    'rows': '10',
+                }
             ),
         }
 
@@ -74,8 +78,10 @@ class ContactUsForm(forms.ModelForm):
                 css_class='row justify-content-center'
             ),
             Row(
-                Column(Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
-                       css_class='offset-2')
+                Column(
+                    Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
+                    css_class='offset-2'
+                )
             )
         )
 
@@ -96,8 +102,12 @@ class SourceForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'placeholder': 'Enter source name'}),
             'code': forms.NumberInput(attrs={'placeholder': 'Enter valid ISO 4217 currency code'}),
             'city': forms.TextInput(attrs={'placeholder': 'Enter source city'}),
-            'phone': forms.TextInput(attrs={'placeholder': 'Enter source phone number',
-                                            'data-mask': '+000-00-000-00-00'}),
+            'phone': forms.TextInput(
+                attrs={
+                    'placeholder': 'Enter source phone number',
+                    'data-mask': '+000-00-000-00-00',
+                }
+            ),
         }
 
     def __init__(self, *args, **kwargs):
@@ -124,7 +134,9 @@ class SourceForm(forms.ModelForm):
                 css_class='row justify-content-center'
             ),
             Row(
-                Column(Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
-                       css_class='offset-2')
+                Column(
+                    Submit('submit', 'Submit', css_class='btn btn-primary col-2'),
+                    css_class='offset-2'
+                )
             )
         )
