@@ -12,5 +12,5 @@ per-file-ignores =
     **/settings_test.py:F401,F403,F405
     */settings/__init__.py:F401,F403
     */settings/base.py:F401,F403
-    */settings/local.py:F401,F403
+    */settings/local.py:F401,F403,F405
     */settings/local_sample.py:F401,F403
