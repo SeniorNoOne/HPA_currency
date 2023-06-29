@@ -100,7 +100,7 @@ class SourceForm(forms.ModelForm):
         widgets = {
             'url': forms.TextInput(attrs={'placeholder': 'Enter source URL'}),
             'name': forms.TextInput(attrs={'placeholder': 'Enter source name'}),
-            'code': forms.NumberInput(attrs={'placeholder': 'Enter valid ISO 4217 currency code'}),
+            'code': forms.NumberInput(attrs={'placeholder': 'Enter unique source code'}),
             'city': forms.TextInput(attrs={'placeholder': 'Enter source city'}),
             'phone': forms.TextInput(
                 attrs={

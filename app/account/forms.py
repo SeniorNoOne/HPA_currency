@@ -120,7 +120,7 @@ class UserSignUpForm(forms.ModelForm):
 
 
 class CustomLoginForm(AuthenticationForm):
-    username = forms.CharField(
+    username = forms.EmailField(
         widget=forms.TextInput(attrs={'placeholder': 'Enter your mail'})
     )
     password = forms.CharField(
@@ -150,15 +150,26 @@ class CustomLoginForm(AuthenticationForm):
             Row(
                 Column(
                     Submit('submit', 'Login', css_class='btn btn-primary col-12'),
+                    css_class='col-4'
+                ),
+                css_class='row justify-content-center'
+            ),
+            Row(
+                Column(
+                    HTML(
+                        '<a href="{% url "password_reset" %}"'
+                        'class="btn btn-danger col-12 mt-3" role="button">Forget Password?</a>'
+                    ),
                     css_class='col-2'
                 ),
                 Column(
                     HTML(
-                        '<a href="{% url "password_reset" %}" '
-                        'class="btn btn-danger col-12" role="button">Reset Password</a>'
+                        '<a href="{% url "account:signup" %}"'
+                        'class="btn btn-danger col-12 mt-3" role="button">'
+                        'Don\'t have an account?</a>'
                     ),
                     css_class='col-2'
                 ),
-                css_class='row justify-content-center',
+                css_class='row justify-content-center'
             )
         )

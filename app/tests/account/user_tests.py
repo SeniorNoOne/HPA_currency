@@ -216,8 +216,7 @@ def test_user_login_form_errors_on_post_wrong_username(client, active_user):
     }
     response = client.post(user_login_url, data=payload)
     assert response.context_data['form']._errors == {
-        '__all__': ['Please enter a correct email and password. '
-                    'Note that both fields may be case-sensitive.']
+        'username': ['Enter a valid email address.']
     }
 
 

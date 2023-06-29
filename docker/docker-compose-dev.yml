@@ -111,6 +111,7 @@ services:
     image: backend_img
     container_name: flower
     depends_on:
+      - backend
       - celery_beat
       - celery_common_worker
       - celery_beat_worker
