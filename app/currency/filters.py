@@ -1,9 +1,12 @@
 import django_filters
 
 from currency.models import Rate, ContactUs, RequestResponseLog, Source
+from currency.widgets import DualSliderWidget
 
 
 class RateFilter(django_filters.FilterSet):
+    buy = django_filters.RangeFilter(widget=DualSliderWidget())
+
     class Meta:
         model = Rate
         fields = {
