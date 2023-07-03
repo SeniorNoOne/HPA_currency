@@ -82,34 +82,33 @@ class StorageUniqueFields:
     source = 'code'
 
 
-LATEST_RATE_CACHE_KEY = 'api::currency::rates::latest'
-
-
-RATE_FILTER_LOOKUPS = {
-    'filter_fields': (
+class RateFilterConfig:
+    filter_fields = (
         'buy',
         'sell',
         'source__name',
-    ),
+    )
 
-    'buy': (
+    buy = (
         ('exact', 'Exact'),
         ('lt', 'Less than'),
         ('lte', 'Less than or equal to'),
         ('gt', 'Greater than'),
         ('gte', 'Greater than or equal to'),
-    ),
+    )
 
-    'sell': (
+    sell = (
         ('exact', 'Exact'),
         ('lt', 'Less than'),
         ('lte', 'Less than or equal to'),
         ('gt', 'Greater than'),
         ('gte', 'Greater than or equal to'),
-    ),
+    )
 
-    'source__name': (
-        ('exact', 'Exact'),
+    source_name = (
         ('icontains', 'Contains'),
-    ),
-}
+        ('exact', 'Exact'),
+    )
+
+
+LATEST_RATE_CACHE_KEY = 'api::currency::rates::latest'
