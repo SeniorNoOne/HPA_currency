@@ -1,8 +1,8 @@
 import django_filters
 
-from currency.models import Rate, ContactUs, RequestResponseLog, Source
 from currency.constants import RateFilterConfig
 from currency.forms import RateFilterForm
+from currency.models import Rate, ContactUs, RequestResponseLog, Source
 
 
 class RateFilter(django_filters.FilterSet):

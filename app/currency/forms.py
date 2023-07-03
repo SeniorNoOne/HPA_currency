@@ -14,9 +14,8 @@ class RateFilterForm(forms.Form):
         required=False
     )
     buy = forms.DecimalField(
-        widget=forms.NumberInput(
-            attrs={'class': 'form-control',
-                   'placeholder': 'Enter buy value'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control',
+                                        'placeholder': 'Enter buy value'}),
         required=False
     )
 
@@ -62,7 +61,7 @@ class RateFilterForm(forms.Form):
             ),
             Row(
                 Column(
-                    Submit('submit', 'Apply', css_class='btn btn-primary col-12'),
+                    Submit('', 'Apply', css_class='btn btn-primary col-12'),
                     css_class='col-6'
                 ),
                 Column(
