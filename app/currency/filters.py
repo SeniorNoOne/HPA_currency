@@ -1,19 +1,18 @@
 import django_filters
 
-from currency.constants import RateFilterConfig
-from currency.forms import RateFilterForm
+from currency.constants import RateFilterConfig, ContactUsFilterConfig, SourceFilterConfig, \
+    RequestResponseLogFilterConfig
+from currency.forms import RateFilterForm, ContactUsFilterForm, SourceFilterForm, \
+    RequestResponseLogFilterForm
 from currency.models import Rate, ContactUs, RequestResponseLog, Source
 
 
-class RateFilter(django_filters.FilterSet):
-    class Meta:
-        model = Rate
-        fields = RateFilterConfig.filter_fields
-        form = RateFilterForm
+class BaseFilter(django_filters.FilterSet):
+    filter_config = None
 
     def filter_queryset(self, queryset):
-        for field in RateFilterConfig.filter_fields:
-            lookup_expr = self.form.cleaned_data.get(f'{field}__lookup', None)
+        for field in self.filter_config.filter_fields:
+            lookup_expr = self.form.cleaned_data.get(f'{field}_lookup', None)
             filter_value = self.form.cleaned_data.get(f'{field}', None)
 
             if lookup_expr and filter_value:
@@ -22,31 +21,37 @@ class RateFilter(django_filters.FilterSet):
         return queryset
 
 
-class ContactUsFilter(django_filters.FilterSet):
+class RateFilter(BaseFilter):
+    class Meta:
+        model = Rate
+        fields = ()
+        form = RateFilterForm
+
+    filter_config = RateFilterConfig
+
+
+class ContactUsFilter(BaseFilter):
     class Meta:
         model = ContactUs
-        fields = {
-            'email_from': ('icontains',),
-            'subject': ('icontains',),
-            'message': ('icontains',),
-        }
+        fields = ()
+        form = ContactUsFilterForm
+
+    filter_config = ContactUsFilterConfig
 
 
-class SourceFilter(django_filters.FilterSet):
+class SourceFilter(BaseFilter):
     class Meta:
         model = Source
-        fields = {
-            'url': ('icontains',),
-            'name': ('icontains',),
-            'city': ('icontains',),
-        }
+        fields = ()
+        form = SourceFilterForm
+
+    filter_config = SourceFilterConfig
 
 
-class RequestResponseLogFilter(django_filters.FilterSet):
+class RequestResponseLogFilter(BaseFilter):
     class Meta:
         model = RequestResponseLog
-        fields = {
-            'path': ('icontains',),
-            'request_method': ('exact',),
-            'time': ('exact', 'lt', 'lte', 'gt', 'gte',),
-        }
+        fields = ()
+        form = RequestResponseLogFilterForm
+
+    filter_config = RequestResponseLogFilterConfig

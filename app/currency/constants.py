@@ -87,6 +87,7 @@ class RateFilterConfig:
         'buy',
         'sell',
         'source__name',
+        'currency',
     )
 
     buy = (
@@ -105,9 +106,84 @@ class RateFilterConfig:
         ('gte', 'Greater than or equal to'),
     )
 
-    source_name = (
+    source__name = (
         ('icontains', 'Contains'),
         ('exact', 'Exact'),
+    )
+
+    currency = (
+        ('exact', 'Exact'),
+    )
+
+
+class ContactUsFilterConfig:
+    filter_fields = (
+        'email_from',
+        'subject',
+        'message',
+    )
+
+    email_from = (
+        ('icontains', 'Contains'),
+        ('exact', 'Exact'),
+    )
+
+    subject = (
+        ('icontains', 'Contains'),
+        ('exact', 'Exact'),
+    )
+
+    message = (
+        ('icontains', 'Contains'),
+        ('exact', 'Exact'),
+    )
+
+
+class SourceFilterConfig:
+    filter_fields = (
+        'url',
+        'name',
+        'city',
+    )
+
+    url = (
+        ('icontains', 'Contains'),
+        ('exact', 'Exact'),
+    )
+
+    name = (
+        ('icontains', 'Contains'),
+        ('exact', 'Exact'),
+    )
+
+    city = (
+        ('icontains', 'Contains'),
+        ('exact', 'Exact'),
+    )
+
+
+class RequestResponseLogFilterConfig:
+    filter_fields = (
+        'path',
+        'request_method',
+        'time',
+    )
+
+    path = (
+        ('icontains', 'Contains'),
+        ('exact', 'Exact'),
+    )
+
+    request_method = (
+        ('exact', 'Exact'),
+    )
+
+    time = (
+        ('exact', 'Exact'),
+        ('lt', 'Less than'),
+        ('lte', 'Less than or equal to'),
+        ('gt', 'Greater than'),
+        ('gte', 'Greater than or equal to'),
     )
 
 
