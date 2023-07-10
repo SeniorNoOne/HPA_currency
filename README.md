@@ -84,52 +84,38 @@ or `docker-compose -f docker/docker-compose-dev.yml restart`
 ## Features
 The Django pet project offers various features and functionalities that can be explored once the 
 project is set up and running. Here are some of the main features:
-
 - **User Registration and Authentication**. Users can sign up and log in to the application, 
 allowing them to access personalized features and data.
 - **Currency Source and Rate Management**. The project allows users to create currency sources 
 and their corresponding rates using the Source and Rate models.
-
 - **Feedback Submission**. Users can submit feedback through the application, which is sent to a 
 moderator using a third-party SMTP service for further review.
-
 - **Rate Parsing**. The project implements rate parsing functionality using BeautifulSoup4 for 
 web scraping and interacting with third-party APIs.
-
 - **Caching with Memcached**. To optimize performance and reduce database load, the project utilizes
 Memcached, an in-memory caching system.
-
 - **Nginx and Gunicorn**. Nginx serves as the web server, while Gunicorn acts as the WSGI server 
 for running the Django application, ensuring efficient handling of HTTP requests.
-
 - **Django Signals**. The project utilizes Django Signals to implement decoupled and reusable 
 event-driven architecture, enabling various actions to be triggered based on specific signals.
-
 - **Logging**. Middleware and a separate model are employed for logging purposes, allowing for 
 effective tracking and analysis of application events.
-
 - **Admin Interface**. Django's built-in admin interface is available for managing the 
 application's data, providing an intuitive and user-friendly interface for administrators.
-
 - **Bootstrap**. The project uses the Bootstrap framework for creating responsive and visually 
 appealing user interfaces, ensuring a modern and engaging user experience.
-
 - **Database Support**. The project supports both SQLite3 for development purposes and Postgres 
 for production deployment, providing flexibility and scalability in data storage.
-
 - **Docker and Docker Compose**. Docker and Docker Compose are utilized for containerization, 
 simplifying deployment and management of the project in different environments.
-
 - **Code Quality and Testing**. Flake8 is used as a linting tool to enforce Python code style and 
 best practices, while Django-pytest enables comprehensive testing of the application's functionality.
-
 - **REST API with Django Rest Framework (DRF)**. The project implements a REST API using Django 
 Rest Framework, allowing for seamless integration with external systems and enabling data exchange 
 in a structured manner.
-
-By incorporating these features and technologies, the Django pet project provides a robust and 
-scalable solution for managing currency sources, rates, user authentication, feedback submission, 
-and more.
+- **Custom Bootstrap Forms for django-filter.** The project incorporates custom Bootstrap forms that are 
+integrated with django-filters. These forms, created using FormHelper, provide a seamless and user-friendly filtering 
+experience, enhancing the overall usability of the application.
 
 ## Technologies Used
 The Django pet project incorporates the following technologies:
@@ -162,6 +148,9 @@ event-driven architecture.
 functionality.
 - **Django Rest Framework (DRF)**. A powerful toolkit for building RESTful APIs, enabling seamless 
 integration with external systems.
+- **Django-filters.** A versatile filtering library for Django applications, enabling the implementation of 
+complex query filters and search functionality. It integrates seamlessly with Django models and provides a 
+convenient way to handle filtering logic.
 
 These technologies collectively contribute to the functionality, performance, security, 
 and maintainability of the project.
