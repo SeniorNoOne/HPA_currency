@@ -4,6 +4,7 @@ from datetime import timedelta
 from pathlib import Path
 
 from django.urls import reverse_lazy
+from django.db.backends.postgresql.psycopg_any import IsolationLevel
 from celery.schedules import crontab
 
 
@@ -94,12 +95,17 @@ WSGI_APPLICATION = 'settings.wsgi.application'
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': env.str('POSTGRES_DB', 'postgres-db'),
         'USER': env.str('POSTGRES_USER', 'postgres'),
         'PASSWORD': env.str('POSTGRES_PASSWORD', 'postgres'),
         'HOST': env.str('POSTGRES_HOST', 'localhost'),
         'PORT': env.str('POSTGRES_PORT', '5432'),
+        'CONN_MAX_AGE': None,
+        'CONN_HEALTH_CHECKS': True,
+        'OPTIONS': {
+            'isolation_level': IsolationLevel.REPEATABLE_READ,
+        }
     }
 }
 
