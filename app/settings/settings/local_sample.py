@@ -18,6 +18,40 @@ DATABASES = {
     }
 }
 
+# Postgres basic config with persistent connection, health check and isolation level
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'test_db',
+        'USER': 'test_user',
+        'PASSWORD': 'testtest',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'CONN_MAX_AGE': None,
+        'CONN_HEALTH_CHECKS': True,
+        'OPTIONS': {
+            'isolation_level': IsolationLevel.REPEATABLE_READ,
+        }
+    }
+}
+
+# Postgres configuration with connection puller
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'test_db',
+        'USER': 'test_user',
+        'PASSWORD': 'testtest',
+        'HOST': 'localhost',
+        'PORT': '6432',
+        'CONN_MAX_AGE': None,
+        'CONN_HEALTH_CHECKS': True,
+        'OPTIONS': {
+            'isolation_level': IsolationLevel.SERIALIZABLE,
+        }
+    }
+}
+
 # Caching should be changed to LocMemCache for django-pytest
 CACHES = {
     'default': {

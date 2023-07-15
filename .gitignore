@@ -16,3 +16,4 @@ config.ini
 # Other files with potentially sensitive data
 *.csv
 **/local.py
+**/userlist.txt
