@@ -10,11 +10,11 @@ if DEBUG:
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 
-# For dev using lightweight DB such as SQLite3
+# For dev purposes using lightweight DB such as SQLite3
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -22,9 +22,9 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'test_db',
-        'USER': 'test_user',
-        'PASSWORD': 'testtest',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '5432',
         'CONN_MAX_AGE': None,
@@ -35,13 +35,13 @@ DATABASES = {
     }
 }
 
-# Postgres configuration with connection puller
+# Postgres config with connection polling
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'test_db',
-        'USER': 'test_user',
-        'PASSWORD': 'testtest',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '6432',
         'CONN_MAX_AGE': None,
@@ -52,12 +52,5 @@ DATABASES = {
     }
 }
 
-# Caching should be changed to LocMemCache for django-pytest
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    }
-}
-
-# Using console email backend
+# Using console email backend for dev
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

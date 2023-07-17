@@ -30,7 +30,9 @@ the broker. Any Django compatible DB can be used if properly configured, but thi
 that SQLite3 or Postgres is used. This mode is suitable for local development and testing. 
 List of required software:
 - [RabbitMQ](https://www.rabbitmq.com/#getstarted)
-- [PostgreSQL](https://www.postgresql.org/download/) or other preferable Django compatible DB
+- [PostgreSQL](https://www.postgresql.org/download/) (optional if used remote DB connection) - or other preferable Django 
+compatible DB engine in case of development with local DB engine
+- [PgBouncer](https://www.pgbouncer.org/install.html) (optional) - required for Postgres connection polling
 
 ### **Venv Mode**
 In this mode, the project employs production settings, including Nginx, Gunicorn, PostgreSQL, and 
@@ -38,7 +40,10 @@ RabbitMQ. This setup is recommended for deploying the project to a production  e
 List of required software:
 - [Nginx](https://nginx.org/en/download.html)
 - [RabbitMQ](https://www.rabbitmq.com/#getstarted)
-- [PostgreSQL](https://www.postgresql.org/download/) or other preferable Django compatible DB
+- [PostgreSQL](https://www.postgresql.org/download/) (optional if used remote DB connection) - or other preferable Django 
+compatible DB engine in case of development with local DB engine
+- [PgBouncer](https://www.pgbouncer.org/install.html) (optional) - required for Postgres connection polling
+
 
 ### **Containerized Mode** 
 The project also supports a containerized production mode. This mode allows to deploy the project 
@@ -162,3 +167,6 @@ and maintainability of the project.
 - Notice that static files are properly served only if `DEBUG = True` which is the case for base and
 local sample setting files. Be aware of using `DEBUG = True` in production.
 - In `docker-compose-dev.yml` Postgres DB image is created. It's done only for dev purpose.
+- Note that settings in config files for nginx, PgBouncer and other third party software used in this project must 
+match Django settings in `local.py` file.
+- For such third party software basic config files are provided in the project's root directory.
