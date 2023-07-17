@@ -10,20 +10,47 @@ if DEBUG:
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 
-# For dev using lightweight DB such as SQLite3
+# For dev purposes using lightweight DB such as SQLite3
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
-# Caching should be changed to LocMemCache for django-pytest
-CACHES = {
+# Postgres basic config with persistent connection, health check and isolation level
+DATABASES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'CONN_MAX_AGE': None,
+        'CONN_HEALTH_CHECKS': True,
+        'OPTIONS': {
+            'isolation_level': IsolationLevel.REPEATABLE_READ,
+        }
     }
 }
 
-# Using console email backend
+# Postgres config with connection polling
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '6432',
+        'CONN_MAX_AGE': None,
+        'CONN_HEALTH_CHECKS': True,
+        'OPTIONS': {
+            'isolation_level': IsolationLevel.SERIALIZABLE,
+        }
+    }
+}
+
+# Using console email backend for dev
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

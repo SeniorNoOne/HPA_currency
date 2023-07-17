@@ -16,7 +16,7 @@ beautifulsoup4
 crispy_bootstrap5
 phonenumbers
 requests
-psycopg2-binary
+psycopg2
 flower
 
 # REST APIs and Serialization
