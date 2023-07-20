@@ -26,5 +26,5 @@ def user_delete_content_dir(sender, instance, **kwargs):
 
 @receiver(post_save, sender=User)
 def user_send_sing_up_email(sender, instance, created, **kwargs):
-    if created:
+    if created and not instance.is_superuser:
         instance.send_email()
