@@ -362,3 +362,21 @@ def test_user_profile_form_on_avatar_update(client, active_user, active_user_wit
     # removing created files
     active_user.delete()
     assert all(checks)
+
+
+def test_createsuperuser_command(monkeypatch, user_data):
+    user_manager = User._default_manager
+    superuser = user_manager.create_superuser(
+        email=user_data.email,
+        password='some_1_password',
+        first_name=user_data.first_name,
+        last_name=user_data.last_name
+    )
+    db_superuser = User.objects.get(email=user_data.email.lower())
+    checks = (
+        db_superuser.is_staff,
+        db_superuser.is_active,
+        db_superuser.is_superuser,
+        db_superuser == superuser
+    )
+    assert all(checks)
