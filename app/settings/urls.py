@@ -41,6 +41,8 @@ urlpatterns = [
 
     path('currency/', include('currency.urls')),
 
+    path('chat/', include('chat.urls')),
+
     path('', MainPageView.as_view(), name='index'),
 
     # REST API

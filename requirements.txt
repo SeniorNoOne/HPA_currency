@@ -18,6 +18,7 @@ phonenumbers
 requests
 psycopg2
 flower
+channels[daphne]
 
 # REST APIs and Serialization
 djangorestframework
